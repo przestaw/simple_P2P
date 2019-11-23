@@ -5,9 +5,9 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 find_package(Threads REQUIRED)
 
-find_package(Boost REQUIRED system)
+find_package(Boost REQUIRED system program_options)
 
-set(EXTERNAL_LIBS "Boost::system" "Threads::Threads")
+set(EXTERNAL_LIBS "Boost::system" "Boost::program_options" "Threads::Threads")
 
 include_directories("${PROJECT_SOURCE_DIR}/include")
 

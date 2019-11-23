@@ -25,7 +25,7 @@ namespace simpleP2P {
          * Synchronised method for logging output
          * @param line
          */
-        static void add_log_line(std::string line);
+        static void add_log_line(std::string line, const std::time_t time);
     private:
         static std::queue<std::string> logging_queue;         //!< Queue of dispatched information from running program
         static std::mutex queue_mutex;                       //!< Mutex to secure exclusive access to the logging_queue
