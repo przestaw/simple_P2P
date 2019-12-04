@@ -5,7 +5,7 @@
 #include "logging_module.h"
 
 namespace simpleP2P{
-    Logging_Module::Logging_Module(std::ostream &output_c) : output(output_c) {}
+    Logging_Module::Logging_Module(std::ostream &output) : output(output) {};
 
     std::thread Logging_Module::init() {
         return std::thread([=] { worker(); });

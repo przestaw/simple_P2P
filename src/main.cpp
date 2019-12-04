@@ -42,6 +42,24 @@ int main(int argc, const char *argv[]) {
             if (vm.count("logs_file"))
                 std::cout << "logs_file: " << vm["logs_file"].as<std::string>() << '\n';
         }
+
+        std::thread basic[4];
+
+        /*
+         * Create threads for all modules and connect them e.g. by signal-slot
+         */
+        Logging_Module logger;
+        basic[3] = logger.init();
+
+//        for (Uint16 iter = 0; iter < 3; ++iter) {
+//            basic[iter] = std::thread(test_worker, iter);
+//        }
+//
+        for (auto &iter : basic) {
+            iter.join();
+        }
+
+//        ip::udp::socket socket_udp();
     }
     catch (const boost::program_options::error &ex) {
         std::cerr << ex.what() << '\n';
