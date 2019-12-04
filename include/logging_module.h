@@ -9,6 +9,7 @@
 #include <queue>
 #include <mutex>
 #include <condition_variable>
+#include <thread>
 
 namespace simpleP2P {
     /**
@@ -16,20 +17,24 @@ namespace simpleP2P {
      */
     class Logging_Module{
     public:
+        Logging_Module(std::ostream &output = std::cerr);
         /**
          * Main thread for the logging module
          * @param output Output stream for logging
          */
-        static void logging_thread(std::ostream &output = std::cerr);
+        std::thread init();
         /**
          * Synchronised method for logging output
          * @param line
          */
-        static void add_log_line(std::string line, const std::time_t time);
+        void add_log_line(std::string line, const std::time_t time);
     private:
-        static std::queue<std::string> logging_queue;         //!< Queue of dispatched information from running program
-        static std::mutex queue_mutex;                       //!< Mutex to secure exclusive access to the logging_queue
-        static std::condition_variable queue_cond;
+        void worker();
+
+        std::ostream &output;
+        std::queue<std::string> logging_queue;         //!< Queue of dispatched information from running program
+        std::mutex queue_mutex;                       //!< Mutex to secure exclusive access to the logging_queue
+        std::condition_variable queue_cond;
     };
 
 }
