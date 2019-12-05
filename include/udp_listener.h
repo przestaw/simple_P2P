@@ -9,7 +9,7 @@
 namespace simpleP2P {
 
     class resource;     //!< contains file information and points to nodes with file possesion
-    class node;         //!< contains node information and points to files it possess
+    class host;         //!< contains node information and points to files it possess
 
     class UDP_Listener {
     public:
@@ -26,7 +26,7 @@ namespace simpleP2P {
 
         /* Not sure where to store information about structure of network and files*/
         std::vector <resource> resources;
-        std::vector <nodes> nodes;
+        std::vector <host> hosts;
     };
 };
 
