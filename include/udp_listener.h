@@ -5,11 +5,13 @@
 #ifndef SIMPLE_P2P_UDP_LISTENER_H
 #define SIMPLE_P2P_UDP_LISTENER_H
 
+#include <vector>
+#include <string>
+#include <boost/asio.hpp>
+#include <thread>
+#include "resource_database.h"
 
 namespace simpleP2P {
-
-    class resource;     //!< contains file information and points to nodes with file possesion
-    class host;         //!< contains node information and points to files it possess
 
     class UDP_Listener {
     public:
@@ -17,16 +19,11 @@ namespace simpleP2P {
 
         std::thread init();
 
-        bool has_file(std::string resource_header); // consider identifier
-        bool add_file(resource);
-
     private:
         void has_changed();                     // if data about files is stored elsewhere
-        boost::asio::ip::udp::socket socket     //!< socket on which listens for file information
+        boost::asio::ip::udp::socket socket;     //!< socket on which listens for file information
 
-        /* Not sure where to store information about structure of network and files*/
-        std::vector <resource> resources;
-        std::vector <host> hosts;
+        Resource_Database database;
     };
 };
 
