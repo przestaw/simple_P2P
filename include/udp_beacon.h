@@ -5,6 +5,14 @@
 #ifndef SIMPLE_P2P_UDP_BEACON_H
 #define SIMPLE_P2P_UDP_BEACON_H
 
+#include <mutex>
+#include <condition_variable>
+#include <thread>
+#include <queue>
+#include <vector>
+#include <string>
+#include <boost/asio.hpp>
+
 namespace simpleP2P {
     class UDP_Beacon {
     public:
