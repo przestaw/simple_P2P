@@ -16,14 +16,14 @@
 namespace simpleP2P {
     class UDP_Beacon {
     public:
-        UDP_Beacon(boost::asio::ip::udp::socket socket);
+        UDP_Beacon(boost::asio::ip::udp::socket socket_c);
 
         std::thread init();
 
         void revoke_file(
                 std::string resource);         //!< to sent aproperiate revoke header TODO: construct resource struct and create command in place
     private:
-        boost::asio::ip::udp::socket socket
+        boost::asio::ip::udp::socket socket;
 
         void
         fire_beacon();                                      //!< puts data in queue fired by timer TODO: internal slot for firing the beacon
@@ -33,6 +33,6 @@ namespace simpleP2P {
         static std::mutex queue_mutex;                           //!< Mutex to secure exclusive access to the queue
         static std::condition_variable queue_cond;               //!< to signal internally that some data is ready to be send
     };
-};
+}
 
 #endif //SIMPLE_P2P_UDP_BEACON_H

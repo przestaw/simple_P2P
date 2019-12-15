@@ -17,7 +17,7 @@ namespace simpleP2P {
      */
     class Logging_Module{
     public:
-        Logging_Module(std::ostream &output = std::cerr);
+        Logging_Module(std::ostream &output_c = std::cerr);
         /**
          * Main thread for the logging module
          * @param output Output stream for logging

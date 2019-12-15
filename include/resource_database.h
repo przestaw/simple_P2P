@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <string>
+#include <shared_mutex>
 #include "host.h"
 #include "resource.h"
 
@@ -14,40 +15,31 @@ namespace simpleP2P {
 
     class Resource_Database {
     public:
-        Resource_Database(Host host);
-
-        bool has_file(std::string resource_header);
+        Resource_Database(Host localhost);
 
         bool has_file(Resource res);
 
-        /* TODO
-         * > consider std::string instead of Resource and Host
-         * > pass Resource and Host as references? -> might be tricky as we cant return vector of Hosts/Requests refs
+        /* NOTE: chosen conception
          * >>> use pointers outside Database -> slightly inefficient, can't track life as it's not dynamically allocated
          *      probably best as it is possible to have host without resources and theoretically lonely resource
-         * > use dynamic memory and shared_ptr -> ?
-         * OR
-         * leave as-is and prepare proper operators == < > etc
-         * + add
-         * void fill_resource(Resource &res)
-         * void fill_host(Host &host)
+         * This assumes that once host is in database it's never deleted
          */
-        bool add_file(Resource res, Host host);
+        void add_file(Resource res, Host host);
 
-        bool remove_file(Resource res, Host host); //!< returns false if file did not existed
+        bool remove_file(Resource res, Host host); //!< returns false if file did not existed or was not possesed
 
-        inline bool add_file(Resource res); //!< same as add_file(Resource, Host) but host is localhost
+        inline void add_file(Resource res); //!< same as add_file(Resource, Host) but host is localhost
         inline bool remove_file(Resource res); //!< same as remove_file(Resource, Host) but host is localhost
 
-        std::vector<Host> who_has_file(std::string resource_header);
+        std::vector<Host *> who_has_file(std::string resource_header);
 
-        std::vector<Host> who_has_file(Resource res);
-
+        std::vector<Host *> who_has_file(Resource res);
     private:
         Host my_host;
         /* all internal operation on this vectors must be made with references */
         std::vector<Resource> resources;
         std::vector<Host> hosts;
+        std::shared_mutex database_mutex;
     };
 }
 

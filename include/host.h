@@ -7,7 +7,7 @@
 
 #include <vector>
 #include <string>
-
+#include <boost/asio.hpp>
 
 namespace simpleP2P {
 
@@ -15,19 +15,24 @@ namespace simpleP2P {
 
     class Host { //!< contains node information and points to files it possess
     public:
+        Host(boost::asio::ip::address ip);
         Host(std::string resource_header);
 
         std::string generate_host_header();
 
-        bool add_resource(Resource res);
-
         bool has_resource(Resource res);
 
+        bool operator==(const Host &other) const;
+
+        bool operator!=(const Host &other) const;
     private:
-        //TODO: IP and/or MAC
+        boost::asio::ip::address host_ip;
+
         /*atrribs not checked for equality*/
         //TODO: timeout etc stats
-        std::vector<Resource> possesed_resources;
+        std::vector<Resource *> possesed_resources;
+
+        friend class Resource_Database;
     };
 }
 

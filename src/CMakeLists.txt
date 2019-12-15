@@ -1,7 +1,7 @@
 
 set(EXECUTABLE_NAME ${PROJECT_NAME})
 
-set(SOURCE_FILES main.cpp ../include/GeneralTypes.h logging_module.cpp ../include/logging_module.h)
+set(SOURCE_FILES main.cpp logging_module.cpp udp_beacon.cpp udp_listener.cpp resource_database.cpp resource.cpp ../include/resource.h host.cpp ../include/host.h)
 
 add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES})
 
