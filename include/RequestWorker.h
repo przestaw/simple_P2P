@@ -6,7 +6,6 @@
 #define SIMPLE_P2P_REQUEST_WORKER_H
 
 #include <memory>	// enable_shared_from_this
-#include <utility>	// move	
 #include <boost/asio.hpp>
 
 using boost::asio::ip::tcp;
@@ -21,13 +20,8 @@ namespace SimpleP2P {
 		// TODO: Actual work of the worker.
 	
 	public:
-		RequestWorker (tcp::socket socket)
-			: _socket(std::move(socket))
-		{}
-		
-		void start() {
-			// TODO: Do the work.
-		}
+		RequestWorker (tcp::socket socket);
+		void start();	// Do the work.
 	}
 }
 
