@@ -21,7 +21,7 @@ namespace SimpleP2P {
 	
 	public:
 		RequestWorker (tcp::socket socket);
-		void start();	// Do the work.
+		void init();	// Do the work.
 	}
 }
 

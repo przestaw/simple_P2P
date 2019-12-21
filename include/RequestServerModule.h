@@ -8,7 +8,12 @@
 namespace SimpleP2P	{
 	class RequestServerModule {
 	public:
-		RequestServerModule(short port);
+		RequestServerModule(short port_);
+		
+		std::thread init();
+	
+	private:
+		short port;
 	}
 }			
 
