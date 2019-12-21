@@ -13,7 +13,7 @@ namespace SimpleP2P {
 		: _socket(std::move(socket))
 	{}
 	
-	void RequestWorker::start() {
+	void RequestWorker::init() {
 		// TODO: Do the work.
 	}
 	

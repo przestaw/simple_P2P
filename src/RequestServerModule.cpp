@@ -6,14 +6,22 @@
 #include "RequestServer.h"
 
 namespace SimpleP2P {
-	RequestServerModule::RequestServerModule(short port) {
-		try{
+	RequestServerModule::RequestServerModule(short port_)
+		: port(port_)
+	{}
+	
+	std::thread RequestServerModule::init() {
+		std::thread res;
+		try {
 			boost::asio::io_context io_context;
-			RequestServer server (io_context, port); // Start the server.
+			RequestServer server (io_context, port);
+			res = server.init();
 			io_context.run();
 		}
-		catch (Exception e){
-			std::err << "Exception (in RequestServerModule()): " << e.what() << std::endl;
+		catch (Exception e) {
+			// TODO: logging module
 		}
+		
+		return res;
 	}
 }

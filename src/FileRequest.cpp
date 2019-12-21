@@ -3,28 +3,23 @@
  * Kamil Zacharczuk
  */
 #include <string> 
+#include <vector>
+#include <initializer_list>
 #include "FileRequest.h"
 
 namespace SimpleP2P {
-	FileRequest::FileRequest(std::string f, short s)
-		: file(f), first_seg(s), last_seg(s)
-	{}
-		
-	FileRequest::FileRequest(std::string f, short fs, short ls)
-		: file(f), first_seg(fs), last_seg(ls)
+	FileRequest::FileRequest(std::string rh, std::initializer_list<short> s)
+		: resource_header(rh), segments(s)
 	{}
 	
 	FileRequest::~FileRequest()
 	{}
 	
-	std::string FileRequest::resource_header() const {
+	std::string FileRequest::get_resource_header() const {
 		return resource_header;
 	}
 	
-	short FileRequest::first_segment() const {
-		return first_seg;
+	std::vector<short> get_segments() const {
+		return segments;
 	}
-	short FileRequest::last_segment() const {
-		return last_seg;
-	}			
 }

@@ -10,8 +10,11 @@
 
 namespace SimpleP2P {
 	RequestServer::RequestServer (boost::asio::io_context& io_context, short port)
-		: _acceptor(io_context, tcp::endpoint(tcp::v4(), port)) {
-			accept_connection();
+		: _acceptor(io_context, tcp::endpoint(tcp::v4(), port))
+	{}
+
+	std::thread RequestServer::init() {
+		return std::thread([=] { accept_connection(); });
 	}
 	
 	void RequestServer::accept_connection() {
