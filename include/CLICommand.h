@@ -1,9 +1,12 @@
-#ifndef __CLICOMMAND_H__
-#define __CLICOMMAND_H__
+#ifndef SIMPLE_P2P_CLICOMMAND_H
+#define SIMPLE_P2P_CLICOMMAND_H
 
 #include "GeneralTypes.h"
 #include <string>
 #include <functional>
+
+namespace simpleP2P
+{
 
 class CLICommand
 {
@@ -18,4 +21,6 @@ public:
     std::string getName() const;
 };
 
-#endif // __CLICOMMAND_H__
+} // namespace simpleP2P
+
+#endif // SIMPLE_P2P_CLICOMMAND_H
