@@ -7,7 +7,7 @@
 
 #include <cinttypes>
 
-#define Uint8  uint_fast8_t
+#define Uint8 uint_fast8_t
 #define Uint16 uint_fast16_t
 #define Uint32 uint_fast32_t
 #define Uint64 uint_fast64_t

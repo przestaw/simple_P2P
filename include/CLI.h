@@ -1,10 +1,13 @@
-#ifndef __CLI_H__
-#define __CLI_H__
+#ifndef SIMPLE_P2P_CLI_H
+#define SIMPLE_P2P_CLI_H
 
 #include <vector>
 
 #include "GeneralTypes.h"
 #include "CLICommand.h"
+
+namespace simpleP2P
+{
 
 class CLI
 {
@@ -18,4 +21,5 @@ public:
     void init();
 };
 
-#endif // __CLI_H__
+} // namespace simpleP2P
+#endif // SIMPLE_P2P_CLI_H
