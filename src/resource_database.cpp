@@ -66,9 +66,9 @@ namespace simpleP2P {
         }
     }
 
-    std::vector<Host *> Resource_Database::who_has_file(std::string resource_header) {
-        return who_has_file(Resource(std::move(resource_header)));
-    }
+//    std::vector<Host *> Resource_Database::who_has_file(std::string resource_header) {
+//        return who_has_file(Resource(std::move(resource_header)));
+//    }
 
     std::vector<Host *> Resource_Database::who_has_file(Resource res) {
         std::shared_lock lock(database_mutex);
@@ -87,5 +87,21 @@ namespace simpleP2P {
 
     inline bool Resource_Database::remove_file(Resource res) {
         return remove_file(std::move(res), this->my_host);
+    }
+
+    std::vector<Int8> Resource_Database::generate_res_header() {
+        std::vector<Int8> header;
+        header.resize(sizeof(Uint64) + 1);
+        auto host = std::find(hosts.begin(),
+                              hosts.end(), my_host);
+        header[0] = (FILE_LIST);// +1
+        Uint64 size_net = host->possesed_resources.size();
+        //TODO htonl
+        memcpy(header.data() + 1, &size_net, sizeof(size_net));
+        for (auto &it : host->possesed_resources) {
+            auto temp = it->generate_resource_header();
+            header.insert(header.end(), temp.begin(), temp.end());
+        }
+        return header;
     }
 }

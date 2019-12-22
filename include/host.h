@@ -16,9 +16,6 @@ namespace simpleP2P {
     class Host { //!< contains node information and points to files it possess
     public:
         Host(boost::asio::ip::address ip);
-        Host(std::string resource_header);
-
-        std::string generate_host_header();
 
         bool has_resource(Resource res);
 

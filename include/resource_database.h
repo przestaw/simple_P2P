@@ -11,6 +11,8 @@
 #include "host.h"
 #include "resource.h"
 
+#define FILE_LIST 15
+
 namespace simpleP2P {
 
     class Resource_Database {
@@ -34,6 +36,8 @@ namespace simpleP2P {
         std::vector<Host *> who_has_file(std::string resource_header);
 
         std::vector<Host *> who_has_file(Resource res);
+
+        std::vector<Int8> generate_res_header();
     private:
         Host my_host;
         /* all internal operation on this vectors must be made with references */

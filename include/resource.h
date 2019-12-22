@@ -17,9 +17,10 @@ namespace simpleP2P {
     class Resource { //!< contains file information and points to nodes with file possesion
     public:
         Resource(std::string name, Uint64 size, std::string path = "/");
-        Resource(std::string resource_header);
 
-        std::string generate_resource_header();
+        Resource(std::vector<Int8> resource_header);
+
+        std::vector<Int8> generate_resource_header();
         bool has_host(Host host);
 
         Uint16 segments() {

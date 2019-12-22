@@ -5,17 +5,24 @@
 #include <algorithm>
 #include "host.h"
 #include "resource.h"
+#include <cstring>
 
 namespace simpleP2P {
     Resource::Resource(std::string name_c, Uint64 size_c, std::string path_c)
             : size(size_c), name(name_c), path(path_c) {}
 
-    Resource::Resource(std::string resource_header) {
-        //TODO
+    Resource::Resource(std::vector<Int8> resource_header) {
+
     }
 
-    std::string Resource::generate_resource_header() {
-        return std::__cxx11::string(); //TODO
+    std::vector<Int8> Resource::generate_resource_header() {
+        std::vector<Int8> header;
+        header.resize(256 + 64);
+        memset(header.data(), 0, 256);
+        strcpy((char *) header.data(), getName().c_str());
+        Uint64 size_net = getSize(); //TODO htonl
+        memcpy(header.data(), &size_net, sizeof(size_net));
+        return header;
     }
 
     bool Resource::has_host(simpleP2P::Host host) {
