@@ -1,8 +1,10 @@
-#ifndef __DOWNLOADSERVICE_H__
-#define __DOWNLOADSERVICE_H__
+#ifndef SIMPLE_P2P_DOWNLOADSERVICE_H
+#define SIMPLE_P2P_DOWNLOADSERVICE_H
 
 #include "DownloadWorker.h"
 #include <string>
+namespace simpleP2P
+{
 
 class DownloadService
 {
@@ -15,4 +17,5 @@ public:
     void download(std::string resource);
 };
 
-#endif // __DOWNLOADSERVICE_H__
+} // namespace simpleP2P
+#endif // SIMPLE_P2P_DOWNLOADSERVICE_H

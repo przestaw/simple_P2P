@@ -1,16 +1,18 @@
-#ifndef __DOWNLOADWORKER_H__
-#define __DOWNLOADWORKER_H__
+#ifndef SIMPLE_DOWNLOADWORKER_H
+#define SIMPLE_DOWNLOADWORKER_H
 
 #include "GeneralTypes.h"
-#include "Peer.h"
-#include "ResourceHeader.h"
+#include "Host.h"
+#include "Resource.h"
+namespace simpleP2P
+{
 
 class DownloadWorker
 {
 public:
     DownloadWorker();
     ~DownloadWorker();
-    const Int8 *download(const Peer &peer, const ResourceHeader &resourceHeader, Int64 segment);
+    const Int8 *download(const Host &host, const Resource &resource, Int64 segment);
 };
-
-#endif // __DOWNLOADWORKER_H__
+} // namespace simpleP2P
+#endif // SIMPLE_DOWNLOADWORKER_H

@@ -1,14 +1,12 @@
-#ifndef __CLIRESOURCESERVICE_H__
-#define __CLIRESOURCESERVICE_H__
+#ifndef SIMPLE_P2P_CLIRESOURCESERVICE_H
+#define SIMPLE_P2P_CLIRESOURCESERVICE_H
 
 #include <string>
+namespace simpleP2P
+{
 
 class CLIResourceService
 {
-private:
-    void copy_file(std::string resource, char *path);
-    void delete_files(std::string resource);
-
 public:
     CLIResourceService();
     ~CLIResourceService();
@@ -18,5 +16,6 @@ public:
     void get_local(); // TODO return resources
     void get_remote();
 };
+} // namespace simpleP2P
 
-#endif // __CLIRESOURCESERVICE_H__
+#endif // SIMPLE_P2P_CLIRESOURCESERVICE_H
