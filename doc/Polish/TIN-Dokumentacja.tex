@@ -1,0 +1,287 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc} 
+\usepackage[parfill]{parskip}
+\usepackage[T1]{fontenc} 
+
+\usepackage{fixltx2e}
+\usepackage{calc}
+\usepackage{doxygen}
+\usepackage[export]{adjustbox} % also loads graphicx
+\usepackage{makeidx}
+\usepackage{multicol}
+\usepackage{multirow}
+\PassOptionsToPackage{warn}{textcomp}
+\usepackage{textcomp}
+\usepackage[nointegrals]{wasysym}
+\usepackage[table]{xcolor}
+
+% Font selection
+\usepackage[T1]{fontenc}
+\usepackage[scaled=.90]{helvet}
+\usepackage{courier}
+\usepackage{amssymb}
+\usepackage{sectsty}
+\renewcommand{\familydefault}{\sfdefault}
+\allsectionsfont{%
+	\fontseries{bc}\selectfont%
+	\color{darkgray}%
+}
+\renewcommand{\DoxyLabelFont}{%
+	\fontseries{bc}\selectfont%
+	\color{darkgray}%
+}
+\newcommand{\+}{\discretionary{\mbox{\scriptsize$\hookleftarrow$}}{}{}}
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+\geometry{margin=1in} % for example, change the margins to 2 inches all round
+
+\usepackage{graphicx} % support the \includegraphics command and options
+\usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+\usepackage{graphicx} 
+\graphicspath{ {./images/} }
+
+\usepackage{ifpdf}
+\ifpdf
+\usepackage[pdftex,pagebackref=true]{hyperref}
+\else
+\usepackage[ps2pdf,pagebackref=true]{hyperref}
+\fi
+\hypersetup{%
+	colorlinks=true,%
+	linkcolor=blue,%
+	citecolor=blue,%
+	unicode%
+}
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} 
+\pagestyle{fancy} 
+\renewcommand{\headrulewidth}{0pt} 
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\title{Projekt TIN - Dokumentacja}
+\author{Wiktor Michalski\\
+Przemysław Stawczyk\\
+Maciej Szulik\\
+Kamil Zacharczuk
+}
+% \date{12 Listopada 2019} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+\begin{document}
+	\hypersetup{pageanchor=false,
+		bookmarksnumbered=true,
+		pdfencoding=unicode
+	}
+	\maketitle
+	\setcounter{secnumdepth}{3}
+	\setcounter{tocdepth}{3}
+	\tableofcontents
+	\clearpage
+
+\section{Zadanie}
+\subsection{Tresć Zadania}
+\paragraph{Napisać program obsługujący prosty protokół P2P.}
+\begin{enumerate}
+\item
+Zasób to plik identyfikowany pewną nazwą, za takie same zasoby uważa się zasoby o takich samych nazwach i takiej samej wielkości pliku w bajtach.
+\item
+Początkowo dany zasób znajduje się w jednym węźle sieci, następnie może być propagowany do innych węzłów w ramach inicjowanego przez użytkownika ręcznie transferu - raz pobrany zasób zostaje zachowany jako kopia.
+\item
+Po pewnym czasie działania systemu ten sam zasób może się znajdować w kilku węzłach sieci (na kilku maszynach).
+\item
+System ma informować o posiadanych lokalnie (tj. w danym węźle) zasobach i umożliwiać ich pobranie.
+\item
+Program powinien umożliwiać współbieżne:
+\begin{itemize}
+\item
+wprowadzanie przez użytkownika (poprzez interfejs tekstowy):
+\begin{itemize}
+\item
+nowych zasobów - z lokalnego systemu plików
+\item
+poleceń pobrania nazwanego zasobu ze zdalnego węzła
+\end{itemize}
+\item
+pobieranie zasobów (także kilku jednocześnie)
+\item
+rozgłaszanie informacji o posiadanych lokalne zasobach
+\end{itemize}
+\item
+W przypadku pobierania zdalnego zasobu system sam (nie użytkownik) decyduje skąd zostanie on pobrany.
+\item
+Powinno być możliwe pobranie zasobu z kilku węzłów na raz (tj. "w kawałkach").
+\item
+Zasób pobrany do lokalnego węzła jest kopią oryginału, kopia jest traktowana tak samo jak oryginał (są nierozróżnialne). Istnienie kopii jest rozgłaszane tak samo jak oryginału.
+\item
+Właściciel zasobu może go unieważnić wysyłając odpowiedni komunikat rozgłaszany. Wszystkie kopie zasobu powinny przestać być rozgłaszane. W przypadku trwających transferów zasobów powinny się one poprawnie zakończyć, dopiero wtedy informacja o zasobie może zostać usunięta.
+\end{enumerate}
+\subsection{Wariant zadania dla zespołu}
+4. Opóźnienia dla wybranego węzła - węzeł reaguje, ale (czasami) z dużym opóźnieniem.
+\subsection{Interpretacja Zadania}
+\paragraph{Doprecyzowanie treści i dodatkowe założenia:}
+\begin{itemize}
+\item
+W związku z tym, że kopia i oryginał są nierozróżnialne, zasób może być unieważniony przez dowolnego użytkownika, który go posiada.
+\item
+Każdy węzeł okresowo rozgłasza informację o posiadanych zasobach. Unieważnienie pliku oznacza, że żaden z węzłów nie będzie już rozgłaszał faktu posiadania tego pliku.
+\item
+Unieważnienie wysyłane jest asynchronicznie poprzez broadcast UDP.
+\item
+W przypadku unieważnienia pliku w trakcie trwającego przesyłu tego pliku przesyłanie kończy się sukcesem, o ile nie wystąpią inne błędy. Nowy posiadacz pliku nie będzie jednak nigdy rozgłaszał o nim informacji.
+\item
+Każdy węzeł przechowuje listy dostępnych zasobów każdego innego węzła. Po odebraniu rozgłoszenia listy zasobów od innego węzła lista ta jest nadpisywana w pamięci węzła odbierającego. Informacje o węźle, w tym lista jego zasobów, są usuwane w przypadku braku, przez ustalony czas, nadchodzącego rozgłoszenia jego listy zasobów. 
+\item
+W przypadku połączenia z innym węzłem w celu pobrania od niego pliku oczekiwanie na odpowiedź tego węzła ma pewien timeout. Ponadto, jeżeli węzeł przekracza pewien ustalony czas odpowiedzi (nawet jeżeli nie dochodzi do timeout’u), to inkrementujemy licznik “opóźnień” tego węzła (każdy węzeł przechowuje takie liczniki dla każdego innego węzła). Po osiągnięciu ustalonej wartości licznik ten jest zerowany, a węzeł zliczający nie będzie próbował łączyć się z “opóźnionym” węzłem przez pewien określony czas.
+\item
+Jeśli węzeł niespodziewanie zakończy połączenie TCP i przestanie rozgłaszać swoją tablicę, to po pewnym czasie pozostałe węzły uznają to za opuszczenie przez niego sieci.
+\item
+W przypadku gdy pojawi się błąd w trakcie transferu TCP, usuwamy pobrane dane (segmenty) i kończymy wątek pobierający. Ponowne pobieranie od tego węzła będzie odbywać się po ponownym połączeniu z węzłem.
+\end{itemize}
+\section{Opis Funkcjonalny Projektu}
+\paragraph{Użytkownik systemu ma wgląd w dwie listy:}
+\begin{itemize}
+\item
+lokalny rejestr zasobów - pliki, które użytkownik dodał lub pobrał od innych,
+\item
+pliki obecne w systemie - pliki posiadane w lokalnym rejestrze zasobów przez innych użytkowników, które nie zostały unieważnione.
+\end{itemize}
+\textsl{Dla każdego użytkownika generowana jest, oczywiście, odrębna para list.}
+
+\paragraph{Użytkownik może wprowadzać tekstowe komendy, aby za ich pomocą:}
+\begin{itemize}
+\item
+\textsl{wyświetlić listę lokalnych zasobów,}
+\item 
+\textsl{wyświetlić listę zasobów obecnych w systemie,}
+\item
+\textsl{wyświetlić listę dostępnych komend,}
+\item
+\textsl{opuścić system,}
+\end{itemize}
+a także wykonywać operacje na plikach, wśród których rozróżniamy:
+\begin{itemize}
+\item
+\textsl{dodanie pliku,}\\
+można dodać do zasobów plik, którego nazwa nie wystąpiła jeszcze wśród plików w lokalnym rejestrze zasobów i reszcie sieci.\\
+Zakładamy, że nie wystąpi sytuacja, gdy więcej niż jeden użytkownik doda plik o tej samej nazwie “jednocześnie” - to znaczy przed “zauważeniem” przez całą sieć dodania pliku o takiej nazwie przez któregokolwiek z nich.
+\item
+\textsl{usunięcie pliku,}\\
+można usunąć plik z własnego rejestru zasobów.
+\item
+\textsl{unieważnienie pliku,}\\
+można unieważnić plik, który mamy we własnym rejestrze zasobów. Oznacza to, że zasób nie będzie już widoczny na liście plików dostępnych w systemie, ale dotychczasowi posiadacze nadal będą go posiadali w swoim lokalnym systemie plików.
+\item
+\textsl{pobranie pliku,}\\
+można pobrać plik, którego nie mamy jeszcze w rejestrze zasobów, a który jest obecny w systemie.
+\end{itemize}
+\section{Protokół}
+\subsection{Składnia :}
+\begin{verbatim}
+<Command 1 octet> ::= <REVOKE> | <FILE_LIST> | <REQ_CONN> | <REQ_SEGMENT> 
+
+<ResourceHeader> ::= 
+        <nazwa pliku: 256 octets, NULL terminated> <rozmiar pliku: 64bit>
+
+<Message> ::= <Command> | <Command><ResourceHeader> | 
+        <Command><ResourceHeader><Options> | 
+        <Command><No_Of_Files 16bit><ResourceHeader><ResourceHeader>...
+
+<Resource> ::= <1 KB of file>
+\end{verbatim}
+\subsection{Komendy :}
+\begin{itemize}
+\item
+\textsl{Unieważnienie pliku:}\\
+Broadcast po UDP: \\ \verb|<Command = REVOKE><ResourceHeader = Revoked File>|
+\item
+\textsl{Rozgłaszanie dostępnych plików:}\\
+Broadcast po UDP: \\ \verb|<Command = FILE_LIST><No_Of_Files = liczba dostępnych plików>| \\
+\verb|        <ResourceHeader = plik1>....|
+%\item
+%\textsl{Wyjście z sieci:}\\
+%Broadcast po UDP: \\ \verb|<Command = EXIT_NETWORK>|
+\item
+\textsl{Żądanie utworzenia połączenia TCP:}\\
+Wysyłane do węzła po TCP: \verb|<Command = REQ_CONN>|
+\item
+\textsl{Żądanie pobrania segmentu:}\\
+Wysyłane do węzła po TCP: \\ \verb|<Command = REQ_SEGMENT><ResourceHeader = plik><Options = segment number>|
+%\item
+%\textsl{Jawne zakończenie pobierania od węzła:}\\
+%Wysyłane do węzła po TCP: \\ \verb|<Command = QUIT_CONN>|
+%\item
+%\textsl{Opuszczenie sieci:}\\
+%Broadcast na UDP: \\ \verb|<Command = EXIT_NETWORK>|
+\end{itemize}
+\section{Organizacja Projektu}
+\subsection{Moduły}
+\begin{enumerate}
+\item
+Moduł CLI odpowiedzialny za komunikację z użytkownikiem.
+\item
+Moduł obsługi sieci.
+\item
+Moduł dispatchera obsługujący protokół.
+\end{enumerate}
+\subsection{Współbieżność}
+\paragraph{Ogólna koncepcja zakłada istnienie następujących bazowych, działających w pętli wątków:}
+\begin{enumerate}
+\item 
+\textsl{Obsługa przychodzących żądań przesłania posiadanego zasobu.}\\
+Wątek ten nasłuchuje na porcie TCP. W przypadku nawiązania połączenia na tym porcie tworzony jest watek potomny. Wątek ten odbiera żądanie przesłania lokalnie posiadanego pliku i nadzoruje to przesłanie. 
+\item
+\textsl{Odbiór komunikatów broadcast UDP.}\\
+Komunikaty te obejmują okresowe rozgłaszanie przez każdego użytkownika listy lokalnie posiadanych zasobów, rozgłaszanie unieważnienia zasobu. Po odebraniu komunikatu wątek ten przekazuje otrzymane informacje do wątku synchronizującego dane.
+\item
+\textsl{Okresowe rozgłaszanie lokalnej listy zasobów.}\\
+Wątek, który co pewien czas rozgłasza przez UDP listę zasobów, które udostępnia do pobrania. Wątek blokuje się pomiędzy kolejnymi broadcastami.  
+\item
+\textsl{Wątek synchronizujący dane.}\\
+Wątek manipulujący danymi przechowywanymi przez program takimi jak: lista  lokalnych zasobów, informacje o pozostałych węzłach - dla każdego z nich lista zasobów, które udostępnia, liczniki opóźnień itp.
+\item
+\textsl{Obsługa interfejsu użytkownika.}\\
+Interakcja z użytkownikiem przez CLI. Odbieranie komend od użytkownika i odpowiednie reagowanie - powoływanie nowych wątków, które mają zająć się realizacją komendy, między innymi: 
+\begin{itemize}
+\item
+W przypadku chęci pobrania pliku tworzony jest wątek nadzorujący to pobieranie. Na potrzeby połączenia z wieloma węzłami może on stworzyć kilka kolejnych wątków przypisanych do połączeń z węzłami.\\
+W zależności od wyniku pobierania przekaże odpowiednie informacje do wątku synchronizującego dane.
+\item
+W przypadku chęci dodania, usunięcia lub unieważnienia pliku tworzony jest wątek, który zajmie się wprowadzeniem tej zmiany i nadzorowaniem wszystkich jej następstw, np.: fizycznie doda plik do systemu i przekaże informację o nowym pliku do wątku synchronizującego dane. W przypadku unieważnienia stworzy nowy wątek, który rozgłosi odpowiednią informację w systemie.
+\item
+W przypadku chęci wyświetlenia którejś z list zasobów lub listy dostępnych komend tworzony jest wątek, który odczyta odpowiednie dane i przygotuje je w odpowiedniej formie do wyświetlenia użytkownikowi.
+\end{itemize}
+\textbf{Wyniki działań powyższych wątków przekazywane są z powrotem do wątku obsługującego CLI, który wyświetla je użytkownikowi.}
+\end{enumerate}
+\section{Implementacja}
+\begin{itemize}
+\item
+Jezyki : \textsl{C++}
+\item
+Biblioteki : \textsl{Boost:Asio, std::thread}
+\end{itemize}
+\section{Dokumentacja kodu źródłowego - \textit{English}}
+\subsection{Class Index}
+% \input{annotated}
+\subsection{Class Documentation}
+% \input{class1}
+% \input{class2}  
+
+\end{document}
