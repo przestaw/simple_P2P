@@ -11,25 +11,47 @@
 
 namespace simpleP2P {
 
-    class Resource;
+    class Resource; //!< Forward declaration
 
-    class Host { //!< contains node information and points to files it possess
+    /**
+     * Class contains node information and points to files it possess
+     */
+    class Host {
     public:
+        /**
+         * Constructor
+         * @param ip Ip of the Host
+         */
         Host(boost::asio::ip::address ip);
 
+        /**
+         * Determines if host has resource
+         * @param res Resource to be checked
+         * @return true if Host has Resource res
+         */
         bool has_resource(Resource res);
 
+        /**
+         * Operator == checks host_ip for equality
+         * @param other other
+         * @return true if equal
+         */
         bool operator==(const Host &other) const;
 
+        /**
+         * Operator != checks host_ip for equality
+         * @param other other
+         * @return true if not equal
+         */
         bool operator!=(const Host &other) const;
     private:
-        boost::asio::ip::address host_ip;
+        boost::asio::ip::address host_ip;           //!< Ip of the Host
 
         /*atrribs not checked for equality*/
         //TODO: timeout etc stats
-        std::vector<Resource *> possesed_resources;
+        std::vector<Resource *> possesed_resources; //!< Resources possessed by the Host
 
-        friend class Resource_Database;
+        friend class Resource_Database;             //!< friendship to manage Host's Resources timeouts etc
     };
 }
 

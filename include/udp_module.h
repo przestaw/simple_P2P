@@ -11,16 +11,40 @@
 #include "udp_server.h"
 
 namespace simpleP2P {
+    /**
+     * Class containing all UDP related resources and logic
+     */
     class Udp_Module {
     public:
-        Udp_Module(Uint16 port);
+        /**
+         * Constructor
+         * @param broadcast_address address on which packets will be sent
+         * @param port port on which packets will be sent
+         * @param beacon_interval beacon interval
+         */
+        Udp_Module(boost::asio::ip::address broadcast_address,
+                   Uint16 port, Uint32 beacon_interval);
 
+        /**
+         * Init methods run worker in thread and returns it
+         * @return logging thread
+         */
         std::thread init();
+
+        /**
+         * Sends revoke datagram
+         * @param resource Resource t obe revoked
+         */
+        void revoke_file(const Resource &resource);
 
     private:
         void run_server();
 
+        boost::shared_ptr<Udp_Client> ptr_client;
+        boost::shared_ptr<Udp_Server> ptr_server;
+        boost::asio::ip::address broadcast_address;
         Uint16 port;
+        Uint32 beacon_interval;
     };
 }
 

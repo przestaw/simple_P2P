@@ -12,15 +12,18 @@ namespace simpleP2P {
             : size(size_c), name(name_c), path(path_c) {}
 
     Resource::Resource(std::vector<Int8> resource_header) {
-
+        (void) resource_header;
+        //TODO
     }
 
     std::vector<Int8> Resource::generate_resource_header() {
         std::vector<Int8> header;
         header.resize(256 + 64);
         memset(header.data(), 0, 256);
-        strcpy((char *) header.data(), getName().c_str());
+        strcpy(reinterpret_cast<char *>(header.data()), getName().c_str());
+
         Uint64 size_net = getSize(); //TODO htonl
+
         memcpy(header.data(), &size_net, sizeof(size_net));
         return header;
     }

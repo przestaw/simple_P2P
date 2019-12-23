@@ -13,36 +13,73 @@
 #include "resource.h"
 
 namespace simpleP2P {
+    /**
+     * class UDP Client to handle all outgoing packets
+     */
     class Udp_Client : public boost::enable_shared_from_this<Udp_Client> {
     public:
-        Udp_Client(boost::asio::io_service &io_service, Uint16 port, Uint32 timeout = 5 * 60);
+        /**
+         * Constructor of UDP Client
+         * @param io_service asio Io Service
+         * @param broadcast_address address on which packets will be sent
+         * @param broadcast_port port on which packets will be sent
+         * @param timeout beacon interval
+         */
+        Udp_Client(boost::asio::io_service &io_service,
+                   const boost::asio::ip::address &broadcast_address,
+                   Uint16 broadcast_port, Uint32 timeout = 5 * 60);
 
+        /**
+         * Destructor closes socket
+         */
         ~Udp_Client();
 
+        /**
+         * Constructs revoke header sends it
+         * @param resource Resource to be revoked
+         */
         void revoke_file(Resource resource);
 
     private:
+        /**
+         * Beacon callback
+         */
         void fire_beacon();
 
-        /// Put arbitrary message in a queue
+        /**
+         * Put arbitrary datagram in a tx_queue_.
+         * @param packet datagram to be put in the tx_queue_
+         */
         void send(const std::vector<Int8> &packet);
 
+        /**
+         * Sends the packet from tx_queue_ head
+         */
         void transmit();
 
-        /// The function called whenever a write event is received.
+        /**
+         * The function called whenever a write event is received.
+         * @param error error code
+         * @param bytes_transferred number of transfered bytes
+         */
         void write_handler(boost::system::error_code const &error,
-                           size_t /* bytes_transferred */);
+                           size_t bytes_transferred);
 
-        /// Static callback function.
-        /// It ensures that the object still exists and the event is valid
-        /// before calling the write handler.
+        /**
+         * Static callback function. It ensures that the object still exists
+         * and the event is valid before calling the write handler.
+         * @param ptr weak ptr to this class
+         * @param error error code
+         * @param bytes_transferred number of transfered bytes
+         */
         static void write_callback(boost::weak_ptr<Udp_Client> ptr,
                                    boost::system::error_code const &error,
                                    size_t bytes_transferred);
 
-        boost::asio::ip::udp::socket socket_;
-        std::deque<std::vector<Int8> > tx_queue_;
-        boost::asio::deadline_timer timer; //timer for the beacon
+        boost::asio::ip::udp::endpoint endpoint_;    //!< Endpoint where data will be sent
+        boost::asio::ip::udp::socket socket_;        //!< Socket on which operates Client
+        std::deque<std::vector<Int8> > tx_queue_;    //!< Queue of datagrams to be sent
+        boost::asio::deadline_timer timer;           //!< Timer for the beacon
     };
 }
 

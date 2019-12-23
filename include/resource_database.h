@@ -11,14 +11,24 @@
 #include "host.h"
 #include "resource.h"
 
-#define FILE_LIST 15
-
 namespace simpleP2P {
-
+    /**
+     * Class holding information about files in network and on localhost
+     */
     class Resource_Database {
     public:
+        /**
+         * Constructor
+         * @param localhost localhost
+         */
         Resource_Database(Host localhost);
 
+        /**
+         * Check if localhost has certain file
+         * @param res Resource to be checked
+         * @return true if host already has some resource
+         */
+        //TODO
         bool has_file(Resource res);
 
         /* NOTE: chosen conception
@@ -26,25 +36,53 @@ namespace simpleP2P {
          *      probably best as it is possible to have host without resources and theoretically lonely resource
          * This assumes that once host is in database it's never deleted
          */
-        void add_file(const Resource &res, const Host &host);
 
+        /**
+         * Adds connection between file and resource, adn creates them if they do not exist
+         * @param res Resource to be added
+         * @param host Host which possess Resource res
+         */
+        void add_file(const Resource &res,
+                      const Host &host);
+
+        /**
+         * Removes connection between file and resource
+         * @param res Resource to be removed from host list
+         * @param host Host which resource will be removed
+         * @return returns false if file did not existed or was not possesed
+         */
         bool remove_file(const Resource &res,
-                         const Host &host); //!< returns false if file did not existed or was not possesed
+                         const Host &host);
 
-        inline void add_file(const Resource &res); //!< same as add_file(Resource, Host) but host is localhost
-        inline bool remove_file(const Resource &res); //!< same as remove_file(Resource, Host) but host is localhost
+        /**
+         * same as add_file(Resource, Host) but host is localhost
+         * @param res Resource to be added
+         */
+        inline void add_file(const Resource &res);
 
-        std::vector<Host *> who_has_file(std::string resource_header);
+        /**
+         * same as remove_file(Resource, Host) but host is localhost
+         * @param res Resource to be removed from localhost list
+         * @return returns false if file did not existed or was not possesed
+         */
+        inline bool remove_file(const Resource &res);
 
+        // TODO: consider returning shared_ptr for Resource
+        std::vector<Host *> who_has_file(std::vector<Int8> resource_header);
         std::vector<Host *> who_has_file(const Resource &res);
 
-        std::vector<Int8> generate_res_header();
+        /**
+         * Generates listing of localhost content in a header
+         * @return listing header of localhost resources
+         */
+        //TODO : max_lenght and support for partial sending
+        std::vector<Int8> generate_database_header();
     private:
-        Host my_host;
-        /* all internal operation on this vectors must be made with references */
-        std::vector<Resource> resources;
-        std::vector<Host> hosts;
-        std::shared_mutex database_mutex;
+        Host my_host;                     //!< localhost Host struct
+        /* all internal operation on this vectors must be made with pointers */
+        std::vector<Resource> resources;  //!< vector of Resources in database
+        std::vector<Host> hosts;          //!< vector of Hosts in database
+        std::shared_mutex database_mutex; //!< rw_lock for database, allows multiple concurrent reads but permits concurrent writes
     };
 }
 

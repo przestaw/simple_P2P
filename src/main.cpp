@@ -3,14 +3,18 @@
 #include <iostream>
 #include <logging_module.h>
 #include <thread>
-#include <random>
 #include <boost/program_options.hpp>
 #include <boost/asio.hpp>
+#include <udp_server.h>
+#include <udp_client.h>
+#include <udp_module.h>
 
 using namespace simpleP2P;
 using namespace boost;
 
 int main(int argc, const char *argv[]) {
+
+    //TODO: Parameters variables
     try {
         program_options::options_description desc{"Options"};
         desc.add_options()
@@ -30,6 +34,7 @@ int main(int argc, const char *argv[]) {
         if (vm.count("help"))
             std::cout << desc << '\n';
         else {
+            // TODO : save parameters
             if (vm.count("incoming"))
                 std::cout << "incoming: " << vm["incoming"].as<int>() << '\n';
             if (vm.count("file_connections"))
@@ -37,26 +42,23 @@ int main(int argc, const char *argv[]) {
             if (vm.count("logs_file"))
                 std::cout << "logs_file: " << vm["logs_file"].as<std::string>() << '\n';
         }
-
-        std::thread basic[4];
-
-        /*
-         * Create threads for all modules and connect them e.g. by signal-slot
-         */
-        Logging_Module logger;
-        basic[3] = logger.init();
-
-//        for (Uint16 iter = 0; iter < 3; ++iter) {
-//            basic[iter] = std::thread(test_worker, iter);
-//        }
-//
-        for (auto &iter : basic) {
-            iter.join();
-        }
-
-//        ip::udp::socket socket_udp();
     }
     catch (const boost::program_options::error &ex) {
         std::cerr << ex.what() << '\n';
+    }
+
+    std::thread basic[4];
+    /*
+     * Create threads for all modules and connect them e.g. by signal-slot
+     */
+    //TODO: use parameters
+    Logging_Module logger;
+    //Udp_Module udp(boost::asio::ip::address::from_string(BROADCAST_ADDRESS), 19000, 5); // basic test
+
+    basic[0] = logger.init();
+    //basic[1] = udp.init();
+
+    for (auto &iter : basic) {
+        iter.join();
     }
 }
