@@ -26,16 +26,17 @@ namespace simpleP2P {
          *      probably best as it is possible to have host without resources and theoretically lonely resource
          * This assumes that once host is in database it's never deleted
          */
-        void add_file(Resource res, Host host);
+        void add_file(const Resource &res, const Host &host);
 
-        bool remove_file(Resource res, Host host); //!< returns false if file did not existed or was not possesed
+        bool remove_file(const Resource &res,
+                         const Host &host); //!< returns false if file did not existed or was not possesed
 
-        inline void add_file(Resource res); //!< same as add_file(Resource, Host) but host is localhost
-        inline bool remove_file(Resource res); //!< same as remove_file(Resource, Host) but host is localhost
+        inline void add_file(const Resource &res); //!< same as add_file(Resource, Host) but host is localhost
+        inline bool remove_file(const Resource &res); //!< same as remove_file(Resource, Host) but host is localhost
 
         std::vector<Host *> who_has_file(std::string resource_header);
 
-        std::vector<Host *> who_has_file(Resource res);
+        std::vector<Host *> who_has_file(const Resource &res);
 
         std::vector<Int8> generate_res_header();
     private:

@@ -8,10 +8,10 @@
 #include "udp_client.h"
 
 std::thread simpleP2P::Udp_Module::init() {
-    return std::thread([=] { run_server(port); });
+    return std::thread([=] { run_server(); });
 }
 
-void simpleP2P::Udp_Module::run_server(Uint16 port) {
+void simpleP2P::Udp_Module::run_server() {
     try {
         boost::asio::io_service io_service;
         Udp_Server server(io_service, port);

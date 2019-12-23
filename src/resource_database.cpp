@@ -11,10 +11,11 @@ namespace simpleP2P {
 
     bool Resource_Database::has_file(Resource res) {
         std::unique_lock lock(database_mutex);
+        //TODO
         return false;
     }
 
-    void Resource_Database::add_file(Resource res, Host host) {
+    void Resource_Database::add_file(const Resource &res, const Host &host) {
         std::unique_lock lock(database_mutex);
         auto res_i = std::find_if(resources.begin(),
                                   resources.end(),
@@ -28,11 +29,11 @@ namespace simpleP2P {
                                    });
 
         //create resource and host if they do not exist
-        if (res_i != resources.end()) {
+        if (res_i == resources.end()) {
             resources.emplace_back(res);
             res_i = resources.end() - 1;
         }
-        if (host_i != hosts.end()) {
+        if (host_i == hosts.end()) {
             hosts.emplace_back(host);
             host_i = hosts.end() - 1;
         }
@@ -42,7 +43,7 @@ namespace simpleP2P {
         host_i->possesed_resources.push_back(&(*res_i));
     }
 
-    bool Resource_Database::remove_file(Resource res, Host host) {
+    bool Resource_Database::remove_file(const Resource &res, const Host &host) {
         std::unique_lock lock(database_mutex);
         auto res_i = std::find_if(resources.begin(),
                                   resources.end(),
@@ -70,7 +71,7 @@ namespace simpleP2P {
 //        return who_has_file(Resource(std::move(resource_header)));
 //    }
 
-    std::vector<Host *> Resource_Database::who_has_file(Resource res) {
+    std::vector<Host *> Resource_Database::who_has_file(const Resource &res) {
         std::shared_lock lock(database_mutex);
 
         auto resource = std::find(resources.begin(),
@@ -81,12 +82,12 @@ namespace simpleP2P {
         return std::vector<Host *>();
     }
 
-    inline void Resource_Database::add_file(Resource res) {
-        return add_file(std::move(res), this->my_host);
+    inline void Resource_Database::add_file(const Resource &res) {
+        return add_file(res, this->my_host);
     }
 
-    inline bool Resource_Database::remove_file(Resource res) {
-        return remove_file(std::move(res), this->my_host);
+    inline bool Resource_Database::remove_file(const Resource &res) {
+        return remove_file(res, this->my_host);
     }
 
     std::vector<Int8> Resource_Database::generate_res_header() {

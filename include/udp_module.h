@@ -18,7 +18,7 @@ namespace simpleP2P {
         std::thread init();
 
     private:
-        void run_server(Uint16 port);
+        void run_server();
 
         Uint16 port;
     };

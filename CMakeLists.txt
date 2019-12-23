@@ -18,6 +18,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og -g3 -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -fdevirtualize -finline-functions -fvectorize -funroll-loop")
 
-add_subdirectory(src)
-#add_subdirectory(tests)
+#add_subdirectory(tests) #TO CONSIDERATION
 
+set(EXECUTABLE_NAME ${PROJECT_NAME})
+
+file(GLOB SOURCE_FILES "src/*.cpp")
+
+add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES})
+
+target_link_libraries(${EXECUTABLE_NAME} ${EXTERNAL_LIBS})

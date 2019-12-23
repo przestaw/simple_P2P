@@ -24,8 +24,6 @@ namespace simpleP2P {
     private:
         void fire_beacon();
 
-#if defined(BOOST_ASIO_HAS_MOVE)
-
         /// Put arbitrary message in a queue
         void send(const std::vector<Int8> &packet);
 
@@ -34,14 +32,6 @@ namespace simpleP2P {
         /// The function called whenever a write event is received.
         void write_handler(boost::system::error_code const &error,
                            size_t /* bytes_transferred */);
-//        {
-//            tx_queue_.pop_front();
-//            if (error)
-//                ; // handle the error, it may be a disconnect.
-//            else
-//            if (!tx_queue_.empty())
-//                transmit();
-//        }
 
         /// Static callback function.
         /// It ensures that the object still exists and the event is valid
@@ -49,12 +39,6 @@ namespace simpleP2P {
         static void write_callback(boost::weak_ptr<Udp_Client> ptr,
                                    boost::system::error_code const &error,
                                    size_t bytes_transferred);
-//        {
-//            boost::shared_ptr<Udp_Client> pointer(ptr.lock());
-//            if (pointer && (boost::asio::error::operation_aborted != error))
-//                pointer->write_handler(error, bytes_transferred);
-//        }
-
 
         boost::asio::ip::udp::socket socket_;
         std::deque<std::vector<Int8> > tx_queue_;

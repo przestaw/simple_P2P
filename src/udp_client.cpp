@@ -12,7 +12,7 @@ simpleP2P::Udp_Client::Udp_Client(boost::asio::io_service &io_service, Uint16 po
           timer(io_service, boost::posix_time::seconds(timeout)) {
     socket_.set_option(ip::udp::socket::reuse_address(true));
     timer.async_wait(boost::bind(&Udp_Client::fire_beacon,
-                                 boost::weak_ptr<Udp_Client>(shared_from_this())));
+                                 this));
 }
 
 simpleP2P::Udp_Client::~Udp_Client() {
@@ -61,5 +61,5 @@ void simpleP2P::Udp_Client::fire_beacon() {
     //TODO : generate packet
     //TODO : put in queue
     timer.async_wait(boost::bind(&Udp_Client::fire_beacon,
-                                 boost::weak_ptr<Udp_Client>(shared_from_this())));
+                                 this));
 }

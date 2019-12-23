@@ -6,6 +6,7 @@
 #define SIMPLE_P2P_UDP_SERVER_H
 
 #include <boost/asio/ip/udp.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
 #include "GeneralTypes.h"
@@ -13,12 +14,11 @@
 #define buffer_size 1500
 
 namespace simpleP2P {
-    class Udp_Server {
+    class Udp_Server : public boost::enable_shared_from_this<Udp_Server> {
     public:
         Udp_Server(boost::asio::io_service &io_service, Uint16 port);
 
         ~Udp_Server();
-
     private:
         void do_receive();
 
