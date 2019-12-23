@@ -1,4 +1,5 @@
 #directories
+*Doxygen/
 .idea/*
 [Bb]in/*
 [Dd]ebug/
@@ -47,3 +48,9 @@ CMakeCache.txt
 *.exe
 *.out
 *.app
+
+# tex Xd
+*.aux
+*.log
+*.synctex.gz
+*.toc
