@@ -1,4 +1,4 @@
-/** 
+/* 
  * RequestServerModule.cpp
  * Kamil Zacharczuk
  */
@@ -11,7 +11,9 @@ namespace SimpleP2P {
 	{}
 	
 	std::thread RequestServerModule::init() {
+		/// The thread of the server.
 		std::thread res;
+		
 		try {
 			boost::asio::io_context io_context;
 			RequestServer server (io_context, port);

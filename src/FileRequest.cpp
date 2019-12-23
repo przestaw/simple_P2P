@@ -1,4 +1,4 @@
-/**
+/*
  * FileRequest.cpp
  * Kamil Zacharczuk
  */

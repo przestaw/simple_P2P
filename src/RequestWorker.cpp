@@ -1,4 +1,4 @@
-/**
+/*
  * RequestWorker.cpp
  * Kamil Zacharczuk
  */
@@ -13,7 +13,7 @@ namespace SimpleP2P {
 		: _socket(std::move(socket))
 	{}
 	
-	void RequestWorker::init() {
+	void RequestWorker::start() {
 		// TODO: Do the work.
 	}
 	
