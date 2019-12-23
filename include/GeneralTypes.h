@@ -17,4 +17,10 @@
 #define Int32 int_fast32_t
 #define Int64 int_fast64_t
 
+#define REQ_SEGMENT 8
+#define REVOKE 16
+#define FILE_LIST 32
+
+#define BROADCAST_ADDRESS "192.168.1.255"
+
 #endif //SIMPLE_P2P_GENERALTYPES_H
