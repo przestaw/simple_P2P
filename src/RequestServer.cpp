@@ -1,5 +1,5 @@
-/** 
- * RequestServer.h
+/* 
+ * RequestServer.cpp
  * Kamil Zacharczuk
  */
  

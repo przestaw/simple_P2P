@@ -1,4 +1,4 @@
-/**
+/*
  * FileRequest.h
  * Kamil Zacharczuk
  */
@@ -9,18 +9,37 @@
 #include <vector>
 #include <initializer_list>
 
-namespace SimpleP2P {
-	class FileRequest {
+namespace SimpleP2P 
+{
+	/**
+	 * \brief Carries info about a single file transfer request - resource header and numbers of wanted segments.
+	 *
+	 * An instance of this class is created by TCP client, sent to TCP server, which passes it to the FileManager
+	 * in order to get the requested segments of the requested file and send them to the TCP client.
+	 */
+	class FileRequest 
+	{
 	public:
-		FileRequest(std::string rh, std::initializer_list<short> s);
-		~FileRequest();
+		/**
+		 * Constructor allows specificating the resource and segments. The fields then can't be modified, only get.
+		 */
+		FileRequest(std::string resource_header, std::initializer_list<short> s);
 		
-		/* Getters */
-		std::string get_resource_header() const;
-		std::vector<short> get_segments() const;
+		// -----------------
+		// Getter functions.
+		
+		/**
+		 * \brief Get the resource header.
+		 */
+		std::vector<Int8> get_resource_header() const;
+		/**
+		 * \brief Get the segments' numbers.
+		 */
+		std::vector<long> get_segments() const;
+		
 	private:
-		const std::string resource_header;
-		const std::vector<short> segments;
+		const std::vector<Int8> resource_header;	//!< Header of requested file.
+		const std::vector<long> segments;			//!< Numbers of requested segments of the file.
 	}
 }
 
