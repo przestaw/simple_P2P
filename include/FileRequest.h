@@ -9,8 +9,12 @@
 #include <vector>
 #include <initializer_list>
 
+#include "GeneralTypes.h"
+
 namespace SimpleP2P 
 {
+	class CompleteResource;
+	
 	/**
 	 * \brief Carries info about a single file transfer request - resource header and numbers of wanted segments.
 	 *
@@ -23,7 +27,7 @@ namespace SimpleP2P
 		/**
 		 * Constructor allows specificating the resource and segments. The fields then can't be modified, only get.
 		 */
-		FileRequest(std::string resource_header, std::initializer_list<short> s);
+		FileRequest(std::vector<Int8> rh, std::initializer_list<long> s);
 		
 		// -----------------
 		// Getter functions.
@@ -40,7 +44,7 @@ namespace SimpleP2P
 	private:
 		const std::vector<Int8> resource_header;	//!< Header of requested file.
 		const std::vector<long> segments;			//!< Numbers of requested segments of the file.
-	}
+	};
 }
 
 #endif // SIMPLE_P2P_FILE_REQUEST_H

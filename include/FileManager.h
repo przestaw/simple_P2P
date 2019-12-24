@@ -9,6 +9,7 @@
 #include <fstream>
 
 #include "FileRequest.h"
+#include "GeneralTypes.h"
 
 namespace SimpleP2P
 {
@@ -43,10 +44,10 @@ namespace SimpleP2P
 		 * @param resource File to store on the disc.
 		 * The data will not be interpreted, so make sure it's complete and ready to store.
 		 */
-		void store_resource (CompleteResource resource);
+		void store_resource (CompleteResource& resource);
 	private:
 		// TODO: synchronizing access to the files.
-	}
+	};
 }
 
 #endif // SIMPLE_P2P_FILE_MANAGER_H

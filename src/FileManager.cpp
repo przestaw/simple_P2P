@@ -4,10 +4,11 @@
  */
 #include <cstddef> // size_t
 #include <string>
-#include <fstream.h>
+#include <fstream>
 
 #include "FileRequest.h"
 #include "FileManager.h"
+#include "GeneralTypes.h"
 
 #define FILE_NAME_LENGHT 256
 #define SEGMENT_SIZE 1024
@@ -24,7 +25,7 @@ namespace SimpleP2P {
 		resource_header.copy(file_name, FILE_NAME_LENGHT, 0);*/
 		// TODO: get file name from the FileRequest object
 		
-		std::vector<short> segments = request.get_segments(); // Numbers of requested segments.
+		std::vector<long> segments = request.get_segments(); // Numbers of requested segments.
 
 		// Open the file.
 		std::ifstream file(file_name, std::ifstream::in | std::ifstream::binary);
@@ -46,7 +47,7 @@ namespace SimpleP2P {
 			
 			file.read(buffer, SEGMENT_SIZE); // Read the contents of the segment.
 			if (!file) {
-				if (file.eof && !file.fail()) {
+				if (file.eof() && !file.fail()) {
 					// We just read over EOF, that's ok - apparently we were reading the last segment.
 					file.clear(); // Reset the state so we can continue reading next segments.
 				}
@@ -59,7 +60,7 @@ namespace SimpleP2P {
 		file.close();
 	}
 
-	void store_resource(CompleteResource resource)
+	void store_resource(CompleteResource& resource)
 	{
 		std::string file_name; // TODO: get file name from the CompleteResource object.
 

@@ -6,20 +6,18 @@
 #include <vector>
 #include <initializer_list>
 #include "FileRequest.h"
+#include "GeneralTypes.h"
 
 namespace SimpleP2P {
-	FileRequest::FileRequest(std::string rh, std::initializer_list<short> s)
+	FileRequest::FileRequest(std::vector<Int8> rh, std::initializer_list<long> s)
 		: resource_header(rh), segments(s)
 	{}
 	
-	FileRequest::~FileRequest()
-	{}
-	
-	std::string FileRequest::get_resource_header() const {
+	std::vector<Int8> FileRequest::get_resource_header() const {
 		return resource_header;
 	}
 	
-	std::vector<short> get_segments() const {
+	std::vector<long> FileRequest::get_segments() const {
 		return segments;
 	}
 }
