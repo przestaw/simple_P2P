@@ -3,6 +3,7 @@
  * Kamil Zacharczuk
  */
 #include <boost/asio.hpp>
+#include "RequestServerModule.h"
 #include "RequestServer.h"
 
 namespace SimpleP2P {

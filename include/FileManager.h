@@ -6,7 +6,7 @@
 #define SIMPLE_P2P_FILE_MANAGER_H
 
 #include <string>
-#include <fstream.h>
+#include <fstream>
 
 #include "FileRequest.h"
 

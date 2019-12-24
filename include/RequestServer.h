@@ -5,6 +5,8 @@
 #ifndef SIMPLE_P2P_REQUEST_SERVER_H
 #define SIMPLE_P2P_REQUEST_SERVER_H
 
+#include <boost/asio.hpp>
+#include <thread>
 #include "RequestWorker.h"
 
 using boost::asio::ip::tcp;
