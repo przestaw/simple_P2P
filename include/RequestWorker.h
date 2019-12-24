@@ -25,18 +25,23 @@ namespace SimpleP2P
 		/**
 		 * Constructor allows setting the socket on which the connection is established
 		 */
-		RequestWorker (tcp::socket socket);
+		RequestWorker (boost::asio::io_service& io_service);
 		
 		/**
 		 * Start handling the request.
 		 */
 		void start();
+		
+		/** 
+		 * Get socket.
+		 */
+		tcp::socket& socket();
 	
 	private:
 		tcp::socket _socket;	//!< Socket on which the connection is established.
 	
 		// TODO: Actual work of the worker.
-	}
+	};
 }
 
 #endif // SIMPLE_P2P_REQUEST_WORKER_H

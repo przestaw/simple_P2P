@@ -9,12 +9,18 @@
 using boost::asio::ip::tcp;
 
 namespace SimpleP2P {
-	RequestWorker::RequestWorker (tcp::socket socket)
-		: _socket(std::move(socket))
+	RequestWorker::RequestWorker (boost::asio::io_service& io_service)
+		: _socket(io_service)
 	{}
 	
-	void RequestWorker::start() {
+	void RequestWorker::start() 
+	{
 		// TODO: Do the work.
+	}
+		
+	tcp::socket& RequestWorker::socket()
+	{	
+		return _socket;
 	}
 	
 	// TODO: The actual work.

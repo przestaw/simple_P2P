@@ -27,7 +27,7 @@ namespace SimpleP2P
 	
 	private:
 		short port;	//!< Port for the server.
-	}
+	};
 }			
 
 #endif // SIMPLE_P2P_REQUEST_SERVER_MODULE_H		 

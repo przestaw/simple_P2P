@@ -3,6 +3,7 @@
  * Kamil Zacharczuk
  */
 #include <boost/asio.hpp>
+#include <thread>
 #include "RequestServerModule.h"
 #include "RequestServer.h"
 
@@ -16,12 +17,12 @@ namespace SimpleP2P {
 		std::thread res;
 		
 		try {
-			boost::asio::io_context io_context;
-			RequestServer server (io_context, port);
+			boost::asio::io_service io_service;
+			RequestServer server (io_service, port);
 			res = server.init();
-			io_context.run();
+			io_service.run();
 		}
-		catch (Exception e) {
+		catch (std::exception& e) {
 			// TODO: logging module
 		}
 		

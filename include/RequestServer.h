@@ -25,14 +25,15 @@ namespace SimpleP2P
 		 * @param io_context boost::asio::io_context for the acceptor.
 		 * @param port Port for the acceptor to listen on.
 		 */
-		RequestServer(boost::asio::io_context& io_context, short port);
+		RequestServer(boost::asio::io_service& io_service, short port);
 		
 		/**
 		 * Turns on the listening and accepting connections and returns the thread in which it works.
 		 */
 		std::thread init();
 	private:
-		tcp::acceptor _acceptor;	//!< The acceptor listening and accepting connections.
+		boost::asio::io_service& io_service;
+		tcp::acceptor acceptor;	//!< The acceptor listening and accepting connections.
 		
 		/**
 		 * \brief Asynchronous connection accepting function.
@@ -40,8 +41,9 @@ namespace SimpleP2P
 		 * When a connection is requested, it accepts it, creates a worker object to handle it
 		 * and calls itself to continue listening.
 		 */
-		void accept_connection();
-	}
+		void start_accept();
+		void handle_accept(RequestWorker* new_worker, const boost::system::error_code& error);
+	};
 }
 						
 #endif // SIMPLE_P2P_REQUEST_SERVER_H	
