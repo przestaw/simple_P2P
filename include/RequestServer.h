@@ -8,6 +8,7 @@
 #include <boost/asio.hpp>
 #include <thread>
 #include "RequestWorker.h"
+#include "GeneralTypes.h"
 
 using boost::asio::ip::tcp;
 
@@ -22,10 +23,10 @@ namespace SimpleP2P
 		/**
 		 * Constructor allows setting the parameters for the connnetion acceptor.
 		 *
-		 * @param io_context boost::asio::io_context for the acceptor.
+		 * @param io_context boost::asio::io_service for the acceptor.
 		 * @param port Port for the acceptor to listen on.
 		 */
-		RequestServer(boost::asio::io_service& io_service, short port);
+		RequestServer(boost::asio::io_service& io_service, Uint16 port);
 		
 		/**
 		 * Turns on the listening and accepting connections and returns the thread in which it works.

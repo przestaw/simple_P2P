@@ -9,12 +9,13 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include "RequestServer.h"
+#include "GeneralTypes.h"
 
 using boost::asio::ip::tcp;
 
 namespace SimpleP2P
 {
-	RequestServer::RequestServer (boost::asio::io_service& _io_service, short port)
+	RequestServer::RequestServer (boost::asio::io_service& _io_service, Uint16 port)
 		: io_service(_io_service), acceptor(_io_service, tcp::endpoint(tcp::v4(), port))
 	{}
 

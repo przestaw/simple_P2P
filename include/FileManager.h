@@ -17,8 +17,8 @@ namespace SimpleP2P
 	 * \brief Handles read/write to the files on disc.
 	 *
 	 * An API which provides:
-	 * - buffering contents of requested segments of a specificated file,
-	 * - storing a complete, downloaded file physically on the disc. 
+	 * - buffering contents of requested segments of a specificated local file,
+	 * - storing a complete, downloaded file physically on the local disc. 
 	 * Ensures synchronization of those operations.
 	 */
 	class FileManager
