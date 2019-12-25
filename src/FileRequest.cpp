@@ -9,7 +9,7 @@
 #include "GeneralTypes.h"
 
 namespace SimpleP2P {
-	FileRequest::FileRequest(std::vector<Int8> rh, std::initializer_list<long> s)
+	FileRequest::FileRequest(std::vector<Int8> rh, std::initializer_list<Uint32> s)
 		: resource_header(rh), segments(s)
 	{}
 	
@@ -17,7 +17,7 @@ namespace SimpleP2P {
 		return resource_header;
 	}
 	
-	std::vector<long> FileRequest::get_segments() const {
+	std::vector<Uint32> FileRequest::get_segments() const {
 		return segments;
 	}
 }

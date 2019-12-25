@@ -27,7 +27,7 @@ namespace SimpleP2P
 		/**
 		 * Constructor allows specificating the resource and segments. The fields then can't be modified, only get.
 		 */
-		FileRequest(std::vector<Int8> rh, std::initializer_list<long> s);
+		FileRequest(std::vector<Int8> rh, std::initializer_list<Uint32> s);
 		
 		// -----------------
 		// Getter functions.
@@ -39,11 +39,11 @@ namespace SimpleP2P
 		/**
 		 * \brief Get the segments' numbers.
 		 */
-		std::vector<long> get_segments() const;
+		std::vector<Uint32> get_segments() const;
 		
 	private:
 		const std::vector<Int8> resource_header;	//!< Header of requested file.
-		const std::vector<long> segments;			//!< Numbers of requested segments of the file.
+		const std::vector<Uint32> segments;			//!< Numbers of requested segments of the file.
 	};
 }
 

@@ -25,7 +25,7 @@ namespace SimpleP2P {
 		resource_header.copy(file_name, FILE_NAME_LENGHT, 0);*/
 		// TODO: get file name from the FileRequest object
 		
-		std::vector<long> segments = request.get_segments(); // Numbers of requested segments.
+		std::vector<Uint32> segments = request.get_segments(); // Numbers of requested segments.
 
 		// Open the file.
 		std::ifstream file(file_name, std::ifstream::in | std::ifstream::binary);
@@ -37,7 +37,7 @@ namespace SimpleP2P {
 
 		char buffer[SEGMENT_SIZE]; // Buffer for reading a single segment.
 
-		for (long s : segments) {
+		for (Uint32 s : segments) {
 			file.seekg(s * SEGMENT_SIZE); // Set the position of reading to the position of the requested segment.
 			if (file.tellg() != s * SEGMENT_SIZE) {
 				// TODO: log error.
