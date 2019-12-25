@@ -5,6 +5,8 @@
 #ifndef SIMPLE_P2P_REQUEST_SERVER_MODULE_H
 #define SIMPLE_P2P_REQUEST_SERVER_MODULE_H
 
+#include "GeneralTypes.h"
+
 namespace SimpleP2P	
 {
 	/**
@@ -16,7 +18,7 @@ namespace SimpleP2P
 		/**
 		 * Constructor, allows setting the port for the server.
 		 */
-		RequestServerModule(short port_);
+		RequestServerModule(Uint16 port_);
 		
 		/**
 		 * \brief Returns the thread object for the module.
@@ -26,7 +28,7 @@ namespace SimpleP2P
 		std::thread init();
 	
 	private:
-		short port;	//!< Port for the server.
+		Uint16 port;	//!< Port for the server.
 	};
 }			
 

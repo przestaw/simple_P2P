@@ -8,7 +8,7 @@
 #include "RequestServer.h"
 
 namespace SimpleP2P {
-	RequestServerModule::RequestServerModule(short port_)
+	RequestServerModule::RequestServerModule(Uint16 port_)
 		: port(port_)
 	{}
 	
