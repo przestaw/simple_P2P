@@ -8,8 +8,10 @@
 #include <vector>
 #include <string>
 #include <boost/asio.hpp>
+#include <GeneralTypes.h>
 
-namespace simpleP2P {
+namespace simpleP2P
+{
 
     class Resource; //!< Forward declaration
 

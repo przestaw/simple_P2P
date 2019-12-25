@@ -1,18 +1,40 @@
 #ifndef SIMPLE_DOWNLOADWORKER_H
 #define SIMPLE_DOWNLOADWORKER_H
 
-#include "GeneralTypes.h"
-#include "Host.h"
-#include "Resource.h"
-namespace simpleP2P
-{
+#include <thread>
+#include <queue>
+#include <mutex>
+#include <condition_variable>
+#include <memory>
 
+#include <boost/asio.hpp>
+
+#include "GeneralTypes.h"
+#include "DownloadService.h"
+#include "host.h"
+#include "resource.h"
+#include "Segment.h"
+namespace simpleP2P::download
+{
 class DownloadWorker
 {
+
 public:
     DownloadWorker();
     ~DownloadWorker();
-    const Int8 *download(const Host &host, const Resource &resource, Int64 segment);
+    std::thread init();
+
+private:
+    void worker();
+    void download(Segment &segment);
+    void connect();
+    Host *host;
+    DownloadService *downloadService;
+    std::atomic<bool> alive;
+    std::atomic<bool> active;
+    boost::asio::io_service *io_service;
+    boost::asio::ip::tcp::socket socket;
+    friend DownloadService;
 };
-} // namespace simpleP2P
+} // namespace simpleP2P::download
 #endif // SIMPLE_DOWNLOADWORKER_H
