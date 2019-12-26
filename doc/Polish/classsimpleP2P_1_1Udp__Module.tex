@@ -1,0 +1,82 @@
+\hypertarget{classsimpleP2P_1_1Udp__Module}{}\subsection{simple\+P2P\+:\+:Udp\+\_\+\+Module Class Reference}
+\label{classsimpleP2P_1_1Udp__Module}\index{simple\+P2\+P\+::\+Udp\+\_\+\+Module@{simple\+P2\+P\+::\+Udp\+\_\+\+Module}}
+
+
+Class containing all U\+DP related resources and logic.  
+
+
+
+
+{\ttfamily \#include $<$udp\+\_\+module.\+h$>$}
+
+\subsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classsimpleP2P_1_1Udp__Module_ae82263553672721e6a6ec034617e08ba}{Udp\+\_\+\+Module} (boost\+::asio\+::ip\+::address broadcast\+\_\+address, Uint16 port, Uint32 beacon\+\_\+interval)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+std\+::thread \hyperlink{classsimpleP2P_1_1Udp__Module_a6e1598a38a557ebdf6eb4849b3cde9db}{init} ()
+\begin{DoxyCompactList}\small\item\em Init methods run worker in thread and returns it. \end{DoxyCompactList}\item 
+void \hyperlink{classsimpleP2P_1_1Udp__Module_ad3904b2be4e113a8f7be11b23cfde4d2}{revoke\+\_\+file} (const \hyperlink{classsimpleP2P_1_1Resource}{Resource} \&resource)
+\begin{DoxyCompactList}\small\item\em Sends revoke datagram. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsubsection{Detailed Description}
+Class containing all U\+DP related resources and logic. 
+
+\subsubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classsimpleP2P_1_1Udp__Module_ae82263553672721e6a6ec034617e08ba}\label{classsimpleP2P_1_1Udp__Module_ae82263553672721e6a6ec034617e08ba}} 
+\index{simple\+P2\+P\+::\+Udp\+\_\+\+Module@{simple\+P2\+P\+::\+Udp\+\_\+\+Module}!Udp\+\_\+\+Module@{Udp\+\_\+\+Module}}
+\index{Udp\+\_\+\+Module@{Udp\+\_\+\+Module}!simple\+P2\+P\+::\+Udp\+\_\+\+Module@{simple\+P2\+P\+::\+Udp\+\_\+\+Module}}
+\paragraph{\texorpdfstring{Udp\+\_\+\+Module()}{Udp\_Module()}}
+{\footnotesize\ttfamily simple\+P2\+P\+::\+Udp\+\_\+\+Module\+::\+Udp\+\_\+\+Module (\begin{DoxyParamCaption}\item[{boost\+::asio\+::ip\+::address}]{broadcast\+\_\+address,  }\item[{Uint16}]{port,  }\item[{Uint32}]{beacon\+\_\+interval }\end{DoxyParamCaption})}
+
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em broadcast\+\_\+address} & address on which packets will be sent \\
+\hline
+{\em port} & port on which packets will be sent \\
+\hline
+{\em beacon\+\_\+interval} & beacon interval \\
+\hline
+\end{DoxyParams}
+
+
+\subsubsection{Member Function Documentation}
+\mbox{\Hypertarget{classsimpleP2P_1_1Udp__Module_a6e1598a38a557ebdf6eb4849b3cde9db}\label{classsimpleP2P_1_1Udp__Module_a6e1598a38a557ebdf6eb4849b3cde9db}} 
+\index{simple\+P2\+P\+::\+Udp\+\_\+\+Module@{simple\+P2\+P\+::\+Udp\+\_\+\+Module}!init@{init}}
+\index{init@{init}!simple\+P2\+P\+::\+Udp\+\_\+\+Module@{simple\+P2\+P\+::\+Udp\+\_\+\+Module}}
+\paragraph{\texorpdfstring{init()}{init()}}
+{\footnotesize\ttfamily std\+::thread simple\+P2\+P\+::\+Udp\+\_\+\+Module\+::init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Init methods run worker in thread and returns it. 
+
+\begin{DoxyReturn}{Returns}
+logging thread 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classsimpleP2P_1_1Udp__Module_ad3904b2be4e113a8f7be11b23cfde4d2}\label{classsimpleP2P_1_1Udp__Module_ad3904b2be4e113a8f7be11b23cfde4d2}} 
+\index{simple\+P2\+P\+::\+Udp\+\_\+\+Module@{simple\+P2\+P\+::\+Udp\+\_\+\+Module}!revoke\+\_\+file@{revoke\+\_\+file}}
+\index{revoke\+\_\+file@{revoke\+\_\+file}!simple\+P2\+P\+::\+Udp\+\_\+\+Module@{simple\+P2\+P\+::\+Udp\+\_\+\+Module}}
+\paragraph{\texorpdfstring{revoke\+\_\+file()}{revoke\_file()}}
+{\footnotesize\ttfamily void simple\+P2\+P\+::\+Udp\+\_\+\+Module\+::revoke\+\_\+file (\begin{DoxyParamCaption}\item[{const \hyperlink{classsimpleP2P_1_1Resource}{Resource} \&}]{resource }\end{DoxyParamCaption})}
+
+
+
+Sends revoke datagram. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em resource} & \hyperlink{classsimpleP2P_1_1Resource}{Resource} t obe revoked \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/udp\+\_\+module.\+h\item 
+src/udp\+\_\+module.\+cpp\end{DoxyCompactItemize}
