@@ -1,7 +1,7 @@
 % !TEX TS-program = pdflatex
 % !TEX encoding = UTF-8 Unicode
 
-\documentclass[11pt]{article}
+\documentclass[11pt]{book}
 \usepackage[utf8]{inputenc} 
 \usepackage[parfill]{parskip}
 \usepackage[T1]{fontenc} 
@@ -96,9 +96,9 @@ Kamil Zacharczuk
 	\tableofcontents
 	\clearpage
 
-\section{Zadanie}
-\subsection{Tresć Zadania}
-\paragraph{Napisać program obsługujący prosty protokół P2P.}
+\chapter{Zadanie}
+\section{Tresć Zadania}
+\paragraph{Napisać program obsługujący prosty protokół P2P}
 \begin{enumerate}
 \item
 Zasób to plik identyfikowany pewną nazwą, za takie same zasoby uważa się zasoby o takich samych nazwach i takiej samej wielkości pliku w bajtach.
@@ -133,10 +133,10 @@ Zasób pobrany do lokalnego węzła jest kopią oryginału, kopia jest traktowan
 \item
 Właściciel zasobu może go unieważnić wysyłając odpowiedni komunikat rozgłaszany. Wszystkie kopie zasobu powinny przestać być rozgłaszane. W przypadku trwających transferów zasobów powinny się one poprawnie zakończyć, dopiero wtedy informacja o zasobie może zostać usunięta.
 \end{enumerate}
-\subsection{Wariant zadania dla zespołu}
+\section{Wariant zadania dla zespołu}
 4. Opóźnienia dla wybranego węzła - węzeł reaguje, ale (czasami) z dużym opóźnieniem.
-\subsection{Interpretacja Zadania}
-\paragraph{Doprecyzowanie treści i dodatkowe założenia:}
+\section{Interpretacja Zadania}
+\paragraph{Doprecyzowanie treści i dodatkowe założenia}
 \begin{itemize}
 \item
 W związku z tym, że kopia i oryginał są nierozróżnialne, zasób może być unieważniony przez dowolnego użytkownika, który go posiada.
@@ -155,8 +155,8 @@ Jeśli węzeł niespodziewanie zakończy połączenie TCP i przestanie rozgłasz
 \item
 W przypadku gdy pojawi się błąd w trakcie transferu TCP, usuwamy pobrane dane (segmenty) i kończymy wątek pobierający. Ponowne pobieranie od tego węzła będzie odbywać się po ponownym połączeniu z węzłem.
 \end{itemize}
-\section{Opis Funkcjonalny Projektu}
-\paragraph{Użytkownik systemu ma wgląd w dwie listy:}
+\chapter{Opis Funkcjonalny Projektu}
+\paragraph{Użytkownik systemu ma wgląd w dwie listy}
 \begin{itemize}
 \item
 lokalny rejestr zasobów - pliki, które użytkownik dodał lub pobrał od innych,
@@ -165,7 +165,7 @@ pliki obecne w systemie - pliki posiadane w lokalnym rejestrze zasobów przez in
 \end{itemize}
 \textsl{Dla każdego użytkownika generowana jest, oczywiście, odrębna para list.}
 
-\paragraph{Użytkownik może wprowadzać tekstowe komendy, aby za ich pomocą:}
+\paragraph{Użytkownik może wprowadzać tekstowe komendy, aby za ich pomocą}
 \begin{itemize}
 \item
 \textsl{wyświetlić listę lokalnych zasobów,}
@@ -192,8 +192,8 @@ można unieważnić plik, który mamy we własnym rejestrze zasobów. Oznacza to
 \textsl{pobranie pliku,}\\
 można pobrać plik, którego nie mamy jeszcze w rejestrze zasobów, a który jest obecny w systemie.
 \end{itemize}
-\section{Protokół}
-\subsection{Składnia :}
+\chapter{Protokół}
+\section{Składnia :}
 \begin{verbatim}
 <Command 1 octet> ::= <REVOKE> | <FILE_LIST> | <REQ_CONN> | <REQ_SEGMENT> 
 
@@ -206,7 +206,7 @@ można pobrać plik, którego nie mamy jeszcze w rejestrze zasobów, a który je
 
 <Resource> ::= <1 KB of file>
 \end{verbatim}
-\subsection{Komendy :}
+\section{Komendy :}
 \begin{itemize}
 \item
 \textsl{Unieważnienie pliku:}\\
@@ -231,8 +231,8 @@ Wysyłane do węzła po TCP: \\ \verb|<Command = REQ_SEGMENT><ResourceHeader = p
 %\textsl{Opuszczenie sieci:}\\
 %Broadcast na UDP: \\ \verb|<Command = EXIT_NETWORK>|
 \end{itemize}
-\section{Organizacja Projektu}
-\subsection{Moduły}
+\chapter{Organizacja Projektu}
+\section{Moduły}
 \begin{enumerate}
 \item
 Moduł CLI odpowiedzialny za komunikację z użytkownikiem.
@@ -241,7 +241,7 @@ Moduł obsługi sieci.
 \item
 Moduł dispatchera obsługujący protokół.
 \end{enumerate}
-\subsection{Współbieżność}
+\section{Współbieżność}
 \paragraph{Ogólna koncepcja zakłada istnienie następujących bazowych, działających w pętli wątków:}
 \begin{enumerate}
 \item 
@@ -270,18 +270,33 @@ W przypadku chęci wyświetlenia którejś z list zasobów lub listy dostępnych
 \end{itemize}
 \textbf{Wyniki działań powyższych wątków przekazywane są z powrotem do wątku obsługującego CLI, który wyświetla je użytkownikowi.}
 \end{enumerate}
-\section{Implementacja}
+\chapter{Implementacja}
 \begin{itemize}
 \item
 Jezyki : \textsl{C++}
 \item
 Biblioteki : \textsl{Boost:Asio, std::thread}
 \end{itemize}
-\section{Dokumentacja kodu źródłowego - \textit{English}}
-\subsection{Class Index}
-% \input{annotated}
-\subsection{Class Documentation}
-% \input{class1}
-% \input{class2}  
+
+%% BEGIN DOXYGEN
+\chapter{Dokumentacja kodu źródłowego - \textit{English}}
+\label{md_README}
+\Hypertarget{md_README}
+\input{md_README}
+\chapter{Class Index}
+\input{annotated}
+\chapter{Class Documentation}
+\input{classsimpleP2P_1_1Logging__Module}
+\input{classSimpleP2P_1_1RequestWorker}
+\input{classSimpleP2P_1_1RequestServer}
+\input{classSimpleP2P_1_1RequestServerModule}
+\input{classsimpleP2P_1_1Udp__Client}
+\input{classsimpleP2P_1_1Udp__Server}
+\input{classsimpleP2P_1_1Udp__Module}
+\input{classsimpleP2P_1_1Resource}
+\input{classsimpleP2P_1_1Host}
+\input{classsimpleP2P_1_1Resource__Database}
+\input{classSimpleP2P_1_1FileManager}
+\input{classSimpleP2P_1_1FileRequest} 
 
 \end{document}
