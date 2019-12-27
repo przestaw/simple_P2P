@@ -9,9 +9,9 @@
 
 namespace simpleP2P {
     Resource::Resource(std::string name_c, Uint64 size_c, std::string path_c)
-            : size(size_c), name(name_c), path(path_c) {}
+            : size(size_c), name(name_c), invalidated(false), path(path_c) {}
 
-    Resource::Resource(std::vector<Int8> resource_header) {
+    Resource::Resource(std::vector<Int8> resource_header) : invalidated(false) {
         (void) resource_header;
         //TODO
     }

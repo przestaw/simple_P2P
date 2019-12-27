@@ -61,6 +61,14 @@ namespace simpleP2P {
         }
 
         /**
+         * Function used to set invalidated flag.
+         * To allow references on resource outside database to gather information about revoke
+         */
+        inline void set_revoked() {
+            invalidated = true;
+        }
+
+        /**
          * Getter for file size
          * @return file size
          */
@@ -95,6 +103,7 @@ namespace simpleP2P {
         Uint64 size;                            //!< file size
         std::string name;                       //!< file name
         /*atrribs not checked for equality*/
+        bool invalidated;                       //!< indicates that resource has been revoked
         std::string path;                       //!< file path
         std::vector<Host *> host_in_possetion;  //!< Host in possession of the Resource
 

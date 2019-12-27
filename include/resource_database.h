@@ -42,6 +42,7 @@ namespace simpleP2P {
          * @param res Resource to be added
          * @param host Host which possess Resource res
          */
+        //FIXME: consider remove or private specifier
         void add_file(const Resource &res,
                       const Host &host);
 
@@ -51,8 +52,25 @@ namespace simpleP2P {
          * @param host Host which resource will be removed
          * @return returns false if file did not existed or was not possesed
          */
+        //FIXME: consider remove or private specifier
         bool remove_file(const Resource &res,
                          const Host &host);
+
+        /**
+         * Updates the list of resources aviable from host
+         * Triggered after receive of full Beacon Packet
+         * @param host Host and possesed resources in a struct
+         */
+        //TODO
+        void update_host(const Host &host);
+
+        /**
+         * Revokes resource and disconnects it from Hosts in database and database itself
+         * Resource will still point to Hosts that possess it
+         * @param resource Resource to be revoked
+         */
+        //TODO
+        void revoke_resource(const Resource &resource);
 
         /**
          * same as add_file(Resource, Host) but host is localhost
@@ -68,6 +86,7 @@ namespace simpleP2P {
         inline bool remove_file(const Resource &res);
 
         // TODO: consider returning shared_ptr for Resource
+        // TODO: thread-safe acess to hosts -> rw_lock?
         std::vector<Host *> who_has_file(std::vector<Int8> resource_header);
         std::vector<Host *> who_has_file(const Resource &res);
 
