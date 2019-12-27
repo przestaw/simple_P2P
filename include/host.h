@@ -49,7 +49,7 @@ namespace simpleP2P {
 
         /*atrribs not checked for equality*/
         //TODO: timeout etc stats
-        std::vector<Resource *> possesed_resources; //!< Resources possessed by the Host
+        std::vector<std::weak_ptr<Resource>> possesed_resources; //!< Resources possessed by the Host
 
         friend class Resource_Database;             //!< friendship to manage Host's Resources timeouts etc
     };

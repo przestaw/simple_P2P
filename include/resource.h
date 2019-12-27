@@ -105,7 +105,7 @@ namespace simpleP2P {
         /*atrribs not checked for equality*/
         bool invalidated;                       //!< indicates that resource has been revoked
         std::string path;                       //!< file path
-        std::vector<Host *> host_in_possetion;  //!< Host in possession of the Resource
+        std::vector<std::weak_ptr<Host>> hosts_in_possession;  //!< Host in possession of the Resource
 
         friend class Resource_Database;         //!< friendship to manage Resource Hosts, path etc
     };

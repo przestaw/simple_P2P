@@ -87,8 +87,9 @@ namespace simpleP2P {
 
         // TODO: consider returning shared_ptr for Resource
         // TODO: thread-safe acess to hosts -> rw_lock?
-        std::vector<Host *> who_has_file(std::vector<Int8> resource_header);
-        std::vector<Host *> who_has_file(const Resource &res);
+        std::shared_ptr<Resource> who_has_file(std::vector<Int8> resource_header);
+
+        std::shared_ptr<Resource> who_has_file(const Resource &res);
 
         /**
          * Generates listing of localhost content in a header
@@ -99,8 +100,8 @@ namespace simpleP2P {
     private:
         Host my_host;                     //!< localhost Host struct
         /* all internal operation on this vectors must be made with pointers */
-        std::vector<Resource> resources;  //!< vector of Resources in database
-        std::vector<Host> hosts;          //!< vector of Hosts in database
+        std::vector<std::shared_ptr<Resource>> resources;  //!< vector of Resources in database
+        std::vector<std::shared_ptr<Host>> hosts;          //!< vector of Hosts in database
         std::shared_mutex database_mutex; //!< rw_lock for database, allows multiple concurrent reads but permits concurrent writes
     };
 }

@@ -29,10 +29,10 @@ namespace simpleP2P {
     }
 
     bool Resource::has_host(simpleP2P::Host host) {
-        return std::count_if(host_in_possetion.begin(),
-                             host_in_possetion.end(),
-                             [&host](auto it) {
-                                 return *it == host;
+        return std::count_if(hosts_in_possession.begin(),
+                             hosts_in_possession.end(),
+                             [&host](std::weak_ptr<Host> &it) {
+                                 return *(it.lock().get()) == host;
                              }) != 0;
     }
 

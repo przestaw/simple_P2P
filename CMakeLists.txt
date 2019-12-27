@@ -23,7 +23,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -fdevirtualize -finl
 set(EXECUTABLE_NAME ${PROJECT_NAME})
 
 file(GLOB SOURCE_FILES "src/*.cpp")
+file(GLOB INCLUDE_FILES "include/*.h")
 
-add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES})
+add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES} ${INCLUDE_FILES})
 
 target_link_libraries(${EXECUTABLE_NAME} ${EXTERNAL_LIBS})

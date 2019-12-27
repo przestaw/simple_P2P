@@ -13,8 +13,8 @@ namespace simpleP2P {
     bool Host::has_resource(Resource res) {
         return std::count_if(possesed_resources.begin(),
                              possesed_resources.end(),
-                             [&res](Resource *it) {
-                                 return res == *it;
+                             [&res](std::weak_ptr<Resource> &it) {
+                                 return res == *(it.lock().get());
                              }) != 0;
     }
 
