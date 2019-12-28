@@ -13,6 +13,8 @@ DownloadWorker::DownloadWorker(
     : host(host), complete_resource(complete_resource), timeouted(false),
       closed(false){};
 
+DownloadWorker::~DownloadWorker() {}
+
 std::thread DownloadWorker::init() {
   return std::thread([=] { worker(); });
 }
@@ -33,7 +35,7 @@ void DownloadWorker::worker() {
       break;
     }
 
-    download(segment);
+    // download(segment);
 
     // TODO: handle error, unset dirty
 

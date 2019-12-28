@@ -5,58 +5,69 @@
 #ifndef SIMPLE_P2P_HOST_H
 #define SIMPLE_P2P_HOST_H
 
-#include <vector>
-#include <string>
 #include <chrono>
+#include <string>
+#include <vector>
 
-#include <boost/asio.hpp>
 #include <GeneralTypes.h>
+#include <boost/asio.hpp>
 
-namespace simpleP2P
-{
+namespace simpleP2P {
 
-    class Resource; //!< Forward declaration
+class Resource; //!< Forward declaration
 
-    /**
-     * Class contains node information and points to files it possess
-     */
-    class Host {
-    public:
-        /**
-         * Constructor
-         * @param ip Ip of the Host
-         */
-        Host(boost::asio::ip::address ip);
+/**
+ * Class contains node information and points to files it possess
+ */
+class Host {
+public:
+  /**
+   * Constructor
+   * @param ip Ip of the Host
+   */
+  Host(boost::asio::ip::address ip);
 
-        /**
-         * Determines if host has resource
-         * @param res Resource to be checked
-         * @return true if Host has Resource res
-         */
-        bool has_resource(Resource res);
+  /**
+   * Determines if host has resource
+   * @param res Resource to be checked
+   * @return true if Host has Resource res
+   */
+  bool has_resource(Resource res);
 
-        /**
-         * Operator == checks host_ip for equality
-         * @param other other
-         * @return true if equal
-         */
-        bool operator==(const Host &other) const;
+  /**
+   * Operator == checks host_ip for equality
+   * @param other other
+   * @return true if equal
+   */
+  bool operator==(const Host &other) const;
 
-        /**
-         * Operator != checks host_ip for equality
-         * @param other other
-         * @return true if not equal
-         */
-        bool operator!=(const Host &other) const;
-    private:
-        boost::asio::ip::address host_ip;           //!< Ip of the Host
+  /**
+   * Operator != checks host_ip for equality
+   * @param other other
+   * @return true if not equal
+   */
+  bool operator!=(const Host &other) const;
 
-        /*atrribs not checked for equality*/
-        //TODO: timeout etc stats
-        std::vector<Resource *> possesed_resources; //!< Resources possessed by the Host
+  Int16 get_port() const;
+  bool is_retarded() const;
+  void increase_timeout_counter();
+  std::chrono::system_clock::time_point get_ban_time_point() const;
+  boost::asio::ip::address get_address() const;
 
-        friend class Resource_Database;             //!< friendship to manage Host's Resources timeouts etc
-    };
-}
+private:
+  boost::asio::ip::address host_ip; //!< Ip of the Host
 
-#endif //SIMPLE_P2P_HOST_H
+  /*atrribs not checked for equality*/
+  // TODO: timeout etc stats
+  std::vector<Resource *>
+      possesed_resources; //!< Resources possessed by the Host
+  Int16 port;
+
+  Int8 timeout_counter;
+  Int32 ban_time_point;
+  friend class Resource_Database; //!< friendship to manage Host's Resources
+                                  //!< timeouts etc
+};
+} // namespace simpleP2P
+
+#endif // SIMPLE_P2P_HOST_H

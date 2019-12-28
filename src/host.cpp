@@ -7,23 +7,23 @@
 #include <utility>
 
 namespace simpleP2P {
+
 Host::Host(boost::asio::ip::address ip) : host_ip(std::move(ip)) {}
 
-Host::Host(std::string resource_header) {
-  // TODO
+bool Host::has_resource(Resource res) {
+  return std::count_if(possesed_resources.begin(), possesed_resources.end(),
+                       [&res](Resource *it) { return res == *it; }) != 0;
 }
 
-std::string Host::generate_host_header() { return std::__cxx11::string(); }
+bool Host::operator==(const Host &other) const {
+  return this->host_ip == other.host_ip;
+}
 
-    bool Host::has_resource(Resource res) {
-        return std::count_if(possesed_resources.begin(),
-                             possesed_resources.end(),
-                             [&res](Resource *it) {
-                                 return res == *it;
-                             }) != 0;
-    }
+bool Host::operator!=(const Host &other) const {
+  return this->host_ip != other.host_ip;
+}
 
-boost::asio::ip::address Host::get_address() const {}
+boost::asio::ip::address Host::get_address() const { return host_ip; }
 
 Int16 Host::get_port() const { return port; }
 
