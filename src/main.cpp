@@ -1,4 +1,4 @@
-
+#include "CLI.h"
 #include <GeneralTypes.h>
 #include <iostream>
 #include <logging_module.h>
@@ -8,6 +8,7 @@
 #include <udp_server.h>
 #include <udp_client.h>
 #include <udp_module.h>
+
 
 using namespace simpleP2P;
 using namespace boost;
@@ -42,6 +43,25 @@ int main(int argc, const char *argv[]) {
             if (vm.count("logs_file"))
                 std::cout << "logs_file: " << vm["logs_file"].as<std::string>() << '\n';
         }
+
+        std::thread basic[4];
+
+        basic[3] = std::thread(&Logging_Module::logging_thread, std::ref(std::cout));
+
+        for (Uint16 iter = 0; iter < 3; ++iter) {
+            basic[iter] = std::thread(test_worker, iter);
+        }
+
+        // for (auto &iter : basic) {
+        //     iter.join();
+        // }
+
+        CLI* commandline = new CLI();
+        commandline->init();
+
+        std::cout << "DZIALAM2";
+
+        ip::udp::socket socket_udp();
     }
     catch (const boost::program_options::error &ex) {
         std::cerr << ex.what() << '\n';
