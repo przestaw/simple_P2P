@@ -5,15 +5,19 @@
 
 namespace simpleP2P::download
 {
-
+/**
+ * @class Complete resource segment representation.
+ * 
+ */
 class Segment
 {
 public:
     Segment();
     Segment(SegmentId id);
     ~Segment();
-    SegmentId getId();
-    Uint8 *getDataPtr();
+    SegmentId get_id() const;
+    Uint8 const *get_data_ptr() const;
+    static const SegmentId NO_SEGMENT = static_cast<SegmentId>(-1);
 
 private:
     SegmentId id;

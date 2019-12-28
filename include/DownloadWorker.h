@@ -1,40 +1,50 @@
 #ifndef SIMPLE_DOWNLOADWORKER_H
 #define SIMPLE_DOWNLOADWORKER_H
 
-#include <thread>
-#include <queue>
-#include <mutex>
 #include <condition_variable>
 #include <memory>
+#include <mutex>
+#include <thread>
 
 #include <boost/asio.hpp>
 
+#include "CompleteResource.h"
 #include "GeneralTypes.h"
-#include "DownloadService.h"
+#include "Segment.h"
 #include "host.h"
 #include "resource.h"
-#include "Segment.h"
-namespace simpleP2P::download
-{
-class DownloadWorker
-{
 
+namespace simpleP2P::download {
+class DownloadWorker {
 public:
-    DownloadWorker();
-    ~DownloadWorker();
-    std::thread init();
+  DownloadWorker(std::shared_ptr<Host> host,
+                 std::shared_ptr<CompleteResource> complete_resource);
+  DownloadWorker(Host *host,
+                 std::shared_ptr<CompleteResource> complete_resource);
+  ~DownloadWorker();
+  std::thread init();
+  void check_timeout();
+  void close();
 
 private:
-    void worker();
-    void download(Segment &segment);
-    void connect();
-    Host *host;
-    DownloadService *downloadService;
-    std::atomic<bool> alive;
-    std::atomic<bool> active;
-    boost::asio::io_service *io_service;
-    boost::asio::ip::tcp::socket socket;
-    friend DownloadService;
+  void worker();
+  void connect();
+  void download(Segment &segment);
+  void request_segment(Segment &segment);
+  std::shared_ptr<Host> host;
+  std::shared_ptr<CompleteResource> complete_resource;
+  std::shared_ptr<Resource> resource;
+  // Host *host;
+  // DownloadService *downloadService;
+  // Resource* resource;
+  // boost::asio::io_service *io_service;
+  // std::shared_ptr<boost::asio::io_service> io_service;
+  // boost::asio::ip::tcp::socket socket;
+  std::atomic<bool> closed;
+  std::mutex cv_m;
+  std::condition_variable cv;
+  std::atomic<bool> timeouted;
+  std::mutex timeouted_mutex;
 };
 } // namespace simpleP2P::download
 #endif // SIMPLE_DOWNLOADWORKER_H

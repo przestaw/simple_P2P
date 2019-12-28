@@ -7,6 +7,8 @@
 
 #include <vector>
 #include <string>
+#include <chrono>
+
 #include <boost/asio.hpp>
 #include <GeneralTypes.h>
 
