@@ -15,10 +15,10 @@ class CLICommand
     std::function<Int32(char *[])> function;
 
 public:
-    CLICommand(std::string name, std::string description, std::function<Int32(char *[])> function);
-    ~CLICommand();
-    void operator()(char *[]) const;
-    std::string getName() const;
+    CLICommand(std::string name, std::string description, std::function<Int32(char *[])> function){};
+    ~CLICommand(){};
+    void operator()(char *[]) const{};
+    std::string getName() const {};
 };
 
 } // namespace simpleP2P

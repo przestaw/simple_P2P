@@ -1,4 +1,5 @@
 #include "CLI.h"
+#include <string>
 #include <iostream>
 #include <boost/tokenizer.hpp>
 
@@ -39,6 +40,8 @@ CLI::CLI()
 void CLI::init()
 {
 
+    std::cout << "DZIALAM";
+
     std::string line;
     while (std::getline(std::cin, line))
     {
@@ -67,5 +70,7 @@ void CLI::execute_command(std::string name, char *args[])
         }
     }
 }
+
+CLI::~CLI() { }
 
 } // namespace simpleP2P

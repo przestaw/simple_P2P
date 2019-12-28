@@ -1,4 +1,4 @@
-
+#include "CLI.h"
 #include <GeneralTypes.h>
 #include <iostream>
 #include <logging_module.h>
@@ -6,6 +6,7 @@
 #include <random>
 #include <boost/program_options.hpp>
 #include <boost/asio.hpp>
+
 
 using namespace simpleP2P;
 using namespace boost::program_options;
@@ -53,9 +54,14 @@ int main(int argc, const char *argv[]) {
             basic[iter] = std::thread(test_worker, iter);
         }
 
-        for (auto &iter : basic) {
-            iter.join();
-        }
+        // for (auto &iter : basic) {
+        //     iter.join();
+        // }
+
+        CLI* commandline = new CLI();
+        commandline->init();
+
+        std::cout << "DZIALAM2";
 
         ip::udp::socket socket_udp();
     }
