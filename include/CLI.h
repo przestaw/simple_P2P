@@ -13,7 +13,7 @@ class CLI
 {
     std::vector<CLICommand> CLICommands;
     void print_help() const;
-    void execute_command(std::string name, char *args[]);
+    void execute_command(std::string name, std::string arg);
 
 public:
     CLI();
