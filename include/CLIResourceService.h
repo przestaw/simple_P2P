@@ -10,9 +10,9 @@ class CLIResourceService
 public:
     CLIResourceService();
     ~CLIResourceService();
-    void add(std::string resource, char *args[]);
-    void remove(std::string resource, char *args[]);
-    void revoke(std::string resource, char *args[]);
+    void add(std::string resource);
+    void remove(std::string resource);
+    void revoke(std::string resource);
     void get_local(); // TODO return resources
     void get_remote();
 };
