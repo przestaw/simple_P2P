@@ -49,7 +49,6 @@ namespace simpleP2P {
          * Triggered after receive of full Beacon Packet
          * @param host Host and possesed resources in a struct
          */
-        //TODO
         void update_host(const Host &host);
 
         /**
@@ -57,7 +56,6 @@ namespace simpleP2P {
          * Resource will still point to Hosts that possess it
          * @param resource Resource to be revoked
          */
-        //TODO
         void revoke_resource(const Resource &resource);
 
         /**
@@ -66,8 +64,19 @@ namespace simpleP2P {
          */
         inline void add_file(const Resource &res);
 
-        std::shared_ptr<Resource> who_has_file(std::vector<Int8> resource_header);
+        /**
+        * Returns shared pointer to resource to allow access to information about file owners
+        * @param res Resource about which information is gathered
+        * @return shared pointer to res
+        */
+        inline std::shared_ptr<Resource>
+        who_has_file(std::vector<Int8> resource_header); //NOTE: no constructor available
 
+        /**
+         * Returns shared pointer to resource to allow access to information about file owners
+         * @param res Resource about which information is gathered
+         * @return shared pointer to res
+         */
         std::shared_ptr<Resource> who_has_file(const Resource &res);
 
         /**
