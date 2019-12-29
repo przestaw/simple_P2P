@@ -51,4 +51,6 @@ const std::vector<Host *> &Resource::get_hosts() const {
   return host_in_possetion;
 }
 
+void Resource::add_host(Host *host) { host_in_possetion.push_back(host); }
+
 } // namespace simpleP2P

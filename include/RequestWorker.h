@@ -10,7 +10,7 @@
 
 using boost::asio::ip::tcp;
 
-namespace SimpleP2P 
+namespace simpleP2P 
 {
 	/**
 	 * \brief TCP connection handler, created by the TCP server.

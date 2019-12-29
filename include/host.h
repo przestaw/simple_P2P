@@ -48,11 +48,12 @@ public:
    */
   bool operator!=(const Host &other) const;
 
-  Int16 get_port() const;
+  boost::asio::ip::tcp::endpoint get_endpoint() const;
+  // Int16 get_port() const;
+  // boost::asio::ip::address get_address() const;
   bool is_retarded() const;
   void increase_timeout_counter();
   std::chrono::system_clock::time_point get_ban_time_point() const;
-  boost::asio::ip::address get_address() const;
 
 private:
   boost::asio::ip::address host_ip; //!< Ip of the Host
@@ -61,7 +62,7 @@ private:
   // TODO: timeout etc stats
   std::vector<Resource *>
       possesed_resources; //!< Resources possessed by the Host
-  Int16 port;
+  Uint16 port;
 
   Int8 timeout_counter;
   Int32 ban_time_point;

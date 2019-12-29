@@ -93,7 +93,7 @@ public:
   bool operator!=(const Resource &other) const;
 
   const std::vector<Host *> &get_hosts() const;
-
+  void add_host(Host *host);
 private:
   Uint64 size;      //!< file size
   std::string name; //!< file name

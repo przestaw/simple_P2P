@@ -23,13 +23,14 @@ bool Host::operator!=(const Host &other) const {
   return this->host_ip != other.host_ip;
 }
 
-boost::asio::ip::address Host::get_address() const { return host_ip; }
+// boost::asio::ip::address Host::get_address() const { return host_ip; }
 
-Int16 Host::get_port() const { return port; }
+// Int16 Host::get_port() const { return port; }
 
 bool Host::is_retarded() const {
-  // TODO check sync
-  return get_ban_time_point() > std::chrono::system_clock::now();
+  // TODO
+  // return get_ban_time_point() > std::chrono::system_clock::now();
+  return false;
 }
 
 void Host::increase_timeout_counter() {
@@ -42,6 +43,10 @@ std::chrono::system_clock::time_point Host::get_ban_time_point() const {
   // TODO: casting ban_time_point
   // return ban_time_point;
   return std::chrono::system_clock::now();
+}
+
+boost::asio::ip::tcp::endpoint Host::get_endpoint() const {
+  return boost::asio::ip::tcp::endpoint{host_ip, port};
 }
 
 } // namespace simpleP2P

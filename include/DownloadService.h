@@ -3,30 +3,48 @@
 
 #include "CompleteResource.h"
 #include "DownloadWorker.h"
+#include "FileManager.h"
 #include "GeneralTypes.h"
+#include "logging_module.h"
 #include "resource.h"
-// #include "Segment.h"
+#include <boost/asio.hpp>
+#include <condition_variable>
 #include <memory>
-#include <string>
+#include <mutex>
+#include <thread>
+#include <vector>
 
 namespace simpleP2P::download {
 
 class DownloadService {
 public:
-  DownloadService(std::shared_ptr<Resource> resource);
+  DownloadService(Logging_Module &logging_module,
+                  boost::asio::io_service &io_service,
+                  FileManager &file_manager,
+                  std::shared_ptr<Resource> resource);
   ~DownloadService();
   std::thread init();
-  // Segment get_segment();
-  // void set_segment(Segment &segment);
 
 private:
-  void timeout_controller();
+  void create_workers();
+  void init_workers();
+  void controll_workers();
+  void join_workers();
+  void close_workers();
+  void check_workers_timeout();
+  bool all_workers_dead();
+  void store_file();
+  void handle_exception(std::exception &e);
+
+  Logging_Module &logging_module;
+  boost::asio::io_service &io_service;
+  FileManager &file_manager;
   std::shared_ptr<Resource> resource;
   std::shared_ptr<CompleteResource> complete_resource;
   std::vector<std::shared_ptr<DownloadWorker>> workers;
   std::vector<std::thread> worker_threads;
-  // std::mutex complete_resource_mutex;
-  // SegmentId last_busy_segment;
+  std::mutex cv_m;
+  std::condition_variable cv;
 };
 
 } // namespace simpleP2P::download
