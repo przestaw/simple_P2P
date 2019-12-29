@@ -8,7 +8,7 @@
 #include "FileRequest.h"
 #include "GeneralTypes.h"
 
-namespace SimpleP2P {
+namespace simpleP2P {
 	FileRequest::FileRequest(std::vector<Int8> rh, std::initializer_list<Uint32> s)
 		: resource_header(rh), segments(s)
 	{}

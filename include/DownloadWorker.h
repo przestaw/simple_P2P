@@ -2,8 +2,8 @@
 #define SIMPLE_DOWNLOADWORKER_H
 
 #include "GeneralTypes.h"
-#include "Host.h"
-#include "Resource.h"
+#include "host.h"
+#include "resource.h"
 namespace simpleP2P
 {
 

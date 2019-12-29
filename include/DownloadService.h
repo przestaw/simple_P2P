@@ -9,7 +9,7 @@ namespace simpleP2P
 class DownloadService
 {
 
-    DownloadWorker downloadWorkers[];
+    //DownloadWorker downloadWorkers[];
 
 public:
     DownloadService();

@@ -1,4 +1,5 @@
 #include "CLI.h"
+#include "DownloadService.h"
 #include "CLICommand.h"
 #include "resource_database.h"
 #include "logging_module.h"
@@ -12,7 +13,7 @@
 
 namespace simpleP2P
 {
-CLI::CLI(Resource_Database& res_db_, Logging_Module* Logger_, boost::asio::io_service &io_service_, FileManager* fm_) : res_db(res_db_), Logger(Logger_), io_service(io_service_), fm(fm_)
+CLI::CLI(Resource_Database res_db_, Logging_Module* Logger_, boost::asio::io_service &io_service_, FileManager fm_) : res_db(res_db_), Logger(Logger_), io_service(io_service_), fm(fm_)
 {
     CLICommands = {
         CLICommand("add", "\"add name_of_file\" - adds local file to resource db, will be broadcasted", nullptr),
@@ -43,9 +44,9 @@ CLI::CLI(Resource_Database& res_db_, Logging_Module* Logger_, boost::asio::io_se
             {
                 if (resource->getName() == name_of_file)
                     {
-                        std::thread downloader([](){
-                            DownloadService ds(logging_module, io_service, fm, resource);
-                            ds.init();
+                        std::thread downloader([this](){
+                            //DownloadService ds(Logger, io_service, fm, resource);
+                            //ds.init();
                         });
                         downloader.detach();
 
@@ -60,7 +61,7 @@ CLI::CLI(Resource_Database& res_db_, Logging_Module* Logger_, boost::asio::io_se
             
         */
         CLICommand("global", "prints files available to be downloaded", [this](std::string dupa){
-            std::vector<Resource *> resources = db.getResources(); 
+            std::vector<Resource *> resources = res_db.getResources(); 
 
             for (auto resource : resources)
             {

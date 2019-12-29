@@ -11,7 +11,7 @@
 
 #include "GeneralTypes.h"
 
-namespace SimpleP2P 
+namespace simpleP2P 
 {
 	class CompleteResource;
 	

@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "GeneralTypes.h"
+#include "DownloadService.h"
 #include "CLICommand.h"
 #include "resource_database.h"
 #include "resource.h"
@@ -19,13 +20,13 @@ class CLI
     Resource_Database& res_db;
     Logging_Module* Logger;
     boost::asio::io_service& io_service;
-    FileManager* fm;
+    FileManager fm;
     void print_help() const;
     void execute_command(std::string name, std::string arg);
     void print_init_info();
 
 public:
-    CLI(Resource_Database& res_db_, Logging_Module* Logger_, boost::asio::io_service& io_service_, FileManager* fm_);
+    CLI(Resource_Database res_db_, Logging_Module* Logger_, boost::asio::io_service& io_service_, FileManager fm_);
     ~CLI();
     void init();
 };
