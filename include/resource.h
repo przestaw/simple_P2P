@@ -91,6 +91,7 @@ namespace simpleP2P {
          * @return true if not equal
          */
         bool operator!=(const Resource &other) const;
+        
     private:
         Uint64 size;                            //!< file size
         std::string name;                       //!< file name

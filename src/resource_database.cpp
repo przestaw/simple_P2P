@@ -108,4 +108,12 @@ namespace simpleP2P {
         }
         return header;
     }
+
+    const std::vector<Resource *>& Resource_Database::getResources() const
+    {
+        //return resources; 
+        // zeby vs code nie krzyczal:
+        std::vector<Resource *> dupa;
+        return dupa;
+    }
 }

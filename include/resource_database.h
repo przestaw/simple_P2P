@@ -77,6 +77,12 @@ namespace simpleP2P {
          */
         //TODO : max_lenght and support for partial sending
         std::vector<Int8> generate_database_header();
+
+        /**
+         * Returns a vector of pointers to resources for the CLI
+         * @return a vector of pointers to resources
+         */
+        const std::vector<Resource *>& getResources() const;
     private:
         Host my_host;                     //!< localhost Host struct
         /* all internal operation on this vectors must be made with pointers */

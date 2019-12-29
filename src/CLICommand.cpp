@@ -16,7 +16,10 @@ namespace simpleP2P
     };
 
     void CLICommand::operator()(std::string argument) const {
-        function(argument);
+        if (function != nullptr)
+            function(argument);
+        else
+            std::cout << "not implemented yet :(\n";
     };
 
     std::ostream &operator<<(std::ostream &os, const CLICommand &command)

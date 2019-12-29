@@ -11,7 +11,7 @@
 #include "FileRequest.h"
 #include "GeneralTypes.h"
 
-namespace SimpleP2P
+namespace simpleP2P
 {
 	/**
 	 * \brief Handles read/write to the files on disc.

@@ -2,6 +2,9 @@
 #include <GeneralTypes.h>
 #include <iostream>
 #include <logging_module.h>
+#include "resource_database.h"
+#include "resource.h"
+#include "FileManager.h"
 #include <thread>
 #include <boost/program_options.hpp>
 #include <boost/asio.hpp>
@@ -9,24 +12,21 @@
 #include <udp_client.h>
 #include <udp_module.h>
 
-
 using namespace simpleP2P;
 using namespace boost;
 
-int main(int argc, const char *argv[]) {
+int main(int argc, const char *argv[])
+{
 
     //TODO: Parameters variables
-    try {
+    try
+    {
         program_options::options_description desc{"Options"};
-        desc.add_options()
-                ("help,h",
-                 "Help screen")
-                ("incoming,i", program_options::value<int>()->default_value(16),
-                 "Incoming connections limit")
-                ("file_connections,f", program_options::value<int>()->default_value(6),
-                 "Connections per downloaded file limit")
-                ("logs_file", program_options::value<std::string>(),
-                 "Log output filename, leave blank to output to stderr");
+        desc.add_options()("help,h",
+                           "Help screen")("incoming,i", program_options::value<int>()->default_value(16),
+                                          "Incoming connections limit")("file_connections,f", program_options::value<int>()->default_value(6),
+                                                                        "Connections per downloaded file limit")("logs_file", program_options::value<std::string>(),
+                                                                                                                 "Log output filename, leave blank to output to stderr");
 
         program_options::variables_map vm;
         store(parse_command_line(argc, argv, desc), vm);
@@ -34,7 +34,8 @@ int main(int argc, const char *argv[]) {
 
         if (vm.count("help"))
             std::cout << desc << '\n';
-        else {
+        else
+        {
             // TODO : save parameters
             if (vm.count("incoming"))
                 std::cout << "incoming: " << vm["incoming"].as<int>() << '\n';
@@ -43,11 +44,9 @@ int main(int argc, const char *argv[]) {
             if (vm.count("logs_file"))
                 std::cout << "logs_file: " << vm["logs_file"].as<std::string>() << '\n';
         }
-
-        CLI* commandline = new CLI();
-        commandline->init();
     }
-    catch (const boost::program_options::error &ex) {
+    catch (const boost::program_options::error &ex)
+    {
         std::cerr << ex.what() << '\n';
     }
 
@@ -62,7 +61,18 @@ int main(int argc, const char *argv[]) {
     basic[0] = logger.init();
     //basic[1] = udp.init();
 
-    for (auto &iter : basic) {
+    // tylko zeby nie krzyczalo
+    Host *host = new Host(boost::asio::ip::address::from_string("192.168.1.1"));
+    Resource_Database *res_db = new Resource_Database(*host);
+    boost::asio::io_service io_service;
+    FileManager *fm = new FileManager();
+    // ^ XDD
+
+    CLI *commandline = new CLI(*res_db, &logger, &io_service, *fm);
+    commandline->init();
+
+    for (auto &iter : basic)
+    {
         iter.join();
     }
 }
