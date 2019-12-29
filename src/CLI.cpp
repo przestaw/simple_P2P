@@ -13,7 +13,7 @@
 
 namespace simpleP2P
 {
-CLI::CLI(Resource_Database res_db_, Logging_Module* Logger_, boost::asio::io_service &io_service_, FileManager fm_) : res_db(res_db_), Logger(Logger_), io_service(io_service_), fm(fm_)
+CLI::CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_service &io_service_, FileManager &fm_) : res_db(res_db_), Logger(Logger_), io_service(io_service_), fm(fm_)
 {
     CLICommands = {
         CLICommand("add", "\"add name_of_file\" - adds local file to resource db, will be broadcasted", nullptr),

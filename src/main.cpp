@@ -63,12 +63,12 @@ int main(int argc, const char *argv[])
 
     // tylko zeby nie krzyczalo
     Host host(boost::asio::ip::address::from_string("192.168.1.1"));
-    Resource_Database *res_db = new Resource_Database(host);
+    Resource_Database res_db(host);
     boost::asio::io_service io_service;
     FileManager fm;
     // ^ XDD
 
-    CLI *commandline = new CLI(res_db, logger, &io_service, fm);
+    CLI *commandline = new CLI(res_db, logger, io_service, fm);
     commandline->init();
 
     for (auto &iter : basic)
