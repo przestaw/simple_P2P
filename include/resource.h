@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <GeneralTypes.h>
+#include "tbb/concurrent_vector.h"
 
 #define SEGMENT_SIZE 1024 //1kb
 
@@ -105,7 +106,7 @@ namespace simpleP2P {
         /*atrribs not checked for equality*/
         bool invalidated;                       //!< indicates that resource has been revoked
         std::string path;                       //!< file path
-        std::vector<std::weak_ptr<Host>> hosts_in_possession;  //!< Host in possession of the Resource
+        tbb::concurrent_vector<std::weak_ptr<Host>> hosts_in_possession;  //!< Host in possession of the Resource
 
         friend class Resource_Database;         //!< friendship to manage Resource Hosts, path etc
     };

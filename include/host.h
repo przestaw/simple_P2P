@@ -45,6 +45,8 @@ namespace simpleP2P {
          */
         bool operator!=(const Host &other) const;
     private:
+        void remove_resource(std::shared_ptr<Resource> res);
+
         boost::asio::ip::address host_ip;           //!< Ip of the Host
 
         /*atrribs not checked for equality*/

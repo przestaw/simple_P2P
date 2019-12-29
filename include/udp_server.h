@@ -11,10 +11,6 @@
 #include <boost/array.hpp>
 #include "GeneralTypes.h"
 
-#ifndef UDP_SERV_BUFFER_SIZE
-#define UDP_SERV_BUFFER_SIZE 1536
-#endif
-
 namespace simpleP2P {
     /**
      * class UDP Server to handle all incoming packets

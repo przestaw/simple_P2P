@@ -18,7 +18,7 @@ namespace simpleP2P {
 
     std::vector<Int8> Resource::generate_resource_header() {
         std::vector<Int8> header;
-        header.resize(256 + 64);
+        header.resize(256 + sizeof(Uint64));
         memset(header.data(), 0, 256);
         strcpy(reinterpret_cast<char *>(header.data()), getName().c_str());
 

@@ -25,4 +25,15 @@ namespace simpleP2P {
     bool Host::operator!=(const Host &other) const {
         return this->host_ip != other.host_ip;
     }
+
+    void Host::remove_resource(std::shared_ptr<Resource> res) {
+        possesed_resources.erase(
+                std::remove_if(
+                        possesed_resources.begin(),
+                        possesed_resources.end(),
+                        [&res](auto &it) {
+                            return it.lock() == res;
+                        }
+                ), possesed_resources.end());
+    }
 }
