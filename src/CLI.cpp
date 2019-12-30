@@ -15,17 +15,17 @@
 
 namespace simpleP2P
 {
-CLI::CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_service &io_service_, FileManager &fm_) : res_db(res_db_), Logger(Logger_), io_service(io_service_), fm(fm_)
+CLI::CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_service &io_service_, FileManager &fm_, Host &localhost_) : res_db(res_db_), Logger(Logger_), io_service(io_service_), fm(fm_), localhost(localhost_)
 {
     CLICommands = {
         CLICommand("add", "\"add name_of_file\" - adds local file to resource db, will be broadcasted", [this](std::string name_of_file) {
             std::error_code errc;
-            std::cout << "Current path is " << std::experimental::filesystem::current_path() << '\n';
+            //std::cout << "Current path is " << std::experimental::filesystem::current_path() << '\n';
             Uint64 size = std::experimental::filesystem::file_size(name_of_file, errc);
 
             if (not errc)
             {
-                std::cout << "File size is: " << size << std::endl;
+                std::cout << " File size is: " << size << std::endl;
 
                 const Resource new_resource(name_of_file, size, name_of_file); //not sure if path is correct?
                 //res_db.add_file(new_resource, boost::asio::ip::address::from_string("192.168.1.1")); 
@@ -34,10 +34,11 @@ CLI::CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_se
             }
             else if (errc == std::errc::no_such_file_or_directory)
             {
-                std::cout << "File does not exist. Are you sure it is in Simple_P2P.bin?" << std::endl;
+                std::cout << " File does not exist. Are you sure it is in Simple_P2P.bin?" << std::endl;
                 return 0;
             }
         }),
+
         CLICommand("remove", "\"remove name_of_file\" - removes a resource", [this](std::string name_of_file) {
             //std::vector<Resource *> resources = res_db.getResources();   --- causes segfault
             std::vector<Resource *> resources;
@@ -56,6 +57,7 @@ CLI::CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_se
             }
             return 0;
         }),
+
         /*
             spawn thread
             add task to remove resource to sync buffer
@@ -86,26 +88,23 @@ CLI::CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_se
             }
             return 0;
         }),
-        CLICommand("local", "prints files in resource database", nullptr),
-        /*
-            
-        */
+
+        //CLICommand("local", "prints files in resource database", nullptr),
+
         CLICommand("global", "prints files available to be downloaded", [this](std::string dupa) {
-            std::vector<Resource *> resources = res_db.getResources();
+            std::vector<std::shared_ptr<Resource>> resources = res_db.getResources();
 
             for (auto resource : resources)
             {
-                std::cout << resource->getName() << "\n";
+                std::cout << " " << resource->getName() << "\n";
             }
             return 0;
         }),
+
         CLICommand("help", "prints available commands", [this](std::string dupa) {
             for (auto &command : CLICommands)
                 std::cout << command;
             return 69; }), CLICommand("quit", "leaves the program", nullptr)
-        /*
-            
-        */
     };
 }
 

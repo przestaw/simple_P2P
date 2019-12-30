@@ -136,7 +136,7 @@ namespace simpleP2P {
         }
     }
 
-    const std::vector<Resource *>& Resource_Database::getResources() const
+    const std::vector<std::shared_ptr<Resource>>& Resource_Database::getResources() const
     {
         return resources; 
     }

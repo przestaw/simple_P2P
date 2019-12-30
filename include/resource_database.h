@@ -87,7 +87,7 @@ namespace simpleP2P {
         std::vector<Int8> generate_database_header();
 
 
-        const std::vector<Resource *>& getResources() const;
+        const std::vector<std::shared_ptr<Resource>>& getResources() const;
     private:
         Host my_host;                     //!< localhost Host struct
         /* all internal operation on this vectors must be made with pointers */

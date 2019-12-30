@@ -68,7 +68,7 @@ int main(int argc, const char *argv[])
     FileManager fm;
     // ^ XDD
 
-    CLI *commandline = new CLI(res_db, logger, io_service, fm);
+    CLI *commandline = new CLI(res_db, logger, io_service, fm, localhost);
     commandline->init();
 
     for (auto &iter : basic)
