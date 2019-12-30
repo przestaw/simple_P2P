@@ -45,11 +45,13 @@ namespace simpleP2P {
          */
         bool operator!=(const Host &other) const;
     private:
+        void remove_resource(std::shared_ptr<Resource> res);
+
         boost::asio::ip::address host_ip;           //!< Ip of the Host
 
         /*atrribs not checked for equality*/
         //TODO: timeout etc stats
-        std::vector<Resource *> possesed_resources; //!< Resources possessed by the Host
+        std::vector<std::weak_ptr<Resource>> possesed_resources; //!< Resources possessed by the Host
 
         friend class Resource_Database;             //!< friendship to manage Host's Resources timeouts etc
     };

@@ -7,7 +7,13 @@ find_package(Threads REQUIRED)
 
 find_package(Boost REQUIRED system program_options)
 
-set(EXTERNAL_LIBS "Boost::system" "Boost::program_options" "Threads::Threads")
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(TBB tbb REQUIRED)
+
+set(EXTERNAL_LIBS "Boost::system" "Boost::program_options" "Threads::Threads" "tbb")
+
+link_libraries(stdc++fs)
 
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
@@ -23,7 +29,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -fdevirtualize -finl
 set(EXECUTABLE_NAME ${PROJECT_NAME})
 
 file(GLOB SOURCE_FILES "src/*.cpp")
+file(GLOB INCLUDE_FILES "include/*.h")
 
-add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES})
+add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES} ${INCLUDE_FILES})
 
 target_link_libraries(${EXECUTABLE_NAME} ${EXTERNAL_LIBS})

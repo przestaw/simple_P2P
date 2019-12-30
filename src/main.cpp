@@ -62,8 +62,8 @@ int main(int argc, const char *argv[])
     //basic[1] = udp.init();
 
     // tylko zeby nie krzyczalo
-    Host host(boost::asio::ip::address::from_string("192.168.1.1"));
-    Resource_Database res_db(host);
+    Host localhost(boost::asio::ip::address::from_string("192.168.1.1"));
+    Resource_Database res_db(localhost);
     boost::asio::io_service io_service;
     FileManager fm;
     // ^ XDD

@@ -28,11 +28,10 @@ namespace simpleP2P {
          * @param res Resource to be checked
          * @return true if host already has some resource
          */
-        //TODO
-        bool has_file(Resource res);
+        bool has_file(const Resource &res);
 
         /* NOTE: chosen conception
-         * >>> use pointers outside Database -> slightly inefficient, can't track life as it's not dynamically allocated
+         * >>> use pointers outside Database -> slightly inefficient,
          *      probably best as it is possible to have host without resources and theoretically lonely resource
          * This assumes that once host is in database it's never deleted
          */
@@ -46,30 +45,39 @@ namespace simpleP2P {
                       const Host &host);
 
         /**
-         * Removes connection between file and resource
-         * @param res Resource to be removed from host list
-         * @param host Host which resource will be removed
-         * @return returns false if file did not existed or was not possesed
+         * Updates the list of resources aviable from host
+         * Triggered after receive of full Beacon Packet
+         * @param host Host and possesed resources in a struct
          */
-        bool remove_file(const Resource &res,
-                         const Host &host);
+        void update_host(const Host &host);
+
+        /**
+         * Revokes resource and disconnects it from Hosts in database and database itself
+         * Resource will still point to Hosts that possess it
+         * @param resource Resource to be revoked
+         */
+        void revoke_resource(const Resource &resource);
 
         /**
          * same as add_file(Resource, Host) but host is localhost
          * @param res Resource to be added
          */
-        inline void add_file(const Resource &res);
+        void add_file(const Resource &res);
 
         /**
-         * same as remove_file(Resource, Host) but host is localhost
-         * @param res Resource to be removed from localhost list
-         * @return returns false if file did not existed or was not possesed
-         */
-        inline bool remove_file(const Resource &res);
+        * Returns shared pointer to resource to allow access to information about file owners
+        * @param res Resource about which information is gathered
+        * @return shared pointer to res
+        */
+        inline std::shared_ptr<Resource>
+        who_has_file(std::vector<Int8> resource_header); //NOTE: no constructor available
 
-        // TODO: consider returning shared_ptr for Resource
-        std::vector<Host *> who_has_file(std::vector<Int8> resource_header);
-        std::vector<Host *> who_has_file(const Resource &res);
+        /**
+         * Returns shared pointer to resource to allow access to information about file owners
+         * @param res Resource about which information is gathered
+         * @return shared pointer to res
+         */
+        std::shared_ptr<Resource> who_has_file(const Resource &res);
 
         /**
          * Generates listing of localhost content in a header
@@ -78,16 +86,13 @@ namespace simpleP2P {
         //TODO : max_lenght and support for partial sending
         std::vector<Int8> generate_database_header();
 
-        /**
-         * Returns a vector of pointers to resources for the CLI
-         * @return a vector of pointers to resources
-         */
+
         const std::vector<Resource *>& getResources() const;
     private:
         Host my_host;                     //!< localhost Host struct
         /* all internal operation on this vectors must be made with pointers */
-        std::vector<Resource> resources;  //!< vector of Resources in database
-        std::vector<Host> hosts;          //!< vector of Hosts in database
+        std::vector<std::shared_ptr<Resource>> resources;  //!< vector of Resources in database
+        std::vector<std::shared_ptr<Host>> hosts;          //!< vector of Hosts in database
         std::shared_mutex database_mutex; //!< rw_lock for database, allows multiple concurrent reads but permits concurrent writes
     };
 }

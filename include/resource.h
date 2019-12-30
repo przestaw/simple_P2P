@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <GeneralTypes.h>
+#include "tbb/concurrent_vector.h"
 
 #define SEGMENT_SIZE 1024 //1kb
 
@@ -61,6 +62,14 @@ namespace simpleP2P {
         }
 
         /**
+         * Function used to set invalidated flag.
+         * To allow references on resource outside database to gather information about revoke
+         */
+        inline void set_revoked() {
+            invalidated = true;
+        }
+
+        /**
          * Getter for file size
          * @return file size
          */
@@ -91,13 +100,13 @@ namespace simpleP2P {
          * @return true if not equal
          */
         bool operator!=(const Resource &other) const;
-        
     private:
         Uint64 size;                            //!< file size
         std::string name;                       //!< file name
         /*atrribs not checked for equality*/
+        bool invalidated;                       //!< indicates that resource has been revoked
         std::string path;                       //!< file path
-        std::vector<Host *> host_in_possetion;  //!< Host in possession of the Resource
+        tbb::concurrent_vector<std::weak_ptr<Host>> hosts_in_possession;  //!< Host in possession of the Resource
 
         friend class Resource_Database;         //!< friendship to manage Resource Hosts, path etc
     };

@@ -20,7 +20,7 @@ class CLI
     Resource_Database& res_db;
     Logging_Module& Logger;
     boost::asio::io_service& io_service;
-    FileManager fm;
+    FileManager& fm;
     void print_help() const;
     void execute_command(std::string name, std::string arg);
     void print_init_info();
