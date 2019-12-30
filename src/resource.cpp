@@ -56,4 +56,8 @@ namespace simpleP2P {
     bool Resource::operator!=(const Resource &other) const {
         return !operator==(other);
     }
+
+    bool Resource::isInvalidated(){
+        return invalidated == true;
+    }
 }

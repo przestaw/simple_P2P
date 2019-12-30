@@ -10,6 +10,8 @@
 #include "resource.h"
 #include "logging_module.h"
 #include "FileManager.h"
+#include "printer.h"
+#include <sstream>
 
 namespace simpleP2P
 {
@@ -22,12 +24,15 @@ class CLI
     boost::asio::io_service& io_service;
     FileManager& fm;
     Host& localhost;
+    Printer& printer;
+    std::stringstream stream;
     void print_help() const;
     void execute_command(std::string name, std::string arg);
     void print_init_info();
+    void print_text(std::stringstream& text);
 
 public:
-    CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_service& io_service_, FileManager &fm_, Host &localhost_);
+    CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_service& io_service_, FileManager &fm_, Host &localhost_, Printer &printer_);
     ~CLI();
     void init();
 };

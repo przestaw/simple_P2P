@@ -11,6 +11,7 @@
 #include <udp_server.h>
 #include <udp_client.h>
 #include <udp_module.h>
+#include <printer.h>
 
 using namespace simpleP2P;
 using namespace boost;
@@ -56,9 +57,11 @@ int main(int argc, const char *argv[])
      */
     //TODO: use parameters
     Logging_Module logger;
+    Printer printer;
     //Udp_Module udp(boost::asio::ip::address::from_string(BROADCAST_ADDRESS), 19000, 5); // basic test
 
     basic[0] = logger.init();
+    basic[1] = printer.init();
     //basic[1] = udp.init();
 
     // tylko zeby nie krzyczalo
@@ -68,7 +71,7 @@ int main(int argc, const char *argv[])
     FileManager fm;
     // ^ XDD
 
-    CLI *commandline = new CLI(res_db, logger, io_service, fm, localhost);
+    CLI *commandline = new CLI(res_db, logger, io_service, fm, localhost, printer);
     commandline->init();
 
     for (auto &iter : basic)
