@@ -1,4 +1,4 @@
-#Dodatkowe założenia do dokumenctacji
+#Appendix - Dodatkowe założenia do dokumenctacji
 ##UDP :
 
 - wysyłanie rozgłoszeń w formie jednego/kilku pamietów w zależności od ilości plików
