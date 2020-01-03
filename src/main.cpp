@@ -57,7 +57,7 @@ int main(int argc, const char *argv[])
      */
     //TODO: use parameters
     Logging_Module logger;
-    Printer printer;
+    Printer printer(std::cout);
     //Udp_Module udp(boost::asio::ip::address::from_string(BROADCAST_ADDRESS), 19000, 5); // basic test
 
     basic[0] = logger.init();

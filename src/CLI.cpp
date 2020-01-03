@@ -127,6 +127,7 @@ void CLI::print_init_info()
 
 void CLI::init()
 {
+    sleep(1);
     std::string line;
     std::vector<std::string> vec;
 
