@@ -165,4 +165,8 @@ namespace simpleP2P {
                           });
         }
     }
+
+    std::shared_ptr<Host> Resource_Database::getHost() const {
+        return std::make_shared<Host>(my_host);
+    }
 }

@@ -24,21 +24,25 @@ simpleP2P::Udp_Server::Udp_Server(io_service &io_service,
 
 void simpleP2P::Udp_Server::handle_receive(const boost::system::error_code &error, size_t bytes_transferred) {
     if (!error || error == error::message_size) {
-        logger.add_log_line("received : " +
-                            std::to_string(bytes_transferred) +
-                            " bytes over UDP\n from : " +
-                            remote_endpoint.address().to_string(),
-                            std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
-        //TODO
-        { //TODO : Parse etc - below for test
+        //TODO negate to switch branches
+        if(*database.getHost().get() == Host(remote_endpoint.address())){
+            if(recv_buffer.front() == FILE_LIST){
+                logger.add_log_line("received (files beacon) : " +
+                                    std::to_string(bytes_transferred) +
+                                    " bytes over UDP\n from : " +
+                                    remote_endpoint.address().to_string(),
+                                    std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+                //TODO parse
 
-//            for (int i = 0; i < bytes_transferred; ++i) {
-//                std::cout << std::setw(2) << std::to_string(recv_buffer[i]) << " ";
-//            }
-//            std::cout << '\n';
+            } else if (recv_buffer.front() == REVOKE) {
+                logger.add_log_line("received (revocation) : " +
+                                    std::to_string(bytes_transferred) +
+                                    " bytes over UDP\n from : " +
+                                    remote_endpoint.address().to_string(),
+                                    std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+                //TODO parse
+            }
         }
-
-
         do_receive();
     }
 }
