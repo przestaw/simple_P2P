@@ -113,7 +113,7 @@ CLI::CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_se
                 stream << command;
             print_text(stream);
             return 1; }), 
-        CLICommand("quit", "leaves the program", nullptr)
+        CLICommand("quit", "leaves the program", [](std::string x){exit(1); return 0;})
     };
 }
 
