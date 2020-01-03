@@ -71,8 +71,9 @@ int main(int argc, const char *argv[])
     FileManager fm;
     // ^ XDD
 
-    CLI *commandline = new CLI(res_db, logger, io_service, fm, localhost, printer);
-    commandline->init();
+    CLI commandline(res_db, logger, io_service, fm, localhost, printer);
+
+    basic[2] = commandline.init();
 
     for (auto &iter : basic)
     {

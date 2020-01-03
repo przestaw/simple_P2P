@@ -52,6 +52,9 @@ CLI::CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_se
                     return 1;
                 }
             }
+            stream << " File does not exist. Are you sure it is in database?\n";
+            print_text(stream);
+
             return 0;
         }),
         CLICommand("download", "\"download name_of_file\" - downloads a file using p2p", [this](std::string name_of_file) {
@@ -127,9 +130,12 @@ void CLI::print_init_info()
     execute_command("help", "");
 }
 
-void CLI::init()
+std::thread CLI::init() {
+        return std::thread([=] { init2(); });
+    }
+
+void CLI::init2()
 {
-    sleep(1);
     std::string line;
     std::vector<std::string> vec;
 
