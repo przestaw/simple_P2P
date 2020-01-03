@@ -44,6 +44,8 @@ namespace simpleP2P {
          * @return true if not equal
          */
         bool operator!=(const Host &other) const;
+
+        const std::vector<std::weak_ptr<Resource>>& get_possesed() const;
     private:
         void remove_resource(std::shared_ptr<Resource> res);
 

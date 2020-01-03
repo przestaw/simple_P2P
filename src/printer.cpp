@@ -12,7 +12,7 @@ namespace simpleP2P{
         for(;;){
             queue_cond.wait(uniqueLock);
             while(printing_queue.size()){
-                output << printing_queue.back();
+                output << printing_queue.front();
                 printing_queue.pop();
             }
         }

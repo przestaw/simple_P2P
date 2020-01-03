@@ -37,4 +37,9 @@ namespace simpleP2P {
                         }
                 ), possesed_resources.end());
     }
+
+    const std::vector<std::weak_ptr<Resource>>& Host::get_possesed() const
+    {
+        return possesed_resources;
+    }
 }

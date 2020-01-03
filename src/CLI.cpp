@@ -87,6 +87,21 @@ CLI::CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_se
 
             return 0;
         }),
+       /* CLICommand("local", "prints files downoloaded in the system", [this](std::string dupa) {
+            std::vector<std::weak_ptr<Resource>> resources = localhost.get_possesed();
+
+            for (auto resource2 : resources)
+            {
+                auto resource = resource2.lock();
+                stream << " " << resource->getName();
+                if (resource->isInvalidated())
+                    stream << " [revoked]";
+                stream << "\n";  
+            }
+            print_text(stream);
+
+            return 0;
+        }),*/
 
         CLICommand("help", "prints available commands", [this](std::string x) {
             for (auto &command : CLICommands)
