@@ -45,6 +45,15 @@ namespace simpleP2P {
                       const Host &host);
 
         /**
+         * Removes connection between file and resource
+         * @param res Resource to be removed from host list
+         * @param host Host which resource will be removed
+         * @return returns false if file did not existed or was not possesed
+         */
+        bool remove_file(const Resource &res,
+                         const Host &host);
+
+        /**
          * Updates the list of resources aviable from host
          * Triggered after receive of full Beacon Packet
          * @param host Host and possesed resources in a struct
@@ -63,6 +72,13 @@ namespace simpleP2P {
          * @param res Resource to be added
          */
         inline void add_file(const Resource &res);
+
+        /**
+          * same as remove_file(Resource, Host) but host is localhost
+          * @param res Resource to be removed from localhost list
+          * @return returns false if file did not existed or was not possesed
+          */
+        inline bool remove_file(const Resource &res);
 
         /**
         * Returns shared pointer to resource to allow access to information about file owners

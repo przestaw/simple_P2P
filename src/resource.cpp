@@ -56,4 +56,22 @@ namespace simpleP2P {
     bool Resource::operator!=(const Resource &other) const {
         return !operator==(other);
     }
+
+    void Resource::remove_host(std::shared_ptr<Host> host) {
+        //make local copy and erase
+        std::vector<std::weak_ptr<Host>> temp(hosts_in_possession.begin(),
+                                              hosts_in_possession.end());
+        temp.erase(
+                std::remove_if(
+                        temp.begin(),
+                        temp.end(),
+                        [&host](auto &it) {
+                            return it.lock() == host;
+                        }
+                ), temp.end());
+
+        //swap contents of the vectors
+        hosts_in_possession.clear();
+        hosts_in_possession.assign(temp.begin(), temp.end());
+    }
 }
