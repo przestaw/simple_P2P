@@ -10,6 +10,8 @@
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
 #include "GeneralTypes.h"
+#include "resource_database.h"
+#include "logging_module.h"
 
 namespace simpleP2P {
     /**
@@ -20,10 +22,13 @@ namespace simpleP2P {
         /**
          * Constructor of UDP Server
          * @param io_service asio Io Service
+         * @param database Database
+         * @param logger Logger
          * @param broadcast_address address on which Server will listen
          * @param broadcast_port port on which Server will listen
          */
         Udp_Server(boost::asio::io_service &io_service,
+                   Resource_Database &database, Logging_Module &logger,
                    const boost::asio::ip::address &broadcast_address,
                    Uint16 broadcast_port);
 
@@ -49,6 +54,8 @@ namespace simpleP2P {
         boost::asio::ip::udp::socket socket_;                //!< Socket on which operates Server
         boost::asio::ip::udp::endpoint remote_endpoint;      //!< Endpoint from data has came
         boost::array<Int8, UDP_SERV_BUFFER_SIZE> recv_buffer;//!< Buffer for received data
+        Resource_Database &database;
+        Logging_Module &logger;
     };
 }
 

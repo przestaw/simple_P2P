@@ -6,6 +6,7 @@
 #include "host.h"
 #include "resource.h"
 #include <cstring>
+#include <iostream>
 
 namespace simpleP2P {
     Resource::Resource(std::string name_c, Uint64 size_c, std::string path_c)
@@ -20,11 +21,12 @@ namespace simpleP2P {
         std::vector<Int8> header;
         header.resize(256 + sizeof(Uint64));
         memset(header.data(), 0, 256);
-        strcpy(reinterpret_cast<char *>(header.data()), getName().c_str());
 
-        Uint64 size_net = getSize(); //TODO htonl
+        memcpy(header.data(), name.c_str(), name.size());
 
-        memcpy(header.data(), &size_net, sizeof(size_net));
+        Uint64 size_net = htobe64(getSize());
+        memcpy(header.data() + 256, &size_net, sizeof(size_net));
+
         return header;
     }
 

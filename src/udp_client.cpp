@@ -9,14 +9,14 @@
 using namespace boost::asio;
 
 simpleP2P::Udp_Client::Udp_Client(io_service &io_service,
-                                  const ip::address &broadcast_address, Uint16 broadcast_port,
-                                  Resource_Database *database_c,
-                                  Uint32 timeout_c)
+                                  Resource_Database &database_c, Logging_Module &logger_c,
+                                  const ip::address &broadcast_address,
+                                  Uint16 broadcast_port, Uint32 timeout_c)
         : endpoint_(broadcast_address, broadcast_port),
           socket_(io_service, endpoint_.protocol()),
           tx_queue_(),
           timer(io_service, boost::posix_time::seconds(timeout_c)),
-          database(database_c), timeout(timeout_c) {
+          database(database_c), logger(logger_c), timeout(timeout_c) {
 
     socket_.set_option(ip::udp::socket::reuse_address(true));
     socket_.set_option(socket_base::broadcast(true));
@@ -49,7 +49,8 @@ void simpleP2P::Udp_Client::transmit() {
 void simpleP2P::Udp_Client::write_handler(boost::system::error_code const &error,
                                           size_t bytes_transferred) {
     tx_queue_.pop_front();
-    std::cerr << "write : " << bytes_transferred << " bytes\n"; // TODO: log send
+    logger.add_log_line("sent : " + std::to_string(bytes_transferred) + " bytes over UDP",
+                        std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
     if (!error) {
         if (!tx_queue_.empty())
             transmit();
@@ -73,13 +74,14 @@ void simpleP2P::Udp_Client::revoke_file(simpleP2P::Resource resource) {
 }
 
 void simpleP2P::Udp_Client::fire_beacon() {
-    std::vector<std::vector<Int8>> files = database->generate_database_headers();
-
+    std::vector<std::vector<Int8>> files = database.generate_database_headers();
+    logger.add_log_line("prepared : advertisement over UDP",
+                        std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
     do {
         std::vector<Int8> packet;
         Uint16 i;
-        if (files.size() > 5) { //TODO depend on size
-            i = 5;
+        if (files.size() > BEACON_MAX_COUNT) {
+            i = BEACON_MAX_COUNT;
         } else {
             i = files.size();
         }
@@ -98,9 +100,8 @@ void simpleP2P::Udp_Client::fire_beacon() {
             send(packet);
         } else {
             std::vector<Int8> vec;
-            std::string blah = "blah 123456789";
+            std::string blah = "blah";
             vec.insert(vec.end(), blah.begin(), blah.end());
-            vec.push_back(0);
             send(vec);
         }
     } while (!files.empty());

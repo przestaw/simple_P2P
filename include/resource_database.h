@@ -71,14 +71,14 @@ namespace simpleP2P {
          * same as add_file(Resource, Host) but host is localhost
          * @param res Resource to be added
          */
-        inline void add_file(const Resource &res);
+        void add_file(const Resource &res);
 
         /**
           * same as remove_file(Resource, Host) but host is localhost
           * @param res Resource to be removed from localhost list
           * @return returns false if file did not existed or was not possesed
           */
-        inline bool remove_file(const Resource &res);
+        bool remove_file(const Resource &res);
 
         /**
         * Returns shared pointer to resource to allow access to information about file owners

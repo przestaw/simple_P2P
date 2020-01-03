@@ -24,7 +24,9 @@ namespace simpleP2P {
          * @param port port on which packets will be sent
          * @param beacon_interval beacon interval
          */
-        Udp_Module(boost::asio::ip::address broadcast_address,
+        Udp_Module(Resource_Database &database_c,
+                   Logging_Module &logger_c,
+                   boost::asio::ip::address broadcast_address,
                    Uint16 port, Uint32 beacon_interval);
 
         /**
@@ -47,10 +49,8 @@ namespace simpleP2P {
         boost::asio::ip::address broadcast_address;
         Uint16 port;
         Uint32 beacon_interval;
-
-        Logging_Module *logger = new Logging_Module();
-        Resource_Database *database = new Resource_Database(
-                Host(boost::asio::ip::address::from_string("192.168.1.198")));
+        Resource_Database &database;
+        Logging_Module &logger;
     };
 }
 

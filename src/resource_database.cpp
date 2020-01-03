@@ -10,7 +10,9 @@ using std::shared_ptr;
 using std::weak_ptr;
 
 namespace simpleP2P {
-    Resource_Database::Resource_Database(Host localhost) : my_host(std::move(localhost)) {}
+    Resource_Database::Resource_Database(Host localhost) : my_host(std::move(localhost)) {
+        hosts.push_back(std::make_shared<Host>(localhost));
+    }
 
     bool Resource_Database::has_file(const Resource &res) {
         std::shared_lock lock(database_mutex);
@@ -21,7 +23,7 @@ namespace simpleP2P {
                                  });
         auto res_i = std::find_if(host->get()->possesed_resources.begin(),
                                   host->get()->possesed_resources.end(),
-                                  [res](weak_ptr<Resource> &it) {
+                                  [&res](weak_ptr<Resource> &it) {
                                       return *(it.lock().get()) == res;
                                   });
         return res_i != host->get()->possesed_resources.end();
@@ -31,12 +33,12 @@ namespace simpleP2P {
         std::unique_lock lock(database_mutex);
         auto res_i = std::find_if(resources.begin(),
                                   resources.end(),
-                                  [res](shared_ptr<Resource> &it) {
+                                  [&res](shared_ptr<Resource> &it) {
                                       return *(it.get()) == res;
                                   });
         auto host_i = std::find_if(hosts.begin(),
                                    hosts.end(),
-                                   [host](shared_ptr<Host> &it) {
+                                   [&host](shared_ptr<Host> &it) {
                                        return *(it.get()) == host;
                                    });
 
@@ -89,7 +91,7 @@ namespace simpleP2P {
 
         auto resource = std::find_if(resources.begin(),
                                      resources.end(),
-                                     [resource_a](shared_ptr<Resource> &it) {
+                                     [&resource_a](shared_ptr<Resource> &it) {
                                          return *(it.get()) == resource_a;
                                      });
         if (resource != resources.end()) {
@@ -98,31 +100,31 @@ namespace simpleP2P {
         return std::shared_ptr<Resource>(nullptr);
     }
 
-    inline void Resource_Database::add_file(const Resource &res) {
+    void Resource_Database::add_file(const Resource &res) {
         return add_file(res, this->my_host);
     }
 
-    inline bool Resource_Database::remove_file(const Resource &res) {
+    bool Resource_Database::remove_file(const Resource &res) {
         return remove_file(res, this->my_host);
     }
 
-    std::vector<Int8> Resource_Database::generate_database_header() {
-        std::vector<Int8> header;
-        header.resize(sizeof(Uint64) + 1);
+
+    std::vector<std::vector<Int8>> Resource_Database::generate_database_headers() {
+        std::vector<std::vector<Int8>> header;
         std::shared_lock lock(database_mutex);
+
+
         auto host = std::find_if(hosts.begin(),
                                  hosts.end(),
                                  [this](shared_ptr<Host> &it) {
                                      return *(it.get()) == my_host;
                                  });
-        header[0] = (FILE_LIST);// +1
-        Uint64 size_net = host->get()->possesed_resources.size();
-        //TODO htonl
-        memcpy(header.data() + 1, &size_net, sizeof(size_net));
+
         for (auto &it : host->get()->possesed_resources) {
-            auto temp = it.lock().get()->generate_resource_header();
-            header.insert(header.end(), temp.begin(), temp.end());
+            header.emplace_back(it.lock().get()->generate_resource_header());
+
         }
+
         return header;
     }
 

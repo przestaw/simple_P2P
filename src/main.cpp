@@ -52,11 +52,19 @@ int main(int argc, const char *argv[]) {
      * Create threads for all modules and connect them e.g. by signal-slot
      */
     //TODO: use parameters
-    Logging_Module logger;
-    //Udp_Module udp(boost::asio::ip::address::from_string(BROADCAST_ADDRESS), 19000, 5); // basic test
+    Logging_Module logger; //TODO file OR default = std::cerr
+    Resource_Database database(Host(boost::asio::ip::address::from_string("192.168.1.198"))); //TODO ADRR
+    Udp_Module udp(database, logger, boost::asio::ip::address::from_string(BROADCAST_ADDRESS), 19000, 10); // basic test
+
+    {
+        Resource res = Resource("Bananowe jointy", 120);
+        database.add_file(res);
+        res = Resource("XD", 120);
+        database.add_file(res);
+    }
 
     basic[0] = logger.init();
-    //basic[1] = udp.init();
+    basic[1] = udp.init();
 
     for (auto &iter : basic) {
         iter.join();

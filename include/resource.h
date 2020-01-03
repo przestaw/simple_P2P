@@ -40,7 +40,6 @@ namespace simpleP2P {
          * Generates Resource header
          * @return Resource header
          */
-        //TODO : htonl for Uint64
         std::vector<Int8> generate_resource_header();
 
         /**

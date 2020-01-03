@@ -16,7 +16,7 @@ namespace simpleP2P{
         for(;;){
             queue_cond.wait(uniqueLock);
             while(logging_queue.size()){
-                output << logging_queue.back() << '\n';
+                output << logging_queue.front() << '\n';
                 logging_queue.pop();
             }
         }
@@ -24,7 +24,10 @@ namespace simpleP2P{
 
     void Logging_Module::add_log_line(std::string line, const std::time_t time) {
         std::lock_guard<std::mutex> uniqueLock(queue_mutex);
-        logging_queue.push("[" + std::string(std::ctime(&time)) + "]" + line);
+        auto time_str = std::string(std::ctime(&time));
+        logging_queue.push("[" +
+                           time_str.substr(0, time_str.length() - 1) +
+                           "] " + line);
         queue_cond.notify_one();
     }
 }
