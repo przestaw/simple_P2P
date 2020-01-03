@@ -59,14 +59,14 @@ namespace simpleP2P {
         std::unique_lock lock(database_mutex);
         auto res_i = std::find_if(resources.begin(),
                                   resources.end(),
-                                  [&res](Resource &it) {
-                                      return it == res;
+                                  [&res](auto &it) {
+                                      return *(it.get()) == res;
                                   });
         if (res_i != resources.end()) {
             auto host_i = std::find_if(res_i->get()->hosts_in_possession.begin(),
                                        res_i->get()->hosts_in_possession.end(),
-                                       [&host](Host *it) {
-                                           return *it == host;
+                                       [&host](auto &it) {
+                                           return *(it.lock().get()) == host;
                                        });
             if (host_i != res_i->get()->hosts_in_possession.end()) {
                 host_i->lock().get()->remove_resource(*res_i);
@@ -106,20 +106,23 @@ namespace simpleP2P {
         return remove_file(res, this->my_host);
     }
 
-    std::vector<std::vector<Int8>> Resource_Database::generate_database_headers() {
-        std::vector<std::vector<Int8>> header;
+    std::vector<Int8> Resource_Database::generate_database_header() {
+        std::vector<Int8> header;
+        header.resize(sizeof(Uint64) + 1);
         std::shared_lock lock(database_mutex);
-
         auto host = std::find_if(hosts.begin(),
                                  hosts.end(),
                                  [this](shared_ptr<Host> &it) {
                                      return *(it.get()) == my_host;
                                  });
-
+        header[0] = (FILE_LIST);// +1
+        Uint64 size_net = host->get()->possesed_resources.size();
+        //TODO htonl
+        memcpy(header.data() + 1, &size_net, sizeof(size_net));
         for (auto &it : host->get()->possesed_resources) {
-            header.emplace_back(it.lock().get()->generate_resource_header());
+            auto temp = it.lock().get()->generate_resource_header();
+            header.insert(header.end(), temp.begin(), temp.end());
         }
-
         return header;
     }
 
