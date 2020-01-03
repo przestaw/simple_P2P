@@ -79,6 +79,8 @@ CLI::CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_se
             for (auto resource : resources)
             {
                 stream << " " << resource->getName();
+                if (localhost.has_resource(*resource))
+                    stream << " [owned]";
                 if (resource->isInvalidated())
                     stream << " [revoked]";
                 stream << "\n";  
