@@ -59,14 +59,14 @@ namespace simpleP2P {
         std::unique_lock lock(database_mutex);
         auto res_i = std::find_if(resources.begin(),
                                   resources.end(),
-                                  [&res](Resource &it) {
-                                      return it == res;
+                                  [&res](auto &it) {
+                                      return *(it.get()) == res;
                                   });
         if (res_i != resources.end()) {
             auto host_i = std::find_if(res_i->get()->hosts_in_possession.begin(),
                                        res_i->get()->hosts_in_possession.end(),
-                                       [&host](Host *it) {
-                                           return *it == host;
+                                       [&host](auto &it) {
+                                           return *(it.lock().get()) == host;
                                        });
             if (host_i != res_i->get()->hosts_in_possession.end()) {
                 host_i->lock().get()->remove_resource(*res_i);
