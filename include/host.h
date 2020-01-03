@@ -6,6 +6,7 @@
 #define SIMPLE_P2P_HOST_H
 
 #include <chrono>
+#include <mutex>
 #include <string>
 #include <vector>
 
@@ -51,7 +52,7 @@ public:
   boost::asio::ip::tcp::endpoint get_endpoint() const;
   // Int16 get_port() const;
   // boost::asio::ip::address get_address() const;
-  bool is_retarded() const;
+  bool is_retarded();
   void increase_timeout_counter();
   std::chrono::system_clock::time_point get_ban_time_point() const;
 
@@ -65,7 +66,8 @@ private:
   Uint16 port;
 
   Int8 timeout_counter;
-  Int32 ban_time_point;
+  std::chrono::system_clock::time_point ban_time_point;
+  std::mutex mutex;
   friend class Resource_Database; //!< friendship to manage Host's Resources
                                   //!< timeouts etc
 };

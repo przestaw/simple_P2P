@@ -90,9 +90,13 @@ int main(int argc, const char *argv[]) {
   FileManager file_manager;
   boost::asio::io_service io_service;
   std::shared_ptr<Resource> resource =
-      std::make_shared<Resource>("nazwa", 5, "");
+      std::make_shared<Resource>("nazwa", 2000, "");
   Host *host = new Host(boost::asio::ip::address::from_string("192.168.0.1"));
+  Host *host2 = new Host(boost::asio::ip::address::from_string("192.168.0.1"));
+
   resource->add_host(host);
+  resource->add_host(host2);
+
   download::DownloadService download_service{logging_module, io_service,
                                              file_manager, resource};
   basic[0] = logging_module.init();

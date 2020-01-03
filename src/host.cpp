@@ -4,6 +4,7 @@
 
 #include "host.h"
 #include "resource.h"
+#include <iostream>
 #include <utility>
 
 namespace simpleP2P {
@@ -27,22 +28,26 @@ bool Host::operator!=(const Host &other) const {
 
 // Int16 Host::get_port() const { return port; }
 
-bool Host::is_retarded() const {
-  // TODO
-  // return get_ban_time_point() > std::chrono::system_clock::now();
-  return false;
+bool Host::is_retarded() {
+  std::unique_lock<std::mutex> lk{mutex};
+
+  return ban_time_point > std::chrono::system_clock::now();
 }
 
 void Host::increase_timeout_counter() {
+  std::unique_lock<std::mutex> lk{mutex};
+  std::cout << "Incr";
   timeout_counter++;
-  // TODO:
-  // ban host after timeout_counter exceeds given value
+
+  if (timeout_counter >= TIMEOUT_COUNTER_LIMIT) {
+    timeout_counter = 0;
+    using namespace std::literals;
+    ban_time_point = std::chrono::system_clock::now() + BAN_TIME;
+  }
 }
 
 std::chrono::system_clock::time_point Host::get_ban_time_point() const {
-  // TODO: casting ban_time_point
-  // return ban_time_point;
-  return std::chrono::system_clock::now();
+  return ban_time_point;
 }
 
 boost::asio::ip::tcp::endpoint Host::get_endpoint() const {

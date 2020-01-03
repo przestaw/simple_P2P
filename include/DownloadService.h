@@ -18,10 +18,10 @@ namespace simpleP2P::download {
 
 class DownloadService {
 public:
-  DownloadService(Logging_Module &logging_module,
-                  boost::asio::io_service &io_service,
-                  FileManager &file_manager,
-                  std::shared_ptr<Resource> resource);
+  DownloadService(Logging_Module &logging_module_c,
+                  boost::asio::io_service &io_service_c,
+                  FileManager &file_manager_c,
+                  std::shared_ptr<Resource> resource_c);
   ~DownloadService();
   std::thread init();
 

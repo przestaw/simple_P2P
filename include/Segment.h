@@ -3,25 +3,22 @@
 
 #include "GeneralTypes.h"
 
-namespace simpleP2P::download
-{
+namespace simpleP2P::download {
 /**
  * @class Complete resource segment representation.
- * 
+ *
  */
-class Segment
-{
+class Segment {
 public:
-    Segment();
-    Segment(SegmentId id);
-    ~Segment();
-    SegmentId get_id() const;
-    Uint8 const *get_data_ptr() const;
-    static const SegmentId NO_SEGMENT = static_cast<SegmentId>(-1);
+  Segment(SegmentId id_c, Uint8 *data_c);
+  ~Segment();
+  SegmentId get_id() const;
+  Uint8 const *get_data_ptr() const;
+  static const SegmentId NO_SEGMENT_ID = static_cast<SegmentId>(-1);
 
 private:
-    SegmentId id;
-    Uint8 *data;
+  SegmentId id;
+  Uint8 *data;
 };
 
 } // namespace simpleP2P::download

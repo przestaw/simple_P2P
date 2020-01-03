@@ -4,11 +4,11 @@
 namespace simpleP2P::download {
 
 DownloadWorker::DownloadWorker(
-    Logging_Module &logging_module, boost::asio::io_service &io_service,
-    Host *host, std::shared_ptr<CompleteResource> complete_resource)
-    : logging_module(logging_module), io_service(io_service), host(host),
-      complete_resource(complete_resource), socket(io_service),
-      timeouted(false), closed(false), dead(false){};
+    Logging_Module &logging_module_c, boost::asio::io_service &io_service_c,
+    Host *host_c, std::shared_ptr<CompleteResource> complete_resource_c)
+    : logging_module(logging_module_c), io_service(io_service_c), host(host_c),
+      complete_resource(complete_resource_c), socket(io_service_c),
+      timeouted(false), closed(false), dead(false) {}
 
 DownloadWorker::~DownloadWorker() {
   if (socket.is_open()) {
@@ -19,12 +19,12 @@ DownloadWorker::~DownloadWorker() {
 std::thread DownloadWorker::init() {
   return std::thread([=] {
     try {
-      connect();
+      // connect();
       worker();
     } catch (std::exception &e) {
       dead = true;
       std::stringstream error_message;
-      error_message << "Download worker terminated, host:"
+      error_message << "Download worker terminated, host: "
                     << host->get_endpoint() << std::endl
                     << " detailed error: " << e.what() << std::endl;
 
@@ -47,11 +47,10 @@ void DownloadWorker::worker() {
 
     Segment segment = complete_resource->get_segment();
 
-    if (segment.get_id() == Segment::NO_SEGMENT) {
+    if (segment.get_id() == Segment::NO_SEGMENT_ID) {
       break;
     }
-
-    download(segment);
+    // download(segment);
 
     complete_resource->set_segment(segment);
   }
@@ -68,14 +67,14 @@ void DownloadWorker::connect() {
     socket.connect(host->get_endpoint()); // TODO errors
   } catch (std::exception &e) {
     std::stringstream error_message;
-    error_message << "Failed to connect to host" << host->get_endpoint()
+    error_message << "Failed to connect to host: " << host->get_endpoint()
                   << std::endl
                   << " detailed error: " << e.what() << std::endl;
 
     using namespace std::chrono;
     logging_module.add_log_line(error_message.str(),
                                 system_clock::to_time_t(system_clock::now()));
-    throw std::exception();
+    throw std::runtime_error("Connection failure");
   }
 }
 
@@ -87,13 +86,16 @@ void DownloadWorker::download(Segment &segment) {
     std::stringstream error_message;
     error_message << "Failed to download segment: " + segment.get_id()
                   << std::endl
-                  << " of resource: " << resource->getName() << std::endl
+                  << " of resource: "
+                  << complete_resource->get_resource()->getName() << std::endl
                   << " from host " << host->get_endpoint() << std::endl
                   << " detailed error: " << e.what() << std::endl;
 
     using namespace std::chrono;
     logging_module.add_log_line(error_message.str(),
                                 system_clock::to_time_t(system_clock::now()));
+
+    // unset dirty
   }
 }
 
@@ -121,6 +123,7 @@ Int8 *patch_segment_request(Segment &segment) { return nullptr; }
 void DownloadWorker::check_timeout() {
   std::unique_lock<std::mutex> lk{timeouted_mutex};
   if (timeouted) {
+    // logging_module.add_log_line();
     host->increase_timeout_counter();
     timeouted = false;
   }

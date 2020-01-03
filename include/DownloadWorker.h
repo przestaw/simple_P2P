@@ -18,9 +18,9 @@
 namespace simpleP2P::download {
 class DownloadWorker {
 public:
-  DownloadWorker(Logging_Module &logging_module,
-                 boost::asio::io_service &io_service, Host *host,
-                 std::shared_ptr<CompleteResource> complete_resource);
+  DownloadWorker(Logging_Module &logging_module_c,
+                 boost::asio::io_service &io_service_c, Host *host_c,
+                 std::shared_ptr<CompleteResource> complete_resource_c);
   ~DownloadWorker();
   std::thread init();
   void check_timeout();
@@ -34,21 +34,20 @@ private:
   void request_segment(Segment &segment);
   void receive_segment(Segment &segment);
   Int8 *patch_segment_request(Segment &segment);
-  boost::asio::io_service &io_service;
   Logging_Module &logging_module;
-  boost::asio::ip::tcp::socket socket;
+  boost::asio::io_service &io_service;
   std::shared_ptr<Host> host;
   std::shared_ptr<CompleteResource> complete_resource;
-  std::shared_ptr<Resource> resource;
+  boost::asio::ip::tcp::socket socket;
   // Host *host;
   // Resource* resource;
   // boost::asio::io_service *io_service;
   // std::shared_ptr<boost::asio::io_service> io_service;
-  std::atomic<bool> dead;
+  std::atomic<bool> timeouted;
   std::atomic<bool> closed;
+  std::atomic<bool> dead;
   std::mutex cv_m;
   std::condition_variable cv;
-  std::atomic<bool> timeouted;
   std::mutex timeouted_mutex;
 };
 } // namespace simpleP2P::download

@@ -4,12 +4,12 @@
 
 namespace simpleP2P::download {
 
-DownloadService::DownloadService(Logging_Module &logging_module,
-                                 boost::asio::io_service &io_service,
-                                 FileManager &file_manager,
-                                 std::shared_ptr<Resource> resource)
-    : logging_module(logging_module), io_service(io_service),
-      file_manager(file_manager), resource(resource) {
+DownloadService::DownloadService(Logging_Module &logging_module_c,
+                                 boost::asio::io_service &io_service_c,
+                                 FileManager &file_manager_c,
+                                 std::shared_ptr<Resource> resource_c)
+    : logging_module(logging_module_c), io_service(io_service_c),
+      file_manager(file_manager_c), resource(resource_c) {
   complete_resource = std::make_shared<CompleteResource>(resource);
 }
 
