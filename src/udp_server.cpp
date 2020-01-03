@@ -29,11 +29,14 @@ void simpleP2P::Udp_Server::handle_receive(const boost::system::error_code &erro
                             " bytes over UDP\n from : " +
                             remote_endpoint.address().to_string(),
                             std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+        //TODO
+        { //TODO : Parse etc - below for test
 
-        for (int i = 0; i < bytes_transferred; ++i) {
-            std::cout << std::setw(2) << std::to_string(recv_buffer[i]) << " ";
+//            for (int i = 0; i < bytes_transferred; ++i) {
+//                std::cout << std::setw(2) << std::to_string(recv_buffer[i]) << " ";
+//            }
+//            std::cout << '\n';
         }
-        std::cout << '\n';
 
 
         do_receive();

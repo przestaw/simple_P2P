@@ -57,9 +57,9 @@ int main(int argc, const char *argv[]) {
     Udp_Module udp(database, logger, boost::asio::ip::address::from_string(BROADCAST_ADDRESS), 19000, 10); // basic test
 
     {
-        Resource res = Resource("Bananowe jointy", 120);
+        Resource res = Resource("Bananowe jointy", 127);
         database.add_file(res);
-        res = Resource("XD", 120);
+        res = Resource("XD", 1320);
         database.add_file(res);
     }
 

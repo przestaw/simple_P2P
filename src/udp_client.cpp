@@ -75,8 +75,7 @@ void simpleP2P::Udp_Client::revoke_file(simpleP2P::Resource resource) {
 
 void simpleP2P::Udp_Client::fire_beacon() {
     std::vector<std::vector<Int8>> files = database.generate_database_headers();
-    logger.add_log_line("prepared : advertisement over UDP",
-                        std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+
     do {
         std::vector<Int8> packet;
         Uint16 i;
@@ -97,12 +96,9 @@ void simpleP2P::Udp_Client::fire_beacon() {
                 files.pop_back();
                 packet.insert(packet.end(), res.begin(), res.end());
             }
+            logger.add_log_line("prepared : advertisement over UDP",
+                                std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
             send(packet);
-        } else {
-            std::vector<Int8> vec;
-            std::string blah = "blah";
-            vec.insert(vec.end(), blah.begin(), blah.end());
-            send(vec);
         }
     } while (!files.empty());
 
