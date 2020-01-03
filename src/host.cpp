@@ -29,25 +29,25 @@ bool Host::operator!=(const Host &other) const {
 // Int16 Host::get_port() const { return port; }
 
 bool Host::is_retarded() {
-  std::unique_lock<std::mutex> lk{mutex};
-
-  return ban_time_point > std::chrono::system_clock::now();
+  return ban_time >
+         std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 }
 
 void Host::increase_timeout_counter() {
-  std::unique_lock<std::mutex> lk{mutex};
-  std::cout << "Incr";
+  // TODO possible races
   timeout_counter++;
 
-  if (timeout_counter >= TIMEOUT_COUNTER_LIMIT) {
-    timeout_counter = 0;
+  Int8 &&limit = TIMEOUT_COUNTER_LIMIT;
+
+  if (timeout_counter.compare_exchange_strong(limit, 0)) {
     using namespace std::literals;
-    ban_time_point = std::chrono::system_clock::now() + BAN_TIME;
+    ban_time = std::chrono::system_clock::to_time_t(
+        std::chrono::system_clock::now() + BAN_TIME);
   }
 }
 
 std::chrono::system_clock::time_point Host::get_ban_time_point() const {
-  return ban_time_point;
+  return std::chrono::system_clock::from_time_t(ban_time);
 }
 
 boost::asio::ip::tcp::endpoint Host::get_endpoint() const {
