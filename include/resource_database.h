@@ -99,8 +99,7 @@ namespace simpleP2P {
          * Generates listing of localhost content in a header
          * @return listing header of localhost resources
          */
-        //TODO : max_lenght and support for partial sending
-        std::vector<Int8> generate_database_header();
+        std::vector<std::vector<Int8>> generate_database_headers();
     private:
         Host my_host;                     //!< localhost Host struct
         /* all internal operation on this vectors must be made with pointers */

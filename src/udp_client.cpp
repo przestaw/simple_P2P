@@ -10,11 +10,13 @@ using namespace boost::asio;
 
 simpleP2P::Udp_Client::Udp_Client(io_service &io_service,
                                   const ip::address &broadcast_address, Uint16 broadcast_port,
-                                  uint_fast32_t timeout)
+                                  Resource_Database *database_c,
+                                  Uint32 timeout_c)
         : endpoint_(broadcast_address, broadcast_port),
           socket_(io_service, endpoint_.protocol()),
           tx_queue_(),
-          timer(io_service, boost::posix_time::seconds(timeout)) {
+          timer(io_service, boost::posix_time::seconds(timeout_c)),
+          database(database_c), timeout(timeout_c) {
 
     socket_.set_option(ip::udp::socket::reuse_address(true));
     socket_.set_option(socket_base::broadcast(true));
@@ -63,23 +65,47 @@ void simpleP2P::Udp_Client::write_callback(boost::weak_ptr<Udp_Client> ptr,
 }
 
 void simpleP2P::Udp_Client::revoke_file(simpleP2P::Resource resource) {
-    (void) resource;
-    //TODO : gen header
-    //TODO : put in queue
+    std::vector<Int8> packet;
+    packet.emplace_back(REVOKE);
+    auto res = resource.generate_resource_header();
+    packet.insert(packet.end(), res.begin(), res.end());
+    send(packet);
 }
 
 void simpleP2P::Udp_Client::fire_beacon() {
-    //TODO : generate packet
-    //TODO : put in queue
+    std::vector<std::vector<Int8>> files = database->generate_database_headers();
 
-    std::cerr << "blah \n";
+    do {
+        std::vector<Int8> packet;
+        Uint16 i;
+        if (files.size() > 5) { //TODO depend on size
+            i = 5;
+        } else {
+            i = files.size();
+        }
 
-    std::vector<Int8> vec;
-    std::string blah = "blah 123456789";
-    vec.insert(vec.end(), blah.begin(), blah.end());
-    vec.push_back(0);
-    send(vec);
-    boost::posix_time::seconds interval(15);
+        if (i > 0) {
+            packet.resize(sizeof(Uint64) + 1);
+            packet[0] = (FILE_LIST);
+            Uint64 size_net = htobe64(i);
+            memcpy(packet.data() + 1, &size_net, sizeof(size_net));
+            //insert resources
+            for (; i > 0; --i) {
+                auto res = files.back();
+                files.pop_back();
+                packet.insert(packet.end(), res.begin(), res.end());
+            }
+            send(packet);
+        } else {
+            std::vector<Int8> vec;
+            std::string blah = "blah 123456789";
+            vec.insert(vec.end(), blah.begin(), blah.end());
+            vec.push_back(0);
+            send(vec);
+        }
+    } while (!files.empty());
+
+    boost::posix_time::seconds interval(timeout);
     timer.expires_at(timer.expires_at() + interval);
     timer.async_wait(boost::bind(&Udp_Client::fire_beacon,
                                  this));

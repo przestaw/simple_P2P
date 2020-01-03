@@ -106,23 +106,20 @@ namespace simpleP2P {
         return remove_file(res, this->my_host);
     }
 
-    std::vector<Int8> Resource_Database::generate_database_header() {
-        std::vector<Int8> header;
-        header.resize(sizeof(Uint64) + 1);
+    std::vector<std::vector<Int8>> Resource_Database::generate_database_headers() {
+        std::vector<std::vector<Int8>> header;
         std::shared_lock lock(database_mutex);
+
         auto host = std::find_if(hosts.begin(),
                                  hosts.end(),
                                  [this](shared_ptr<Host> &it) {
                                      return *(it.get()) == my_host;
                                  });
-        header[0] = (FILE_LIST);// +1
-        Uint64 size_net = host->get()->possesed_resources.size();
-        //TODO htonl
-        memcpy(header.data() + 1, &size_net, sizeof(size_net));
+
         for (auto &it : host->get()->possesed_resources) {
-            auto temp = it.lock().get()->generate_resource_header();
-            header.insert(header.end(), temp.begin(), temp.end());
+            header.emplace_back(it.lock().get()->generate_resource_header());
         }
+
         return header;
     }
 

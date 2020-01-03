@@ -11,6 +11,7 @@
 #include <deque>
 #include "GeneralTypes.h"
 #include "resource.h"
+#include "resource_database.h"
 
 namespace simpleP2P {
     /**
@@ -22,11 +23,13 @@ namespace simpleP2P {
          * Constructor of UDP Client
          * @param io_service asio Io Service
          * @param broadcast_address address on which packets will be sent
+         * @param database Database
          * @param broadcast_port port on which packets will be sent
          * @param timeout beacon interval
          */
         Udp_Client(boost::asio::io_service &io_service,
                    const boost::asio::ip::address &broadcast_address,
+                   Resource_Database *database,
                    Uint16 broadcast_port, Uint32 timeout = 5 * 60);
 
         /**
@@ -80,6 +83,8 @@ namespace simpleP2P {
         boost::asio::ip::udp::socket socket_;        //!< Socket on which operates Client
         std::deque<std::vector<Int8> > tx_queue_;    //!< Queue of datagrams to be sent
         boost::asio::deadline_timer timer;           //!< Timer for the beacon
+        Resource_Database *database;
+        Uint32 timeout;
     };
 }
 

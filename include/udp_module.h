@@ -9,6 +9,8 @@
 #include "GeneralTypes.h"
 #include "udp_client.h"
 #include "udp_server.h"
+#include "logging_module.h"
+#include "resource_database.h"
 
 namespace simpleP2P {
     /**
@@ -45,6 +47,10 @@ namespace simpleP2P {
         boost::asio::ip::address broadcast_address;
         Uint16 port;
         Uint32 beacon_interval;
+
+        Logging_Module *logger = new Logging_Module();
+        Resource_Database *database = new Resource_Database(
+                Host(boost::asio::ip::address::from_string("192.168.1.198")));
     };
 }
 
