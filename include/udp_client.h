@@ -83,11 +83,11 @@ namespace simpleP2P {
 
         boost::asio::ip::udp::endpoint endpoint_;    //!< Endpoint where data will be sent
         boost::asio::ip::udp::socket socket_;        //!< Socket on which operates Client
-        std::deque<std::vector<Uint8> > tx_queue_;    //!< Queue of datagrams to be sent
+        std::deque<std::vector<Uint8> > tx_queue_;   //!< Queue of datagrams to be sent
         boost::asio::deadline_timer timer;           //!< Timer for the beacon
-        Resource_Database &database;
-        Logging_Module &logger;
-        Uint32 timeout;
+        Resource_Database &database;                 //!< Connection to ResourceDatabase
+        Logging_Module &logger;                      //!< Connection to LoggingModule
+        Uint32 timeout;                              //!< Beacon interval
     };
 }
 
