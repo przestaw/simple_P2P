@@ -7,18 +7,30 @@
 #include "resource.h"
 #include <cstring>
 #include <iostream>
+#include <utility>
 
 namespace simpleP2P {
     Resource::Resource(std::string name_c, Uint64 size_c, std::string path_c)
-            : size(size_c), name(name_c), invalidated(false), path(path_c) {}
+            : size(size_c), name(std::move(name_c)), invalidated(false), path(std::move(path_c)) {}
 
-    Resource::Resource(std::vector<Int8> resource_header) : invalidated(false) {
-        (void) resource_header;
-        //TODO
+    Resource::Resource(std::vector<Uint8> resource_header) : invalidated(false) {
+        std::string filename;
+        Uint64 size_c = 0;
+        if (resource_header.size() >= RESOURCE_HEADER_SIZE) {
+            Uint8 *buf = &resource_header[0];
+            Uint8 *end = std::find(buf, buf + 256, '\0');
+            filename = std::string(buf, end);
+            size_c = be64toh(
+                    *(reinterpret_cast<Uint64 *>(
+                            buf + 256)));
+        }
+        path = "./";
+        size = size_c;
+        name = std::move(filename);
     }
 
-    std::vector<Int8> Resource::generate_resource_header() {
-        std::vector<Int8> header;
+    std::vector<Uint8> Resource::generate_resource_header() {
+        std::vector<Uint8> header;
         header.resize(256 + sizeof(Uint64));
         memset(header.data(), 0, 256);
 

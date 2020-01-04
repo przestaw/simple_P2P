@@ -33,14 +33,13 @@ namespace simpleP2P {
          * Constructor makes resource from header
          * @param resource_header Resource header
          */
-        //TODO
-        Resource(std::vector<Int8> resource_header);
+        Resource(std::vector<Uint8> resource_header);
 
         /**
          * Generates Resource header
          * @return Resource header
          */
-        std::vector<Int8> generate_resource_header();
+        std::vector<Uint8> generate_resource_header();
 
         /**
          * Determines if resource is possesed by Host

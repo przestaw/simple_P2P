@@ -55,7 +55,7 @@ namespace simpleP2P {
          * Put arbitrary datagram in a tx_queue_.
          * @param packet datagram to be put in the tx_queue_
          */
-        void send(const std::vector<Int8> &packet);
+        void send(const std::vector<Uint8> &packet);
 
         /**
          * Sends the packet from tx_queue_ head
@@ -83,7 +83,7 @@ namespace simpleP2P {
 
         boost::asio::ip::udp::endpoint endpoint_;    //!< Endpoint where data will be sent
         boost::asio::ip::udp::socket socket_;        //!< Socket on which operates Client
-        std::deque<std::vector<Int8> > tx_queue_;    //!< Queue of datagrams to be sent
+        std::deque<std::vector<Uint8> > tx_queue_;    //!< Queue of datagrams to be sent
         boost::asio::deadline_timer timer;           //!< Timer for the beacon
         Resource_Database &database;
         Logging_Module &logger;

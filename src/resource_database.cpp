@@ -82,7 +82,7 @@ namespace simpleP2P {
         }
     }
 
-    shared_ptr<Resource> Resource_Database::who_has_file(std::vector<Int8> resource_header) {
+    shared_ptr<Resource> Resource_Database::who_has_file(std::vector<Uint8> resource_header) {
         return who_has_file(Resource(std::move(resource_header)));
     }
 
@@ -109,10 +109,9 @@ namespace simpleP2P {
     }
 
 
-    std::vector<std::vector<Int8>> Resource_Database::generate_database_headers() {
-        std::vector<std::vector<Int8>> header;
+    std::vector<std::vector<Uint8>> Resource_Database::generate_database_headers() {
+        std::vector<std::vector<Uint8>> header;
         std::shared_lock lock(database_mutex);
-
 
         auto host = std::find_if(hosts.begin(),
                                  hosts.end(),

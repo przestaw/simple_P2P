@@ -29,7 +29,7 @@ simpleP2P::Udp_Client::~Udp_Client() {
     socket_.close();
 }
 
-void simpleP2P::Udp_Client::send(const std::vector<Int8> &packet) {
+void simpleP2P::Udp_Client::send(const std::vector<Uint8> &packet) {
     bool queue_empty(tx_queue_.empty());
     tx_queue_.emplace_back(packet);
     if (queue_empty)
@@ -66,7 +66,7 @@ void simpleP2P::Udp_Client::write_callback(boost::weak_ptr<Udp_Client> ptr,
 }
 
 void simpleP2P::Udp_Client::revoke_file(simpleP2P::Resource resource) {
-    std::vector<Int8> packet;
+    std::vector<Uint8> packet;
     packet.emplace_back(REVOKE);
     auto res = resource.generate_resource_header();
     packet.insert(packet.end(), res.begin(), res.end());
@@ -74,10 +74,10 @@ void simpleP2P::Udp_Client::revoke_file(simpleP2P::Resource resource) {
 }
 
 void simpleP2P::Udp_Client::fire_beacon() {
-    std::vector<std::vector<Int8>> files = database.generate_database_headers();
+    std::vector<std::vector<Uint8>> files = database.generate_database_headers();
 
     do {
-        std::vector<Int8> packet;
+        std::vector<Uint8> packet;
         Uint16 i;
         if (files.size() >= BEACON_MAX_COUNT) {
             i = BEACON_MAX_COUNT;

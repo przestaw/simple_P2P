@@ -86,7 +86,7 @@ namespace simpleP2P {
         * @return shared pointer to res
         */
         inline std::shared_ptr<Resource>
-        who_has_file(std::vector<Int8> resource_header); //NOTE: no constructor available
+        who_has_file(std::vector<Uint8> resource_header); //NOTE: no constructor available
 
         /**
          * Returns shared pointer to resource to allow access to information about file owners
@@ -99,7 +99,7 @@ namespace simpleP2P {
          * Generates listing of localhost content in a header
          * @return listing header of localhost resources
          */
-        std::vector<std::vector<Int8>> generate_database_headers();
+        std::vector<std::vector<Uint8>> generate_database_headers();
 
         std::shared_ptr<Host> getHost() const;
     private:
