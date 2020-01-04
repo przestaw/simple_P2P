@@ -2,37 +2,42 @@
 #include <algorithm>
 #include <iostream>
 
-namespace simpleP2P::download {
+namespace simpleP2P {
+using namespace std::literals;
 
 DownloadService::DownloadService(Logging_Module &logging_module_c,
                                  boost::asio::io_service &io_service_c,
                                  FileManager &file_manager_c,
+                                 Resource_Database &resource_database_c,
                                  std::shared_ptr<Resource> resource_c)
     : logging_module(logging_module_c), io_service(io_service_c),
-      file_manager(file_manager_c), resource(resource_c) {
+      file_manager(file_manager_c), resource_database(resource_database_c),
+      resource(resource_c) {
   complete_resource = std::make_shared<CompleteResource>(resource);
 }
 
 DownloadService::~DownloadService() {}
 
-std::thread DownloadService::init() {
-  return std::thread([=] {
-    try {
-      create_workers();
-      init_workers();
-      controll_workers();
-      store_file();
-      close_workers();
-      join_workers();
-    } catch (std::exception &e) {
-      handle_exception(e);
-      // TODO
-      // notify CLI about failure
-      // add log
-      // close all
-      // join all
-    }
-  });
+void DownloadService::init() {
+  try {
+    create_workers();
+    init_workers();
+    controll_workers();
+    store_file();
+    close_workers();
+    join_workers();
+  } catch (std::exception &e) {
+    handle_exception(e);
+    // TODO
+    // notify CLI about failure
+    // add log
+    // close all
+    // join all
+  }
+}
+
+std::thread DownloadService::init_thread() {
+  return std::thread([=] { init(); });
 }
 
 void DownloadService::create_workers() {
@@ -60,7 +65,7 @@ void DownloadService::init_workers() {
 void DownloadService::controll_workers() {
   while (true) {
     std::unique_lock<std::mutex> lk{cv_m};
-    if (cv.wait_for(lk, std::chrono::milliseconds(TIMEOUT_CHECK_INTERVAL),
+    if (cv.wait_for(lk, TIMEOUT_CHECK_INTERVAL,
                     [this]() { return complete_resource->is_completed(); })) {
       // download_completed
       break;
@@ -69,8 +74,7 @@ void DownloadService::controll_workers() {
       // timeouted
       // TODO
       if (all_workers_closed()) { // or all workers' hosts are retarded
-        // workers are unavailable
-        // download is not completed
+                                  // or no worker exists
         // throw exception
       }
       check_workers_timeout();

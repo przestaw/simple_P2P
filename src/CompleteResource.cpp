@@ -1,6 +1,6 @@
 #include "CompleteResource.h"
 
-namespace simpleP2P::download {
+namespace simpleP2P {
 
 CompleteResource::CompleteResource(std::shared_ptr<Resource> resource_c)
     : resource(resource_c), busy_segments(resource->calc_segments_count()),
@@ -41,15 +41,17 @@ void CompleteResource::set_segment(Segment &segment) {
   busy_segments[segment.get_id()] = false;
   completed_segments[segment.get_id()] = true;
   completed_counter++;
+  // TODO check if notifying all should be there or in is_completed
+  // (undesirable side effects)
+  if (completed_counter == resource->calc_segments_count()) {
+    cv.notify_all();
+  }
 }
 
 bool CompleteResource::is_completed() {
+  // TODO completed_counter is atomic, should there be a lock?
   std::unique_lock<std::mutex> lk{complete_resource_mutex};
-  if (completed_counter == resource->calc_segments_count()) {
-    cv.notify_all();
-    return true;
-  }
-  return false;
+  return completed_counter == resource->calc_segments_count();
 }
 
 bool CompleteResource::downloadable(SegmentId id) {

@@ -49,25 +49,53 @@ public:
    */
   bool operator!=(const Host &other) const;
 
+  /**
+   * @brief Method returning boost tcp endpoint (ip address and port) of the
+   * host.
+   *
+   * @return boost::asio::ip::tcp::endpoint
+   */
   boost::asio::ip::tcp::endpoint get_endpoint() const;
-  // Int16 get_port() const;
-  // boost::asio::ip::address get_address() const;
+
+  /**
+   * @brief Method returning true if program considers a given host to be
+   * retarded.
+   *
+   * @return true if a host is retarded
+   * @return false otherwise
+   */
   bool is_retarded();
+
+  /**
+   * @brief Method increasing a host timeout counter.
+   * After exeeding timeout limit, a host is considered to be retarded up to
+   * some point in time.
+   *
+   */
   void increase_timeout_counter();
+
+  /**
+   * @brief Method returning a time point to which a host is considered to be
+   * retarded.
+   *
+   * @return std::chrono::system_clock::time_point
+   */
   std::chrono::system_clock::time_point get_ban_time_point() const;
 
 private:
   boost::asio::ip::address host_ip; //!< Ip of the Host
 
   /*atrribs not checked for equality*/
-  // TODO: timeout etc stats
   std::vector<Resource *>
       possesed_resources; //!< Resources possessed by the Host
-  Uint16 port;
 
-  // std::atomic<Int8> timeout_counter;
-  // // std::atomic<std::chrono::system_clock::time_point> ban_time_point;
-  // std::atomic<std::time_t> ban_time;
+  // TODO timeout and retardation
+  // std::atomic<Int8> timeout_counter; //!< timeout counter
+  // std::atomic<std::chrono::system_clock::time_point> ban_time_point; //!<
+  // a time point to which a host is considered to be retarded
+  // std::atomic<std::time_t> ban_time; //!<
+  // a timestamp to which a host is considered to be retarded
+  Int16 port;
   friend class Resource_Database; //!< friendship to manage Host's Resources
                                   //!< timeouts etc
 };

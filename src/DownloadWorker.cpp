@@ -1,7 +1,7 @@
 #include "DownloadWorker.h"
 #include <sstream>
 
-namespace simpleP2P::download {
+namespace simpleP2P {
 
 DownloadWorker::DownloadWorker(
     Logging_Module &logging_module_c, boost::asio::io_service &io_service_c,
@@ -42,8 +42,6 @@ std::thread DownloadWorker::init() {
   });
 }
 
-int i = 0;
-
 void DownloadWorker::worker() {
   while (!closed) {
     if (host->is_retarded()) {
@@ -55,16 +53,14 @@ void DownloadWorker::worker() {
     Segment segment = complete_resource->get_segment();
 
     if (segment.get_id() == Segment::NO_SEGMENT_ID) {
-      close();
       break;
     }
 
     owned_segment_id = segment.get_id();
     log_start_downloading();
     // download(segment);
-    i++;
     std::this_thread::sleep_for(
-        std::chrono::duration(std::chrono::milliseconds(i * 100)));
+        std::chrono::duration(std::chrono::milliseconds(100)));
     log_finish_downloading();
 
     timeouted = false;
@@ -111,14 +107,14 @@ void DownloadWorker::download(Segment &segment) {
     logging_module.add_log_line(error_message.str(),
                                 system_clock::to_time_t(system_clock::now()));
 
-    // unset dirty
+    complete_resource->unset_busy(owned_segment_id);
   }
 }
 
 void DownloadWorker::request_segment(Segment &segment) {
   boost::system::error_code error;
-  // size!
-  boost::asio::write(socket, boost::asio::buffer("test"), error);
+  boost::asio::write(
+      socket, boost::asio::buffer(serialize_segment_request(segment)), error);
   if (error) {
     throw boost::system::system_error(error);
   }
@@ -126,15 +122,30 @@ void DownloadWorker::request_segment(Segment &segment) {
 
 void DownloadWorker::receive_segment(Segment &segment) {
   boost::system::error_code error;
-  // boost::asio::read(socket,
-  // boost::asio::buffer(patch_segment_request(segment), error);
-  // TODO check for errors
+  boost::asio::read(
+      socket, boost::asio::buffer(segment.get_data_ptr(), SEGMENT_SIZE), error);
   if (error) {
     throw boost::system::system_error(error);
   }
 }
 
-Int8 *patch_segment_request(Segment &segment) { return nullptr; }
+std::vector<Uint8> DownloadWorker::serialize_segment_request(Segment &segment) {
+  std::vector<Uint8> data;
+  data.push_back(REQ_SEGMENT);
+
+  std::vector<Uint8> resource_header =
+      complete_resource->get_resource()->generate_resource_header();
+
+  std::copy(resource_header.begin(), resource_header.end(),
+            std::back_inserter(data));
+
+  auto id = segment.get_id();
+  const Uint8 *byte_id_begin = reinterpret_cast<const Uint8 *>(&id);
+  std::copy(byte_id_begin, byte_id_begin + sizeof(SegmentId),
+            std::back_inserter(data));
+
+  return data;
+}
 
 void DownloadWorker::check_timeout() {
   std::unique_lock<std::mutex> lk{timeouted_mutex};
@@ -177,4 +188,4 @@ std::string DownloadWorker::get_log_header() {
 
 bool DownloadWorker::is_closed() { return closed; }
 
-} // namespace simpleP2P::download
+} // namespace simpleP2P

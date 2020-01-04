@@ -40,7 +40,7 @@ public:
    * @return Resource header
    */
   // TODO : htonl for Uint64
-  std::vector<Int8> generate_resource_header();
+  std::vector<Uint8> generate_resource_header();
 
   /**
    * Determines if resource is possesed by Host
@@ -94,6 +94,7 @@ public:
 
   const std::vector<Host *> &get_hosts() const;
   void add_host(Host *host);
+
 private:
   Uint64 size;      //!< file size
   std::string name; //!< file name

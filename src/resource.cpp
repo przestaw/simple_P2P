@@ -16,8 +16,8 @@ Resource::Resource(std::vector<Int8> resource_header) {
   // TODO
 }
 
-std::vector<Int8> Resource::generate_resource_header() {
-  std::vector<Int8> header;
+std::vector<Uint8> Resource::generate_resource_header() {
+  std::vector<Uint8> header;
   header.resize(256 + 64);
   memset(header.data(), 0, 256);
   strcpy(reinterpret_cast<char *>(header.data()), getName().c_str());

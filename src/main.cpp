@@ -88,19 +88,21 @@ int main(int argc, const char *argv[]) {
   std::thread basic[4];
   Logging_Module logging_module;
   FileManager file_manager;
+  Resource_Database resource_database(
+      Host{boost::asio::ip::address::from_string("192.168.0.1")});
   boost::asio::io_service io_service;
   std::shared_ptr<Resource> resource =
       std::make_shared<Resource>("nazwa", 20000, "");
-  Host *host = new Host(boost::asio::ip::address::from_string("192.168.0.1"));
-  Host *host2 = new Host(boost::asio::ip::address::from_string("192.168.0.2"));
+  Host *host = new Host(boost::asio::ip::address::from_string("192.168.0.2"));
+  Host *host2 = new Host(boost::asio::ip::address::from_string("192.168.0.3"));
 
   resource->add_host(host);
   resource->add_host(host2);
 
-  download::DownloadService download_service{logging_module, io_service,
-                                             file_manager, resource};
+  DownloadService download_service{
+      logging_module, io_service, file_manager, resource_database, resource};
   basic[0] = logging_module.init();
-  basic[1] = download_service.init();
+  basic[1] = download_service.init_thread();
   for (auto &iter : basic) {
     iter.join();
   }
