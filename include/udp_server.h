@@ -53,7 +53,7 @@ namespace simpleP2P {
 
         boost::asio::ip::udp::socket socket_;                //!< Socket on which operates Server
         boost::asio::ip::udp::endpoint remote_endpoint;      //!< Endpoint from data has came
-        boost::array<Int8, UDP_SERV_BUFFER_SIZE> recv_buffer;//!< Buffer for received data
+        boost::array<Uint8, UDP_SERV_BUFFER_SIZE> recv_buffer;//!< Buffer for received data
         Resource_Database &database;
         Logging_Module &logger;
     };

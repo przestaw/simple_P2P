@@ -79,7 +79,7 @@ void simpleP2P::Udp_Client::fire_beacon() {
     do {
         std::vector<Int8> packet;
         Uint16 i;
-        if (files.size() > BEACON_MAX_COUNT) {
+        if (files.size() >= BEACON_MAX_COUNT) {
             i = BEACON_MAX_COUNT;
         } else {
             i = files.size();
