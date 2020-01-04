@@ -8,7 +8,8 @@ DownloadWorker::DownloadWorker(
     Host *host_c, std::shared_ptr<CompleteResource> complete_resource_c)
     : logging_module(logging_module_c), io_service(io_service_c), host(host_c),
       complete_resource(complete_resource_c), socket(io_service_c),
-      timeouted(false), closed(false), dead(false) {}
+      timeouted(false), closed(false),
+      owned_segment_id(Segment::NO_SEGMENT_ID) {}
 
 DownloadWorker::~DownloadWorker() {
   if (socket.is_open()) {
@@ -20,9 +21,15 @@ std::thread DownloadWorker::init() {
   return std::thread([=] {
     try {
       // connect();
+      logging_module.add_log_line("new DownloadWorker initiated",
+                                  std::chrono::system_clock::to_time_t(
+                                      std::chrono::system_clock::now()));
       worker();
+      logging_module.add_log_line("DownloadWorker finished",
+                                  std::chrono::system_clock::to_time_t(
+                                      std::chrono::system_clock::now()));
     } catch (std::exception &e) {
-      dead = true;
+      closed = true;
       std::stringstream error_message;
       error_message << "Download worker terminated, host: "
                     << host->get_endpoint() << std::endl
@@ -35,23 +42,32 @@ std::thread DownloadWorker::init() {
   });
 }
 
+int i = 0;
+
 void DownloadWorker::worker() {
-  while (true) {
+  while (!closed) {
     if (host->is_retarded()) {
       std::unique_lock<std::mutex> lk{cv_m};
       cv.wait_until(lk, host->get_ban_time_point(),
                     [this]() { return closed == true; });
     }
 
-    timeouted = false;
-
     Segment segment = complete_resource->get_segment();
 
     if (segment.get_id() == Segment::NO_SEGMENT_ID) {
+      close();
       break;
     }
-    // download(segment);
 
+    owned_segment_id = segment.get_id();
+    log_start_downloading();
+    // download(segment);
+    i++;
+    std::this_thread::sleep_for(
+        std::chrono::duration(std::chrono::milliseconds(i * 100)));
+    log_finish_downloading();
+
+    timeouted = false;
     complete_resource->set_segment(segment);
   }
 }
@@ -123,12 +139,42 @@ Int8 *patch_segment_request(Segment &segment) { return nullptr; }
 void DownloadWorker::check_timeout() {
   std::unique_lock<std::mutex> lk{timeouted_mutex};
   if (timeouted) {
-    // logging_module.add_log_line();
+
     host->increase_timeout_counter();
-    timeouted = false;
+    complete_resource->unset_busy(owned_segment_id);
   }
+
+  timeouted = true;
 }
 
-bool DownloadWorker::is_dead() { return dead; }
+void DownloadWorker::log_timeout() {
+  logging_module.add_log_line(
+      get_log_header() + "timeout",
+      std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+}
+
+void DownloadWorker::log_start_downloading() {
+  logging_module.add_log_line(
+      get_log_header() + "segment downloading started",
+      std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+}
+
+void DownloadWorker::log_finish_downloading() {
+  logging_module.add_log_line(
+      get_log_header() + "segment downloading finished",
+      std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+}
+
+std::string DownloadWorker::get_log_header() {
+
+  std::stringstream message;
+  message << "Download worker"
+          << "; Resource: " << complete_resource->get_resource()->getName()
+          << "; Host " << host->get_endpoint()
+          << "; Segment: " << owned_segment_id << "; Message: ";
+  return message.str();
+}
+
+bool DownloadWorker::is_closed() { return closed; }
 
 } // namespace simpleP2P::download

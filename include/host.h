@@ -65,9 +65,9 @@ private:
       possesed_resources; //!< Resources possessed by the Host
   Uint16 port;
 
-  std::atomic<Int8> timeout_counter;
-  // std::atomic<std::chrono::system_clock::time_point> ban_time_point;
-  std::atomic<std::time_t> ban_time;
+  // std::atomic<Int8> timeout_counter;
+  // // std::atomic<std::chrono::system_clock::time_point> ban_time_point;
+  // std::atomic<std::time_t> ban_time;
   friend class Resource_Database; //!< friendship to manage Host's Resources
                                   //!< timeouts etc
 };

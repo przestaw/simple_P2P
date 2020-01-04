@@ -3,10 +3,9 @@
 namespace simpleP2P::download {
 
 CompleteResource::CompleteResource(std::shared_ptr<Resource> resource_c)
-    : resource(resource_c),
-      busy_segments(resource->calc_segments_count()),
-      completed_segments(resource->calc_segments_count()), completed_counter(0),
-      last_busy_segment(Segment::NO_SEGMENT_ID) {
+    : resource(resource_c), busy_segments(resource->calc_segments_count()),
+      completed_segments(resource->calc_segments_count()),
+      completed_counter(0) {
   data = new Uint8[resource->calc_segments_count() * SEGMENT_SIZE];
 }
 
@@ -17,42 +16,50 @@ std::shared_ptr<Resource> CompleteResource::get_resource() const {
 }
 
 Segment CompleteResource::get_segment() {
-  std::unique_lock<std::mutex> lk{complete_resource_mutex};
-
   if (is_completed()) {
-    return Segment{Segment::NO_SEGMENT_ID, nullptr};
+    return Segment::no_segment_left();
   }
 
-  auto segments = resource->calc_segments_count();
+  {
+    std::unique_lock<std::mutex> lk{complete_resource_mutex};
 
-  do {
-    last_busy_segment = (last_busy_segment + 1) % segments;
-  } while (!can_be_downloaded(last_busy_segment));
+    for (SegmentId id = 0; id < resource->calc_segments_count(); id++) {
+      if (downloadable(id)) {
+        busy_segments[id] = true;
+        return Segment{id, data + id * SEGMENT_SIZE * sizeof(Uint8)};
+      }
+    }
 
-  set_busy(last_busy_segment);
+    cv.wait(lk);
+  } // lock on scope to prevent deadlock while recursing
 
-  return Segment{last_busy_segment,
-                 data + last_busy_segment * SEGMENT_SIZE * sizeof(Uint8)};
+  return get_segment();
 }
 
 void CompleteResource::set_segment(Segment &segment) {
   std::unique_lock<std::mutex> lk{complete_resource_mutex};
-  unset_busy(segment.get_id());
-  set_completed(segment.get_id());
-}
-bool CompleteResource::is_completed() {
-  return completed_counter == resource->calc_segments_count();
+  busy_segments[segment.get_id()] = false;
+  completed_segments[segment.get_id()] = true;
+  completed_counter++;
 }
 
-bool CompleteResource::can_be_downloaded(SegmentId id) {
+bool CompleteResource::is_completed() {
+  std::unique_lock<std::mutex> lk{complete_resource_mutex};
+  if (completed_counter == resource->calc_segments_count()) {
+    cv.notify_all();
+    return true;
+  }
+  return false;
+}
+
+bool CompleteResource::downloadable(SegmentId id) {
   return busy_segments[id] == false && completed_segments[id] == false;
 }
 
-void CompleteResource::set_completed(SegmentId id) {
-  completed_segments[id] = true;
-  completed_counter++;
+void CompleteResource::unset_busy(SegmentId id) {
+  std::unique_lock<std::mutex> lk{complete_resource_mutex};
+  busy_segments[id] = false;
+  cv.notify_one();
 }
-void CompleteResource::set_busy(SegmentId id) { busy_segments[id] = true; }
-void CompleteResource::unset_busy(SegmentId id) { busy_segments[id] = false; }
 
 } // namespace simpleP2P::download

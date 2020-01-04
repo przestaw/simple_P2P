@@ -15,6 +15,7 @@ public:
   SegmentId get_id() const;
   Uint8 const *get_data_ptr() const;
   static const SegmentId NO_SEGMENT_ID = static_cast<SegmentId>(-1);
+  static Segment no_segment_left();
 
 private:
   SegmentId id;

@@ -21,6 +21,7 @@ std::thread DownloadService::init() {
       create_workers();
       init_workers();
       controll_workers();
+      store_file();
       close_workers();
       join_workers();
     } catch (std::exception &e) {
@@ -59,16 +60,16 @@ void DownloadService::init_workers() {
 void DownloadService::controll_workers() {
   while (true) {
     std::unique_lock<std::mutex> lk{cv_m};
-    if (cv.wait_for(lk, std::chrono::milliseconds(300), [this]() {
-          return complete_resource->is_completed() == true;
-        })) {
+    if (cv.wait_for(lk, std::chrono::milliseconds(TIMEOUT_CHECK_INTERVAL),
+                    [this]() { return complete_resource->is_completed(); })) {
       // download_completed
-      store_file();
       break;
     } else {
+      std::cout << "timeout controller" << std::endl;
       // timeouted
-      if (all_workers_dead()) {
-        // workers are dead
+      // TODO
+      if (all_workers_closed()) { // or all workers' hosts are retarded
+        // workers are unavailable
         // download is not completed
         // throw exception
       }
@@ -95,9 +96,9 @@ void DownloadService::close_workers() {
   }
 }
 
-bool DownloadService::all_workers_dead() {
+bool DownloadService::all_workers_closed() {
   return std::all_of(workers.begin(), workers.end(),
-                     [](auto worker) { return worker->is_dead(); });
+                     [](auto worker) { return worker->is_closed(); });
 }
 
 void DownloadService::handle_exception(std::exception &e) {

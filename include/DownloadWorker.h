@@ -25,7 +25,7 @@ public:
   std::thread init();
   void check_timeout();
   void close();
-  bool is_dead();
+  bool is_closed();
 
 private:
   void worker();
@@ -34,18 +34,18 @@ private:
   void request_segment(Segment &segment);
   void receive_segment(Segment &segment);
   Int8 *patch_segment_request(Segment &segment);
+  void log_timeout();
+  void log_start_downloading();
+  void log_finish_downloading();
+  std::string get_log_header();
   Logging_Module &logging_module;
   boost::asio::io_service &io_service;
   std::shared_ptr<Host> host;
   std::shared_ptr<CompleteResource> complete_resource;
   boost::asio::ip::tcp::socket socket;
-  // Host *host;
-  // Resource* resource;
-  // boost::asio::io_service *io_service;
-  // std::shared_ptr<boost::asio::io_service> io_service;
   std::atomic<bool> timeouted;
   std::atomic<bool> closed;
-  std::atomic<bool> dead;
+  std::atomic<SegmentId> owned_segment_id;
   std::mutex cv_m;
   std::condition_variable cv;
   std::mutex timeouted_mutex;

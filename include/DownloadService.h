@@ -32,7 +32,7 @@ private:
   void join_workers();
   void close_workers();
   void check_workers_timeout();
-  bool all_workers_dead();
+  bool all_workers_closed();
   void store_file();
   void handle_exception(std::exception &e);
 
