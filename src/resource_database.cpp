@@ -10,8 +10,8 @@ using std::shared_ptr;
 using std::weak_ptr;
 
 namespace simpleP2P {
-    Resource_Database::Resource_Database(Host localhost) : my_host(std::move(localhost)) {
-        hosts.push_back(std::make_shared<Host>(localhost));
+    Resource_Database::Resource_Database(Host localhost) : my_host(std::make_shared<Host>(localhost)) {
+        hosts.push_back(my_host);
     }
 
     bool Resource_Database::has_file(const Resource &res) {
@@ -19,7 +19,7 @@ namespace simpleP2P {
         auto host = std::find_if(hosts.begin(),
                                  hosts.end(),
                                  [this](shared_ptr<Host> &it) {
-                                     return *(it.get()) == my_host;
+                                     return *(it.get()) == *my_host.get();
                                  });
         auto res_i = std::find_if(host->get()->possesed_resources.begin(),
                                   host->get()->possesed_resources.end(),
@@ -101,13 +101,12 @@ namespace simpleP2P {
     }
 
     void Resource_Database::add_file(const Resource &res) {
-        return add_file(res, this->my_host);
+        return add_file(res, *my_host.get());
     }
 
     bool Resource_Database::remove_file(const Resource &res) {
-        return remove_file(res, this->my_host);
+        return remove_file(res, *my_host.get());
     }
-
 
     std::vector<std::vector<Uint8>> Resource_Database::generate_database_headers() {
         std::vector<std::vector<Uint8>> header;
@@ -116,7 +115,7 @@ namespace simpleP2P {
         auto host = std::find_if(hosts.begin(),
                                  hosts.end(),
                                  [this](shared_ptr<Host> &it) {
-                                     return *(it.get()) == my_host;
+                                     return *(it.get()) == *my_host.get();
                                  });
 
         for (auto &it : host->get()->possesed_resources) {
@@ -166,6 +165,6 @@ namespace simpleP2P {
     }
 
     std::shared_ptr<Host> Resource_Database::getHost() const {
-        return std::make_shared<Host>(my_host);
+        return my_host;
     }
 }

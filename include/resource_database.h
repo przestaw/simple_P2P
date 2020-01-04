@@ -101,13 +101,17 @@ namespace simpleP2P {
          */
         std::vector<std::vector<Uint8>> generate_database_headers();
 
+        /**
+         * Get localhost information
+         * @return localhost
+         */
         std::shared_ptr<Host> getHost() const;
     private:
-        Host my_host;                     //!< localhost Host struct
+        std::shared_ptr<Host> my_host;                     //!< localhost Host struct
         /* all internal operation on this vectors must be made with pointers */
         std::vector<std::shared_ptr<Resource>> resources;  //!< vector of Resources in database
         std::vector<std::shared_ptr<Host>> hosts;          //!< vector of Hosts in database
-        std::shared_mutex database_mutex; //!< rw_lock for database, allows multiple concurrent reads but permits concurrent writes
+        std::shared_mutex database_mutex;                  //!< rw_lock for database, allows multiple concurrent reads but permits concurrent writes
     };
 }
 
