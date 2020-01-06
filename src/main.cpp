@@ -1,5 +1,10 @@
 
+#include <DownloadService.h>
+#include <FileManager.h>
+
 #include <GeneralTypes.h>
+#include <boost/asio.hpp>
+#include <boost/program_options.hpp>
 #include <iostream>
 #include <logging_module.h>
 #include <thread>
@@ -57,6 +62,11 @@ int main(int argc, const char *argv[]) {
     Udp_Module udp(database, logger, boost::asio::ip::address::from_string(BROADCAST_ADDRESS), BROADCAST_PORT,
                    10); // basic test
 
+    //TODO : DownloadService
+    boost::asio::io_service io_service;
+    DownloadService download_service{
+      logger, io_service, file_manager, resource_database, resource};
+
     {
         Resource res = Resource("Bananowe jointy", 102070);
         database.add_file(res);
@@ -71,6 +81,7 @@ int main(int argc, const char *argv[]) {
 
     basic[0] = logger.init();
     basic[1] = udp.init();
+    basic[2] = download_service.init_thread();
 
     for (auto &iter : basic) {
         iter.join();

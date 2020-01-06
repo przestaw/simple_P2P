@@ -10,24 +10,24 @@
 #include <GeneralTypes.h>
 #include "tbb/concurrent_vector.h"
 
-#define SEGMENT_SIZE 1024 //1kb
+#define SEGMENT_SIZE 1024 // 1kb
 
 namespace simpleP2P {
 
-    class Host; //!< Forward declaration
+class Host; //!< Forward declaration
 
-    /**
-     * Class contains file information and points to nodes with file possesion
-     */
-    class Resource {
-    public:
-        /**
-         * Constructor
-         * @param name filename
-         * @param size filesize
-         * @param path filepath, default is "./"
-         */
-        Resource(std::string name, Uint64 size, std::string path = "./");
+/**
+ * Class contains file information and points to nodes with file possesion
+ */
+class Resource {
+public:
+  /**
+   * Constructor
+   * @param name filename
+   * @param size filesize
+   * @param path filepath, default is "./"
+   */
+  Resource(std::string name, Uint64 size, std::string path = "./");
 
         /**
          * Constructor makes resource from header

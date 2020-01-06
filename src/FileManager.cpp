@@ -15,7 +15,7 @@
 
 // TODO: synchronizing access to the files.
 
-namespace SimpleP2P {
+namespace simpleP2P {
 	FileManager::FileManager()
 	{}
 

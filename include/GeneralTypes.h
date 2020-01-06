@@ -17,6 +17,8 @@
 #define Int32 int32_t
 #define Int64 int64_t
 
+#define SegmentId Uint16
+
 #define REQ_SEGMENT 8
 #define REVOKE 16
 #define FILE_LIST 32
@@ -30,4 +32,9 @@
 #define BROADCAST_ADDRESS "192.168.1.255"
 #define BROADCAST_PORT 2020
 
-#endif //SIMPLE_P2P_GENERALTYPES_H
+#define TIMEOUT_COUNTER_LIMIT 5
+#define MAX_TIMEOUT 100ms
+#define BAN_TIME 1000ms
+#define TIMEOUT_CHECK_INTERVAL 300ms
+
+#endif // SIMPLE_P2P_GENERALTYPES_H

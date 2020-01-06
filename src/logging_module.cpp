@@ -30,4 +30,4 @@ namespace simpleP2P{
                            "] " + line);
         queue_cond.notify_one();
     }
-}
+} // namespace simpleP2P
