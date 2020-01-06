@@ -1,0 +1,38 @@
+\hypertarget{classsimpleP2P_1_1RequestWorker}{}\section{simple\+P2P\+:\+:Request\+Worker Class Reference}
+\label{classsimpleP2P_1_1RequestWorker}\index{simple\+P2\+P\+::\+Request\+Worker@{simple\+P2\+P\+::\+Request\+Worker}}
+
+
+T\+CP connection handler, created by the T\+CP server.  
+
+
+
+
+{\ttfamily \#include $<$Request\+Worker.\+h$>$}
+
+
+
+Inherits enable\+\_\+shared\+\_\+from\+\_\+this$<$ Request\+Worker $>$.
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsimpleP2P_1_1RequestWorker_ac5ad9c81de1edfea9e7ff01b55d46d60}\label{classsimpleP2P_1_1RequestWorker_ac5ad9c81de1edfea9e7ff01b55d46d60}} 
+\hyperlink{classsimpleP2P_1_1RequestWorker_ac5ad9c81de1edfea9e7ff01b55d46d60}{Request\+Worker} (boost\+::asio\+::io\+\_\+service \&io\+\_\+service)
+\begin{DoxyCompactList}\small\item\em Constructor allows setting the socket on which the connection is established. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classsimpleP2P_1_1RequestWorker_a2581f6fe51f1140db9d1e7c9b33900ba}\label{classsimpleP2P_1_1RequestWorker_a2581f6fe51f1140db9d1e7c9b33900ba}} 
+void \hyperlink{classsimpleP2P_1_1RequestWorker_a2581f6fe51f1140db9d1e7c9b33900ba}{start} ()
+\begin{DoxyCompactList}\small\item\em Start handling the request. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classsimpleP2P_1_1RequestWorker_aaf449574acb97751ab086c519bb17955}\label{classsimpleP2P_1_1RequestWorker_aaf449574acb97751ab086c519bb17955}} 
+tcp\+::socket \& \hyperlink{classsimpleP2P_1_1RequestWorker_aaf449574acb97751ab086c519bb17955}{socket} ()
+\begin{DoxyCompactList}\small\item\em Get socket. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+T\+CP connection handler, created by the T\+CP server. 
+
+Receives the file request, buffers requested segments and sends them to the client. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/Request\+Worker.\+h\item 
+src/Request\+Worker.\+cpp\end{DoxyCompactItemize}

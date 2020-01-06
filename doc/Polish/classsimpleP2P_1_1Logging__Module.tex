@@ -12,37 +12,17 @@ class Providing logging support based on text logs
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hyperlink{classsimpleP2P_1_1Logging__Module_a300ea6b6f0c06caa7891c2226fecf67b}{Logging\+\_\+\+Module} (std\+::ostream \&output\+\_\+c=std\+::cerr)
-\begin{DoxyCompactList}\small\item\em Constructor for the logging thread. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classsimpleP2P_1_1Logging__Module_a300ea6b6f0c06caa7891c2226fecf67b}\label{classsimpleP2P_1_1Logging__Module_a300ea6b6f0c06caa7891c2226fecf67b}} 
+{\bfseries Logging\+\_\+\+Module} (std\+::ostream \&output\+\_\+c=std\+::cerr)
+\item 
 std\+::thread \hyperlink{classsimpleP2P_1_1Logging__Module_a57e92e151320fd7c811689d831498b6a}{init} ()
-\begin{DoxyCompactList}\small\item\em Init methods run worker in thread and returns it. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Constructor for the logging thread. \end{DoxyCompactList}\item 
 void \hyperlink{classsimpleP2P_1_1Logging__Module_a5f1eb6d6c66d406f02ae4093cc7657ec}{add\+\_\+log\+\_\+line} (std\+::string line, const std\+::time\+\_\+t time)
 \begin{DoxyCompactList}\small\item\em Synchronised method for logging output. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
 class Providing logging support based on text logs 
-
-\subsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classsimpleP2P_1_1Logging__Module_a300ea6b6f0c06caa7891c2226fecf67b}\label{classsimpleP2P_1_1Logging__Module_a300ea6b6f0c06caa7891c2226fecf67b}} 
-\index{simple\+P2\+P\+::\+Logging\+\_\+\+Module@{simple\+P2\+P\+::\+Logging\+\_\+\+Module}!Logging\+\_\+\+Module@{Logging\+\_\+\+Module}}
-\index{Logging\+\_\+\+Module@{Logging\+\_\+\+Module}!simple\+P2\+P\+::\+Logging\+\_\+\+Module@{simple\+P2\+P\+::\+Logging\+\_\+\+Module}}
-\subsubsection{\texorpdfstring{Logging\+\_\+\+Module()}{Logging\_Module()}}
-{\footnotesize\ttfamily simple\+P2\+P\+::\+Logging\+\_\+\+Module\+::\+Logging\+\_\+\+Module (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{output\+\_\+c = {\ttfamily std\+:\+:cerr} }\end{DoxyParamCaption})}
-
-
-
-Constructor for the logging thread. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em output\+\_\+c} & Output stream for the logs \\
-\hline
-\end{DoxyParams}
-\begin{DoxyNote}{Note}
-if output stream is a file you must explicitly close it 
-\end{DoxyNote}
-
 
 \subsection{Member Function Documentation}
 \mbox{\Hypertarget{classsimpleP2P_1_1Logging__Module_a5f1eb6d6c66d406f02ae4093cc7657ec}\label{classsimpleP2P_1_1Logging__Module_a5f1eb6d6c66d406f02ae4093cc7657ec}} 
@@ -68,11 +48,16 @@ Synchronised method for logging output.
 
 
 
-Init methods run worker in thread and returns it. 
+Constructor for the logging thread. 
 
-\begin{DoxyReturn}{Returns}
-logging thread 
-\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em output\+\_\+c} & Output stream for the logs \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+if output stream is a file you must explicitly close it 
+\end{DoxyNote}
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}

@@ -1,0 +1,46 @@
+\hypertarget{classsimpleP2P_1_1FileRequest}{}\section{simple\+P2P\+:\+:File\+Request Class Reference}
+\label{classsimpleP2P_1_1FileRequest}\index{simple\+P2\+P\+::\+File\+Request@{simple\+P2\+P\+::\+File\+Request}}
+
+
+Carries info about a single file transfer request -\/ resource header and numbers of wanted segments.  
+
+
+
+
+{\ttfamily \#include $<$File\+Request.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classsimpleP2P_1_1FileRequest_a10e638217e87f34d01c527b919e238e4}{File\+Request} (std\+::vector$<$ Int8 $>$ rh, std\+::initializer\+\_\+list$<$ Uint32 $>$ s)
+\begin{DoxyCompactList}\small\item\em Constructor allows specificating the resource and segments. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classsimpleP2P_1_1FileRequest_abc003e2b2e4f5966e08f8a09ca05bac8}\label{classsimpleP2P_1_1FileRequest_abc003e2b2e4f5966e08f8a09ca05bac8}} 
+std\+::vector$<$ Int8 $>$ \hyperlink{classsimpleP2P_1_1FileRequest_abc003e2b2e4f5966e08f8a09ca05bac8}{get\+\_\+resource\+\_\+header} () const
+\begin{DoxyCompactList}\small\item\em Get the resource header. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classsimpleP2P_1_1FileRequest_a4d8b93821844d17ae11b4dc82097db28}\label{classsimpleP2P_1_1FileRequest_a4d8b93821844d17ae11b4dc82097db28}} 
+std\+::vector$<$ Uint32 $>$ \hyperlink{classsimpleP2P_1_1FileRequest_a4d8b93821844d17ae11b4dc82097db28}{get\+\_\+segments} () const
+\begin{DoxyCompactList}\small\item\em Get the segments\textquotesingle{} numbers. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Carries info about a single file transfer request -\/ resource header and numbers of wanted segments. 
+
+An instance of this class is created by T\+CP client, sent to T\+CP server, which passes it to the \hyperlink{classsimpleP2P_1_1FileManager}{File\+Manager} in order to get the requested segments of the requested file and send them to the T\+CP client. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classsimpleP2P_1_1FileRequest_a10e638217e87f34d01c527b919e238e4}\label{classsimpleP2P_1_1FileRequest_a10e638217e87f34d01c527b919e238e4}} 
+\index{simple\+P2\+P\+::\+File\+Request@{simple\+P2\+P\+::\+File\+Request}!File\+Request@{File\+Request}}
+\index{File\+Request@{File\+Request}!simple\+P2\+P\+::\+File\+Request@{simple\+P2\+P\+::\+File\+Request}}
+\subsubsection{\texorpdfstring{File\+Request()}{FileRequest()}}
+{\footnotesize\ttfamily simple\+P2\+P\+::\+File\+Request\+::\+File\+Request (\begin{DoxyParamCaption}\item[{std\+::vector$<$ Int8 $>$}]{rh,  }\item[{std\+::initializer\+\_\+list$<$ Uint32 $>$}]{s }\end{DoxyParamCaption})}
+
+
+
+Constructor allows specificating the resource and segments. 
+
+The fields then can\textquotesingle{}t be modified, only get. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/File\+Request.\+h\item 
+src/File\+Request.\+cpp\end{DoxyCompactItemize}

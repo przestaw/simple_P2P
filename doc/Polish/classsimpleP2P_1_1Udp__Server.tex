@@ -16,7 +16,7 @@ Inherits enable\+\_\+shared\+\_\+from\+\_\+this$<$ Udp\+\_\+\+Server $>$.
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hyperlink{classsimpleP2P_1_1Udp__Server_ad2e7873688dea22fa7db5ae1ef86ba6f}{Udp\+\_\+\+Server} (boost\+::asio\+::io\+\_\+service \&io\+\_\+service, const boost\+::asio\+::ip\+::address \&broadcast\+\_\+address, Uint16 broadcast\+\_\+port)
+\hyperlink{classsimpleP2P_1_1Udp__Server_a27116256dba312db65b6736253d059e7}{Udp\+\_\+\+Server} (boost\+::asio\+::io\+\_\+service \&io\+\_\+service, \hyperlink{classsimpleP2P_1_1Resource__Database}{Resource\+\_\+\+Database} \&database, \hyperlink{classsimpleP2P_1_1Logging__Module}{Logging\+\_\+\+Module} \&logger, const boost\+::asio\+::ip\+::address \&broadcast\+\_\+address, Uint16 broadcast\+\_\+port)
 \begin{DoxyCompactList}\small\item\em Constructor of U\+DP Server. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classsimpleP2P_1_1Udp__Server_adde5307f34477b9bca29f8e2cb9077b0}\label{classsimpleP2P_1_1Udp__Server_adde5307f34477b9bca29f8e2cb9077b0}} 
 \hyperlink{classsimpleP2P_1_1Udp__Server_adde5307f34477b9bca29f8e2cb9077b0}{$\sim$\+Udp\+\_\+\+Server} ()
@@ -27,11 +27,11 @@ Inherits enable\+\_\+shared\+\_\+from\+\_\+this$<$ Udp\+\_\+\+Server $>$.
 class U\+DP Server to handle all incoming packets 
 
 \subsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classsimpleP2P_1_1Udp__Server_ad2e7873688dea22fa7db5ae1ef86ba6f}\label{classsimpleP2P_1_1Udp__Server_ad2e7873688dea22fa7db5ae1ef86ba6f}} 
+\mbox{\Hypertarget{classsimpleP2P_1_1Udp__Server_a27116256dba312db65b6736253d059e7}\label{classsimpleP2P_1_1Udp__Server_a27116256dba312db65b6736253d059e7}} 
 \index{simple\+P2\+P\+::\+Udp\+\_\+\+Server@{simple\+P2\+P\+::\+Udp\+\_\+\+Server}!Udp\+\_\+\+Server@{Udp\+\_\+\+Server}}
 \index{Udp\+\_\+\+Server@{Udp\+\_\+\+Server}!simple\+P2\+P\+::\+Udp\+\_\+\+Server@{simple\+P2\+P\+::\+Udp\+\_\+\+Server}}
 \subsubsection{\texorpdfstring{Udp\+\_\+\+Server()}{Udp\_Server()}}
-{\footnotesize\ttfamily simple\+P2\+P\+::\+Udp\+\_\+\+Server\+::\+Udp\+\_\+\+Server (\begin{DoxyParamCaption}\item[{boost\+::asio\+::io\+\_\+service \&}]{io\+\_\+service,  }\item[{const boost\+::asio\+::ip\+::address \&}]{broadcast\+\_\+address,  }\item[{Uint16}]{broadcast\+\_\+port }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily simple\+P2\+P\+::\+Udp\+\_\+\+Server\+::\+Udp\+\_\+\+Server (\begin{DoxyParamCaption}\item[{boost\+::asio\+::io\+\_\+service \&}]{io\+\_\+service,  }\item[{\hyperlink{classsimpleP2P_1_1Resource__Database}{Resource\+\_\+\+Database} \&}]{database,  }\item[{\hyperlink{classsimpleP2P_1_1Logging__Module}{Logging\+\_\+\+Module} \&}]{logger,  }\item[{const boost\+::asio\+::ip\+::address \&}]{broadcast\+\_\+address,  }\item[{Uint16}]{broadcast\+\_\+port }\end{DoxyParamCaption})}
 
 
 
@@ -40,6 +40,10 @@ Constructor of U\+DP Server.
 
 \begin{DoxyParams}{Parameters}
 {\em io\+\_\+service} & asio Io Service \\
+\hline
+{\em database} & Database \\
+\hline
+{\em logger} & Logger \\
 \hline
 {\em broadcast\+\_\+address} & address on which Server will listen \\
 \hline

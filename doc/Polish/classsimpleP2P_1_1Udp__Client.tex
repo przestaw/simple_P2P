@@ -16,7 +16,7 @@ Inherits enable\+\_\+shared\+\_\+from\+\_\+this$<$ Udp\+\_\+\+Client $>$.
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hyperlink{classsimpleP2P_1_1Udp__Client_acb5ed96ec556665f56510c27f234bb5a}{Udp\+\_\+\+Client} (boost\+::asio\+::io\+\_\+service \&io\+\_\+service, const boost\+::asio\+::ip\+::address \&broadcast\+\_\+address, Uint16 broadcast\+\_\+port, Uint32 timeout=5 $\ast$60)
+\hyperlink{classsimpleP2P_1_1Udp__Client_a1c904ca43ce865a07572d94aecb48871}{Udp\+\_\+\+Client} (boost\+::asio\+::io\+\_\+service \&io\+\_\+service, \hyperlink{classsimpleP2P_1_1Resource__Database}{Resource\+\_\+\+Database} \&database, \hyperlink{classsimpleP2P_1_1Logging__Module}{Logging\+\_\+\+Module} \&logger, const boost\+::asio\+::ip\+::address \&broadcast\+\_\+address, Uint16 broadcast\+\_\+port, Uint32 timeout=5 $\ast$60)
 \begin{DoxyCompactList}\small\item\em Constructor of U\+DP Client. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classsimpleP2P_1_1Udp__Client_a710c95899ddcfba71004d780ab4c1e4d}\label{classsimpleP2P_1_1Udp__Client_a710c95899ddcfba71004d780ab4c1e4d}} 
 \hyperlink{classsimpleP2P_1_1Udp__Client_a710c95899ddcfba71004d780ab4c1e4d}{$\sim$\+Udp\+\_\+\+Client} ()
@@ -29,11 +29,11 @@ void \hyperlink{classsimpleP2P_1_1Udp__Client_a459f622d0f3671d48d33bce035f5de90}
 class U\+DP Client to handle all outgoing packets 
 
 \subsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classsimpleP2P_1_1Udp__Client_acb5ed96ec556665f56510c27f234bb5a}\label{classsimpleP2P_1_1Udp__Client_acb5ed96ec556665f56510c27f234bb5a}} 
+\mbox{\Hypertarget{classsimpleP2P_1_1Udp__Client_a1c904ca43ce865a07572d94aecb48871}\label{classsimpleP2P_1_1Udp__Client_a1c904ca43ce865a07572d94aecb48871}} 
 \index{simple\+P2\+P\+::\+Udp\+\_\+\+Client@{simple\+P2\+P\+::\+Udp\+\_\+\+Client}!Udp\+\_\+\+Client@{Udp\+\_\+\+Client}}
 \index{Udp\+\_\+\+Client@{Udp\+\_\+\+Client}!simple\+P2\+P\+::\+Udp\+\_\+\+Client@{simple\+P2\+P\+::\+Udp\+\_\+\+Client}}
 \subsubsection{\texorpdfstring{Udp\+\_\+\+Client()}{Udp\_Client()}}
-{\footnotesize\ttfamily simple\+P2\+P\+::\+Udp\+\_\+\+Client\+::\+Udp\+\_\+\+Client (\begin{DoxyParamCaption}\item[{boost\+::asio\+::io\+\_\+service \&}]{io\+\_\+service,  }\item[{const boost\+::asio\+::ip\+::address \&}]{broadcast\+\_\+address,  }\item[{Uint16}]{broadcast\+\_\+port,  }\item[{Uint32}]{timeout = {\ttfamily 5~$\ast$~60} }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily simple\+P2\+P\+::\+Udp\+\_\+\+Client\+::\+Udp\+\_\+\+Client (\begin{DoxyParamCaption}\item[{boost\+::asio\+::io\+\_\+service \&}]{io\+\_\+service,  }\item[{\hyperlink{classsimpleP2P_1_1Resource__Database}{Resource\+\_\+\+Database} \&}]{database,  }\item[{\hyperlink{classsimpleP2P_1_1Logging__Module}{Logging\+\_\+\+Module} \&}]{logger,  }\item[{const boost\+::asio\+::ip\+::address \&}]{broadcast\+\_\+address,  }\item[{Uint16}]{broadcast\+\_\+port,  }\item[{Uint32}]{timeout = {\ttfamily 5~$\ast$~60} }\end{DoxyParamCaption})}
 
 
 
@@ -42,6 +42,10 @@ Constructor of U\+DP Client.
 
 \begin{DoxyParams}{Parameters}
 {\em io\+\_\+service} & asio Io Service \\
+\hline
+{\em database} & Database \\
+\hline
+{\em logger} & Logger \\
 \hline
 {\em broadcast\+\_\+address} & address on which packets will be sent \\
 \hline

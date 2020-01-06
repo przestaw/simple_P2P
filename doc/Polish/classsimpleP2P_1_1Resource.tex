@@ -14,9 +14,9 @@ Forward declaration.
 \item 
 \hyperlink{classsimpleP2P_1_1Resource_a0aed54e6cf7d3a5fa2c53fe3b3b57d19}{Resource} (std\+::string name, Uint64 size, std\+::string path=\char`\"{}./\char`\"{})
 \begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
-\hyperlink{classsimpleP2P_1_1Resource_a06890bc51f5d591aa562fb009f915ea4}{Resource} (std\+::vector$<$ Int8 $>$ resource\+\_\+header)
+\hyperlink{classsimpleP2P_1_1Resource_aa725d8f5028c2f83a088a18bcbd9318d}{Resource} (std\+::vector$<$ Uint8 $>$ resource\+\_\+header)
 \begin{DoxyCompactList}\small\item\em Constructor makes resource from header. \end{DoxyCompactList}\item 
-std\+::vector$<$ Int8 $>$ \hyperlink{classsimpleP2P_1_1Resource_ad2f3883ae1993c7788aecf34b8fb8470}{generate\+\_\+resource\+\_\+header} ()
+std\+::vector$<$ Uint8 $>$ \hyperlink{classsimpleP2P_1_1Resource_a87e735b9e7b48c329698c6e7aab455a8}{generate\+\_\+resource\+\_\+header} ()
 \begin{DoxyCompactList}\small\item\em Generates \hyperlink{classsimpleP2P_1_1Resource}{Resource} header. \end{DoxyCompactList}\item 
 bool \hyperlink{classsimpleP2P_1_1Resource_ac3c067c66ef0db0a25a7904a83f50e3d}{has\+\_\+host} (\hyperlink{classsimpleP2P_1_1Host}{Host} host)
 \begin{DoxyCompactList}\small\item\em Determines if resource is possesed by \hyperlink{classsimpleP2P_1_1Host}{Host}. \end{DoxyCompactList}\item 
@@ -24,6 +24,9 @@ Uint16 \hyperlink{classsimpleP2P_1_1Resource_a4bbfde4d1e25c62ae4da0e6dfd64900b}{
 \begin{DoxyCompactList}\small\item\em Calculates and returns segment count. \end{DoxyCompactList}\item 
 void \hyperlink{classsimpleP2P_1_1Resource_a49e46561e4088f78bb96c07c12d4738c}{set\+\_\+revoked} ()
 \begin{DoxyCompactList}\small\item\em Function used to set invalidated flag. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classsimpleP2P_1_1Resource_a3b271172c4b67a378c264babbc1d72a1}\label{classsimpleP2P_1_1Resource_a3b271172c4b67a378c264babbc1d72a1}} 
+bool {\bfseries is\+Invalidated} ()
+\item 
 Uint64 \hyperlink{classsimpleP2P_1_1Resource_adadeb491cccabbce2e1d883f9e8519f7}{get\+Size} () const
 \begin{DoxyCompactList}\small\item\em Getter for file size. \end{DoxyCompactList}\item 
 const std\+::string \& \hyperlink{classsimpleP2P_1_1Resource_adc12496aedf1729852d2c98bf94428aa}{get\+Name} () const
@@ -33,7 +36,10 @@ const std\+::string \& \hyperlink{classsimpleP2P_1_1Resource_a866cdd2e717abf3515
 bool \hyperlink{classsimpleP2P_1_1Resource_a0b42735bed5ab425b9e26b660ededecf}{operator==} (const \hyperlink{classsimpleP2P_1_1Resource}{Resource} \&other) const
 \begin{DoxyCompactList}\small\item\em Operator == checks file size and name for equality. \end{DoxyCompactList}\item 
 bool \hyperlink{classsimpleP2P_1_1Resource_a5694c4c5a3d5b303a1fa0dcb3fb478b1}{operator!=} (const \hyperlink{classsimpleP2P_1_1Resource}{Resource} \&other) const
-\begin{DoxyCompactList}\small\item\em Operator != checks file size and name for equality. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Operator != checks file size and name for equality. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classsimpleP2P_1_1Resource_a4a8773417a0532826c75fdebe84304d3}\label{classsimpleP2P_1_1Resource_a4a8773417a0532826c75fdebe84304d3}} 
+const tbb\+::concurrent\+\_\+vector$<$ std\+::weak\+\_\+ptr$<$ \hyperlink{classsimpleP2P_1_1Host}{Host} $>$ $>$ \& {\bfseries get\+\_\+hosts} () const
+\end{DoxyCompactItemize}
 \subsection*{Friends}
 \begin{DoxyCompactItemize}
 \item 
@@ -67,11 +73,11 @@ Constructor.
 {\em path} & filepath, default is \char`\"{}./\char`\"{} \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{classsimpleP2P_1_1Resource_a06890bc51f5d591aa562fb009f915ea4}\label{classsimpleP2P_1_1Resource_a06890bc51f5d591aa562fb009f915ea4}} 
+\mbox{\Hypertarget{classsimpleP2P_1_1Resource_aa725d8f5028c2f83a088a18bcbd9318d}\label{classsimpleP2P_1_1Resource_aa725d8f5028c2f83a088a18bcbd9318d}} 
 \index{simple\+P2\+P\+::\+Resource@{simple\+P2\+P\+::\+Resource}!Resource@{Resource}}
 \index{Resource@{Resource}!simple\+P2\+P\+::\+Resource@{simple\+P2\+P\+::\+Resource}}
 \subsubsection{\texorpdfstring{Resource()}{Resource()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
-{\footnotesize\ttfamily simple\+P2\+P\+::\+Resource\+::\+Resource (\begin{DoxyParamCaption}\item[{std\+::vector$<$ Int8 $>$}]{resource\+\_\+header }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily simple\+P2\+P\+::\+Resource\+::\+Resource (\begin{DoxyParamCaption}\item[{std\+::vector$<$ Uint8 $>$}]{resource\+\_\+header }\end{DoxyParamCaption})}
 
 
 
@@ -98,11 +104,11 @@ Calculates and returns segment count.
 \begin{DoxyReturn}{Returns}
 segment count 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classsimpleP2P_1_1Resource_ad2f3883ae1993c7788aecf34b8fb8470}\label{classsimpleP2P_1_1Resource_ad2f3883ae1993c7788aecf34b8fb8470}} 
+\mbox{\Hypertarget{classsimpleP2P_1_1Resource_a87e735b9e7b48c329698c6e7aab455a8}\label{classsimpleP2P_1_1Resource_a87e735b9e7b48c329698c6e7aab455a8}} 
 \index{simple\+P2\+P\+::\+Resource@{simple\+P2\+P\+::\+Resource}!generate\+\_\+resource\+\_\+header@{generate\+\_\+resource\+\_\+header}}
 \index{generate\+\_\+resource\+\_\+header@{generate\+\_\+resource\+\_\+header}!simple\+P2\+P\+::\+Resource@{simple\+P2\+P\+::\+Resource}}
 \subsubsection{\texorpdfstring{generate\+\_\+resource\+\_\+header()}{generate\_resource\_header()}}
-{\footnotesize\ttfamily std\+::vector$<$ Int8 $>$ simple\+P2\+P\+::\+Resource\+::generate\+\_\+resource\+\_\+header (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily std\+::vector$<$ Uint8 $>$ simple\+P2\+P\+::\+Resource\+::generate\+\_\+resource\+\_\+header (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
 
 
