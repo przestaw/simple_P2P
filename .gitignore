@@ -9,6 +9,7 @@
 [Rr]eleases/
 [Oo]bj/
 [Ll]og/
+[Bb]uild/
 
 #CMake files
 CMakeFiles/
@@ -55,3 +56,5 @@ CMakeCache.txt
 *.log
 *.synctex.gz
 *.toc
+/.vscode/
+/build/
