@@ -17,12 +17,16 @@ include_directories("${PROJECT_SOURCE_DIR}/include")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 
+cmake_policy(SET CMP0069 NEW)
+include(CheckIPOSupported)
+check_ipo_supported()
+
+set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+
 set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og -g3 -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -fdevirtualize -finline-functions -fvectorize -funroll-loop")
-
-#add_subdirectory(tests) #TO CONSIDERATION
 
 set(EXECUTABLE_NAME ${PROJECT_NAME})
 

@@ -71,14 +71,14 @@ namespace simpleP2P {
          * same as add_file(Resource, Host) but host is localhost
          * @param res Resource to be added
          */
-        inline void add_file(const Resource &res);
+        void add_file(const Resource &res);
 
         /**
           * same as remove_file(Resource, Host) but host is localhost
           * @param res Resource to be removed from localhost list
           * @return returns false if file did not existed or was not possesed
           */
-        inline bool remove_file(const Resource &res);
+        bool remove_file(const Resource &res);
 
         /**
         * Returns shared pointer to resource to allow access to information about file owners
@@ -86,7 +86,7 @@ namespace simpleP2P {
         * @return shared pointer to res
         */
         inline std::shared_ptr<Resource>
-        who_has_file(std::vector<Int8> resource_header); //NOTE: no constructor available
+        who_has_file(std::vector<Uint8> resource_header); //NOTE: no constructor available
 
         /**
          * Returns shared pointer to resource to allow access to information about file owners
@@ -99,14 +99,19 @@ namespace simpleP2P {
          * Generates listing of localhost content in a header
          * @return listing header of localhost resources
          */
-        //TODO : max_lenght and support for partial sending
-        std::vector<Int8> generate_database_header();
+        std::vector<std::vector<Uint8>> generate_database_headers();
+
+        /**
+         * Get localhost information
+         * @return localhost
+         */
+        std::shared_ptr<Host> getHost() const;
     private:
-        Host my_host;                     //!< localhost Host struct
+        std::shared_ptr<Host> my_host;                     //!< localhost Host struct
         /* all internal operation on this vectors must be made with pointers */
         std::vector<std::shared_ptr<Resource>> resources;  //!< vector of Resources in database
         std::vector<std::shared_ptr<Host>> hosts;          //!< vector of Hosts in database
-        std::shared_mutex database_mutex; //!< rw_lock for database, allows multiple concurrent reads but permits concurrent writes
+        std::shared_mutex database_mutex;                  //!< rw_lock for database, allows multiple concurrent reads but permits concurrent writes
     };
 }
 
