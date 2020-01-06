@@ -51,5 +51,6 @@ void simpleP2P::Udp_Module::run_server() {
 void simpleP2P::Udp_Module::revoke_file(const simpleP2P::Resource &resource) {
     if (ptr_client.get() != nullptr) {
         ptr_client->revoke_file(resource);
+        database.revoke_resource(resource);
     }
 }
