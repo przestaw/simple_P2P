@@ -14,20 +14,20 @@
 
 namespace simpleP2P {
 
-class Host; //!< Forward declaration
+    class Host; //!< Forward declaration
 
 /**
  * Class contains file information and points to nodes with file possesion
  */
-class Resource {
-public:
-  /**
-   * Constructor
-   * @param name filename
-   * @param size filesize
-   * @param path filepath, default is "./"
-   */
-  Resource(std::string name, Uint64 size, std::string path = "./");
+    class Resource {
+    public:
+        /**
+         * Constructor
+         * @param name filename
+         * @param size filesize
+         * @param path filepath, default is "./"
+         */
+        Resource(std::string name, Uint64 size, std::string path = "./");
 
         /**
          * Constructor makes resource from header
@@ -99,8 +99,9 @@ public:
          */
         bool operator!=(const Resource &other) const;
 
-        void remove_host(std::shared_ptr<Host> host);
     private:
+        void remove_host(std::shared_ptr<Host> host);
+
         Uint64 size;                            //!< file size
         std::string name;                       //!< file name
         /*atrribs not checked for equality*/

@@ -28,7 +28,7 @@ namespace simpleP2P {
         void
         fire_beacon();                                      //!< puts data in queue fired by timer TODO: internal slot for firing the beacon
         void worker();                                           //!< simple working thread for sending data
-        static std::queue <std::string> datagrams_queue;          //!< Queue of data to be send ASAP
+        static std::queue<std::string> datagrams_queue;          //!< Queue of data to be send ASAP
         // NOTE: std::string can properly hold octet datagram
         static std::mutex queue_mutex;                           //!< Mutex to secure exclusive access to the queue
         static std::condition_variable queue_cond;               //!< to signal internally that some data is ready to be send

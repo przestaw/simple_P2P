@@ -106,6 +106,7 @@ namespace simpleP2P {
          * @return localhost
          */
         std::shared_ptr<Host> getHost() const;
+
     private:
         std::shared_ptr<Host> my_host;                     //!< localhost Host struct
         /* all internal operation on this vectors must be made with pointers */

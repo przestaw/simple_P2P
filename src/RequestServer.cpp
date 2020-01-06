@@ -14,33 +14,33 @@
 using boost::asio::ip::tcp;
 
 namespace simpleP2P {
-RequestServer::RequestServer(boost::asio::io_service &_io_service, Uint16 port)
-    : io_service(_io_service),
-      acceptor(_io_service, tcp::endpoint(tcp::v4(), port)) {}
+    RequestServer::RequestServer(boost::asio::io_service &_io_service, Uint16 port)
+            : io_service(_io_service),
+              acceptor(_io_service, tcp::endpoint(tcp::v4(), port)) {}
 
-std::thread RequestServer::init() {
-  return std::thread([=] { start_accept(); });
-}
+    std::thread RequestServer::init() {
+        return std::thread([=] { start_accept(); });
+    }
 
-void RequestServer::start_accept() {
-  RequestWorker *new_worker = new RequestWorker(io_service);
+    void RequestServer::start_accept() {
+        RequestWorker *new_worker = new RequestWorker(io_service);
 
-  acceptor.async_accept(new_worker->socket(),
-                        boost::bind(&RequestServer::handle_accept, this,
-                                    new_worker,
-                                    boost::asio::placeholders::error));
-}
+        acceptor.async_accept(new_worker->socket(),
+                              boost::bind(&RequestServer::handle_accept, this,
+                                          new_worker,
+                                          boost::asio::placeholders::error));
+    }
 
-void RequestServer::handle_accept(RequestWorker *new_worker,
-                                  const boost::system::error_code &error) {
-  if (!error) {
-    new_worker->start();
-  } else {
-    delete new_worker;
-  }
+    void RequestServer::handle_accept(RequestWorker *new_worker,
+                                      const boost::system::error_code &error) {
+        if (!error) {
+            new_worker->start();
+        } else {
+            delete new_worker;
+        }
 
-  start_accept();
-}
+        start_accept();
+    }
 
 /*
 void RequestServer::accept_connection()

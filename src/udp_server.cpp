@@ -23,9 +23,9 @@ simpleP2P::Udp_Server::Udp_Server(io_service &io_service,
 void simpleP2P::Udp_Server::handle_receive(const boost::system::error_code &error, size_t bytes_transferred) {
     if (!error || error == error::message_size) {
         //TODO negate to switch branches
-        if(*database.getHost().get() == Host(remote_endpoint.address())){
+        if (*database.getHost().get() == Host(remote_endpoint.address())) {
             Uint8 *buf = recv_buffer.data() + 1;
-            if(recv_buffer.front() == FILE_LIST){
+            if (recv_buffer.front() == FILE_LIST) {
                 logger.add_log_line("received (files beacon) : " +
                                     std::to_string(bytes_transferred) +
                                     " bytes over UDP\n from : " +

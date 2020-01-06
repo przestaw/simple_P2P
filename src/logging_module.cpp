@@ -4,7 +4,7 @@
 
 #include "logging_module.h"
 
-namespace simpleP2P{
+namespace simpleP2P {
     Logging_Module::Logging_Module(std::ostream &output_c) : output(output_c) {}
 
     std::thread Logging_Module::init() {
@@ -13,9 +13,9 @@ namespace simpleP2P{
 
     void Logging_Module::worker() {
         std::unique_lock<std::mutex> uniqueLock(queue_mutex);
-        for(;;){
+        for (;;) {
             queue_cond.wait(uniqueLock);
-            while(logging_queue.size()){
+            while (logging_queue.size()) {
                 output << logging_queue.front() << '\n';
                 logging_queue.pop();
             }

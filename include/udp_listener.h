@@ -21,6 +21,7 @@ namespace simpleP2P {
 
     private:
         void worker();
+
         void has_changed();                     // if data about files is stored elsewhere
         boost::asio::ip::udp::socket socket;     //!< socket on which listens for file information
 

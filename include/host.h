@@ -56,32 +56,33 @@ namespace simpleP2P {
    *
    * @return boost::asio::ip::tcp::endpoint
    */
-  boost::asio::ip::tcp::endpoint get_endpoint() const;
+        boost::asio::ip::tcp::endpoint get_endpoint() const;
 
-  /**
-   * @brief Method returning true if program considers a given host to be
-   * retarded.
-   *
-   * @return true if a host is retarded
-   * @return false otherwise
-   */
-  bool is_retarded();
+        /**
+         * @brief Method returning true if program considers a given host to be
+         * retarded.
+         *
+         * @return true if a host is retarded
+         * @return false otherwise
+         */
+        bool is_retarded();
 
-  /**
-   * @brief Method increasing a host timeout counter.
-   * After exeeding timeout limit, a host is considered to be retarded up to
-   * some point in time.
-   *
-   */
-  void increase_timeout_counter();
+        /**
+         * @brief Method increasing a host timeout counter.
+         * After exeeding timeout limit, a host is considered to be retarded up to
+         * some point in time.
+         *
+         */
+        void increase_timeout_counter();
 
-  /**
-   * @brief Method returning a time point to which a host is considered to be
-   * retarded.
-   *
-   * @return std::chrono::system_clock::time_point
-   */
-  std::chrono::system_clock::time_point get_ban_time_point() const;
+        /**
+         * @brief Method returning a time point to which a host is considered to be
+         * retarded.
+         *
+         * @return std::chrono::system_clock::time_point
+         */
+        std::chrono::system_clock::time_point get_ban_time_point() const;
+
     private:
         void remove_resource(std::shared_ptr<Resource> res);
 
@@ -90,11 +91,11 @@ namespace simpleP2P {
         /*atrribs not checked for equality*/
         //TODO: timeout etc stats
         // std::atomic<Int8> timeout_counter; //!< timeout counter
-  // std::atomic<std::chrono::system_clock::time_point> ban_time_point; //!<
-  // a time point to which a host is considered to be retarded
-  // std::atomic<std::time_t> ban_time; //!<
-  // a timestamp to which a host is considered to be retarded
-  Int16 port;
+        // std::atomic<std::chrono::system_clock::time_point> ban_time_point; //!<
+        // a time point to which a host is considered to be retarded
+        // std::atomic<std::time_t> ban_time; //!<
+        // a timestamp to which a host is considered to be retarded
+        Int16 port;
 
         std::vector<std::weak_ptr<Resource>> possesed_resources; //!< Resources possessed by the Host
 

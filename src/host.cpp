@@ -43,32 +43,32 @@ namespace simpleP2P {
 
 // Int16 Host::get_port() const { return port; }
 
-bool Host::is_retarded() {
-  // return ban_time >
-  //        std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-  return false;
-}
+    bool Host::is_retarded() {
+        // return ban_time >
+        //        std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+        return false;
+    }
 
-void Host::increase_timeout_counter() {
-  // TODO possible races
-  // timeout_counter++;
+    void Host::increase_timeout_counter() {
+        // TODO possible races
+        // timeout_counter++;
 
-  // Int8 &&limit = TIMEOUT_COUNTER_LIMIT;
+        // Int8 &&limit = TIMEOUT_COUNTER_LIMIT;
 
-  // if (timeout_counter.compare_exchange_strong(limit, 0)) {
-  //   using namespace std::literals;
-  //   ban_time = std::chrono::system_clock::to_time_t(
-  //       std::chrono::system_clock::now() + BAN_TIME);
-  // }
-}
+        // if (timeout_counter.compare_exchange_strong(limit, 0)) {
+        //   using namespace std::literals;
+        //   ban_time = std::chrono::system_clock::to_time_t(
+        //       std::chrono::system_clock::now() + BAN_TIME);
+        // }
+    }
 
-std::chrono::system_clock::time_point Host::get_ban_time_point() const {
-  // return std::chrono::system_clock::from_time_t(ban_time);
-  return std::chrono::system_clock::now();
-}
+    std::chrono::system_clock::time_point Host::get_ban_time_point() const {
+        // return std::chrono::system_clock::from_time_t(ban_time);
+        return std::chrono::system_clock::now();
+    }
 
-boost::asio::ip::tcp::endpoint Host::get_endpoint() const {
-  return boost::asio::ip::tcp::endpoint{host_ip, port};
-}
+    boost::asio::ip::tcp::endpoint Host::get_endpoint() const {
+        return boost::asio::ip::tcp::endpoint{host_ip, port};
+    }
 
 } // namespace simpleP2P
