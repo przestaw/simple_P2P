@@ -1,4 +1,8 @@
 
+#include <DownloadService.h>
+#include <FileManager.h>
+
+#include "CLI.h"
 #include <GeneralTypes.h>
 #include <iostream>
 #include <logging_module.h>
@@ -52,8 +56,9 @@ int main(int argc, const char *argv[]) {
      * Create threads for all modules and connect them e.g. by signal-slot
      */
     //TODO: use parameters
+    Host localhost(boost::asio::ip::address::from_string("192.168.1.198"));
     Logging_Module logger; //TODO file OR default = std::cerr
-    Resource_Database database(Host(boost::asio::ip::address::from_string("192.168.1.198"))); //TODO ADRR
+    Resource_Database database(localhost); //TODO ADRR
     Udp_Module udp(database, logger, boost::asio::ip::address::from_string(BROADCAST_ADDRESS), BROADCAST_PORT,
                    10); // basic test
 
@@ -69,8 +74,17 @@ int main(int argc, const char *argv[]) {
         database.add_file(res);
     }
 
+    boost::asio::io_service io_service;
+    FileManager fm;
+    // ^ XDD
+
+    //TODO : localhost as shared_ptr
+    Printer printer;
+    CLI commandline(database, logger, io_service, fm, *database.getHost().get(), printer);
+
     basic[0] = logger.init();
     basic[1] = udp.init();
+    basic[2] = commandline.init();
 
     for (auto &iter : basic) {
         iter.join();

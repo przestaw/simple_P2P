@@ -6,8 +6,6 @@
 #include "host.h"
 #include "resource.h"
 #include <cstring>
-#include <iostream>
-#include <utility>
 
 namespace simpleP2P {
     Resource::Resource(std::string name_c, Uint64 size_c, std::string path_c)
@@ -87,5 +85,13 @@ namespace simpleP2P {
         //swap contents of the vectors
         hosts_in_possession.clear();
         hosts_in_possession.assign(temp.begin(), temp.end());
+    }
+
+    bool Resource::isInvalidated() {
+        return invalidated == true;
+    }
+
+    const tbb::concurrent_vector<std::weak_ptr<Host>> &Resource::get_hosts() const {
+        return hosts_in_possession;
     }
 }

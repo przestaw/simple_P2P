@@ -10,15 +10,15 @@
 #include <GeneralTypes.h>
 #include "tbb/concurrent_vector.h"
 
-#define SEGMENT_SIZE 1024 //1kb
+#define SEGMENT_SIZE 1024 // 1kb
 
 namespace simpleP2P {
 
     class Host; //!< Forward declaration
 
-    /**
-     * Class contains file information and points to nodes with file possesion
-     */
+/**
+ * Class contains file information and points to nodes with file possesion
+ */
     class Resource {
     public:
         /**
@@ -67,6 +67,8 @@ namespace simpleP2P {
             invalidated = true;
         }
 
+        bool isInvalidated();
+
         /**
          * Getter for file size
          * @return file size
@@ -99,8 +101,11 @@ namespace simpleP2P {
          */
         bool operator!=(const Resource &other) const;
 
-        void remove_host(std::shared_ptr<Host> host);
+        const tbb::concurrent_vector<std::weak_ptr<Host>> &get_hosts() const;
+
     private:
+        void remove_host(std::shared_ptr<Host> host);
+
         Uint64 size;                            //!< file size
         std::string name;                       //!< file name
         /*atrribs not checked for equality*/
