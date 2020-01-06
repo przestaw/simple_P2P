@@ -2,9 +2,8 @@
 #include <DownloadService.h>
 #include <FileManager.h>
 
+#include "CLI.h"
 #include <GeneralTypes.h>
-#include <boost/asio.hpp>
-#include <boost/program_options.hpp>
 #include <iostream>
 #include <logging_module.h>
 #include <thread>
@@ -74,8 +73,15 @@ int main(int argc, const char *argv[]) {
         database.add_file(res);
     }
 
+    boost::asio::io_service io_service;
+    FileManager fm;
+    // ^ XDD
+
+    CLI commandline(database, logger, io_service, fm, localhost, printer);
+
     basic[0] = logger.init();
     basic[1] = udp.init();
+    basic[2] = commandline.init();
 
     for (auto &iter : basic) {
         iter.join();

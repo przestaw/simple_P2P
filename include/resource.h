@@ -67,6 +67,8 @@ namespace simpleP2P {
             invalidated = true;
         }
 
+        bool isInvalidated();
+
         /**
          * Getter for file size
          * @return file size

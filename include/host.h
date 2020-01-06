@@ -83,6 +83,8 @@ namespace simpleP2P {
          */
         std::chrono::system_clock::time_point get_ban_time_point() const;
 
+
+        const std::vector<std::weak_ptr<Resource>>& get_possesed() const;
     private:
         void remove_resource(std::shared_ptr<Resource> res);
 

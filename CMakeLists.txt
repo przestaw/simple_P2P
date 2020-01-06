@@ -11,7 +11,7 @@ find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(TBB tbb REQUIRED)
 
-set(EXTERNAL_LIBS "Boost::system" "Boost::program_options" "Threads::Threads" "tbb")
+set(EXTERNAL_LIBS "stdc++fs" "Boost::system" "Boost::program_options" "Threads::Threads" "tbb")
 
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
@@ -27,6 +27,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og -g3 -Wshadow -Wall -pedantic -Wextra -Wold-style-cast")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -fdevirtualize -finline-functions -fvectorize -funroll-loop")
+
+#add_subdirectory(tests) #TO CONSIDERATION
 
 set(EXECUTABLE_NAME ${PROJECT_NAME})
 

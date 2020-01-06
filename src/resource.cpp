@@ -86,4 +86,8 @@ namespace simpleP2P {
         hosts_in_possession.clear();
         hosts_in_possession.assign(temp.begin(), temp.end());
     }
+
+    bool Resource::isInvalidated(){
+        return invalidated == true;
+    }
 }

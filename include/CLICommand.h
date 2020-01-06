@@ -1,25 +1,29 @@
-// #ifndef SIMPLE_P2P_CLICOMMAND_H
-// #define SIMPLE_P2P_CLICOMMAND_H
+#ifndef SIMPLE_P2P_CLICOMMAND_H
+#define SIMPLE_P2P_CLICOMMAND_H
 
-// #include "GeneralTypes.h"
-// #include <string>
-// #include <functional>
+#include "GeneralTypes.h"
+#include <string>
+#include <functional>
 
-// namespace simpleP2P
-// {
+namespace simpleP2P
+{
 
-// class CLICommand
-// {
-//     std::string name;
-//     std::string description;
-//     std::function<Int32(char *[])> function;
+class CLICommand
+{
+    std::string name;
+    std::string description;
+    std::function<Int32(const std::string&)> function;
 
-// public:
-//     CLICommand(std::string name, std::string description,
-//     std::function<Int32(char *[])> function); ~CLICommand(); void
-//     operator()(char *[]) const; std::string getName() const;
-// };
+public:
+    CLICommand(std::string, std::string, std::function<Int32(const std::string&)>);
+    ~CLICommand(){};
+    void operator()(std::string) const;
+    std::string getName() const { return name;};
+    std::string getDesc() const { return description;};
+};
 
-// } // namespace simpleP2P
+std::ostream& operator<<(std::ostream&, const simpleP2P::CLICommand&);
 
-// #endif // SIMPLE_P2P_CLICOMMAND_H
+} // namespace simpleP2P
+
+#endif // SIMPLE_P2P_CLICOMMAND_H
