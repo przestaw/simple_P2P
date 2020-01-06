@@ -54,16 +54,17 @@ int main(int argc, const char *argv[]) {
     //TODO: use parameters
     Logging_Module logger; //TODO file OR default = std::cerr
     Resource_Database database(Host(boost::asio::ip::address::from_string("192.168.1.198"))); //TODO ADRR
-    Udp_Module udp(database, logger, boost::asio::ip::address::from_string(BROADCAST_ADDRESS), 19000, 3); // basic test
+    Udp_Module udp(database, logger, boost::asio::ip::address::from_string(BROADCAST_ADDRESS), BROADCAST_PORT,
+                   10); // basic test
 
     {
-        Resource res = Resource("Bananowe jointy", 127);
+        Resource res = Resource("Bananowe jointy", 102070);
         database.add_file(res);
 
-        res = Resource("XD", 1320);
+        res = Resource("XD", 10302000);
 
         database.add_file(res);
-        res = Resource("Karmiace kaczki", 10);
+        res = Resource("Karmiace kaczki", 1910);
 
         database.add_file(res);
     }

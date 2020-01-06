@@ -12,6 +12,7 @@
 namespace simpleP2P {
 
     class Resource; //!< Forward declaration
+    class UDP_Server;
 
     /**
      * Class contains node information and points to files it possess
@@ -54,6 +55,7 @@ namespace simpleP2P {
         std::vector<std::weak_ptr<Resource>> possesed_resources; //!< Resources possessed by the Host
 
         friend class Resource_Database;             //!< friendship to manage Host's Resources timeouts etc
+        friend class Udp_Server;
     };
 }
 

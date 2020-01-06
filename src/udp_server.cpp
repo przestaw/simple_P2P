@@ -6,8 +6,6 @@
 #include <boost/bind.hpp>
 #include <iostream>
 
-#include <iomanip>
-
 using namespace boost::asio;
 
 simpleP2P::Udp_Server::Udp_Server(io_service &io_service,
@@ -35,32 +33,27 @@ void simpleP2P::Udp_Server::handle_receive(const boost::system::error_code &erro
                                     std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
                 Uint64 iter = be64toh(*(reinterpret_cast<Uint64 *>(buf)));
                 buf += 8; //move to first resource
+                Host adv_host(remote_endpoint.address());
+                std::vector<std::shared_ptr<Resource>> resources; // To keep objects from destruction
                 for (Uint64 i = 0; i < iter; ++i) {
-                    Uint8 *end = std::find(buf, buf + 256, '\0');
-                    std::string filename(buf, end);
-
-                    Resource res = Resource(filename,
-                                            be64toh(
-                                                    *(reinterpret_cast<Uint64 *>(
-                                                            buf + 256))));
+                    Resource res(std::vector<Uint8>(buf, buf + 264));
                     buf += 264;//move to next header
-                    //TODO: add to host
-                    //TODO: update HOST in database
+
+                    resources.push_back(std::make_shared<Resource>(res));
+                    adv_host.possesed_resources.emplace_back(resources.back());
                 }
+                database.update_host(adv_host);
+                //now resources and adv_host ends scope as they are not longer necessary
             } else if (recv_buffer.front() == REVOKE) {
                 logger.add_log_line("received (revocation) : " +
                                     std::to_string(bytes_transferred) +
                                     " bytes over UDP\n from : " +
                                     remote_endpoint.address().to_string(),
                                     std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
-                Uint8 *end = std::find(buf, buf + 256, '\0');
-                std::string filename(buf, end);
 
-                Resource res = Resource(filename,
-                                        be64toh(
-                                                *(reinterpret_cast<Uint64 *>(
-                                                        buf + 256))));
-                //TODO: revoke res
+                Resource res(std::vector<Uint8>(buf, buf + 264));
+
+                database.revoke_resource(res); //revoke local Resource information
             }
         }
         do_receive();

@@ -3,7 +3,6 @@
 //
 
 #include <boost/bind.hpp>
-#include <iostream>
 #include "udp_client.h"
 
 using namespace boost::asio;
