@@ -11,7 +11,7 @@ namespace simpleP2P {
     /**
      * class printing outputs, using queue in order to avoid races
      */
-    class Printer{
+    class Printer {
     public:
         /**
          * Constructor for the printer
@@ -30,6 +30,7 @@ namespace simpleP2P {
          * @param line
          */
         void print(std::string line);
+
     private:
         /**
          * Main loop of the printer

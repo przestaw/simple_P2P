@@ -1,6 +1,7 @@
 #include "DownloadService.h"
 #include <algorithm>
 #include <iostream>
+#include <utility>
 
 namespace simpleP2P {
     using namespace std::literals;
@@ -12,7 +13,7 @@ namespace simpleP2P {
                                      std::shared_ptr<Resource> resource_c)
             : logging_module(logging_module_c), io_service(io_service_c),
               file_manager(file_manager_c), resource_database(resource_database_c),
-              resource(resource_c) {
+              resource(std::move(resource_c)) {
         complete_resource = std::make_shared<CompleteResource>(resource);
     }
 
@@ -49,9 +50,9 @@ namespace simpleP2P {
         }
 
         for (auto host : hosts) {
-            if (!host->is_retarded()) {
+            if (!host.lock().get()->is_retarded()) {
                 workers.push_back(std::make_shared<DownloadWorker>(
-                        logging_module, io_service, host, complete_resource));
+                        logging_module, io_service, host.lock(), complete_resource));
             }
         }
     }

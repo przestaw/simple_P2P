@@ -84,7 +84,8 @@ namespace simpleP2P {
         std::chrono::system_clock::time_point get_ban_time_point() const;
 
 
-        const std::vector<std::weak_ptr<Resource>>& get_possesed() const;
+        const std::vector<std::weak_ptr<Resource>> &get_possesed() const;
+
     private:
         void remove_resource(std::shared_ptr<Resource> res);
 
@@ -97,7 +98,7 @@ namespace simpleP2P {
         // a time point to which a host is considered to be retarded
         // std::atomic<std::time_t> ban_time; //!<
         // a timestamp to which a host is considered to be retarded
-        Int16 port;
+        Uint16 port;
 
         std::vector<std::weak_ptr<Resource>> possesed_resources; //!< Resources possessed by the Host
 

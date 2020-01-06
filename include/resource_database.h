@@ -107,7 +107,8 @@ namespace simpleP2P {
          */
         std::shared_ptr<Host> getHost() const;
 
-          const std::vector<std::shared_ptr<Resource>> getResources() const;
+        const std::vector<std::shared_ptr<Resource>> getResources() const;
+
     private:
         std::shared_ptr<Host> my_host;                     //!< localhost Host struct
         /* all internal operation on this vectors must be made with pointers */

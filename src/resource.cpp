@@ -87,7 +87,11 @@ namespace simpleP2P {
         hosts_in_possession.assign(temp.begin(), temp.end());
     }
 
-    bool Resource::isInvalidated(){
+    bool Resource::isInvalidated() {
         return invalidated == true;
+    }
+
+    const tbb::concurrent_vector<std::weak_ptr<Host>> &Resource::get_hosts() const {
+        return hosts_in_possession;
     }
 }

@@ -101,6 +101,8 @@ namespace simpleP2P {
          */
         bool operator!=(const Resource &other) const;
 
+        const tbb::concurrent_vector<std::weak_ptr<Host>> &get_hosts() const;
+
     private:
         void remove_host(std::shared_ptr<Host> host);
 

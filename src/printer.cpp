@@ -1,6 +1,6 @@
 #include "printer.h"
 
-namespace simpleP2P{
+namespace simpleP2P {
     Printer::Printer(std::ostream &output_c) : output(output_c) {}
 
     std::thread Printer::init() {
@@ -9,9 +9,9 @@ namespace simpleP2P{
 
     void Printer::worker() {
         std::unique_lock<std::mutex> uniqueLock(queue_mutex);
-        for(;;){
+        for (;;) {
             queue_cond.wait(uniqueLock);
-            while(printing_queue.size()){
+            while (printing_queue.size()) {
                 output << printing_queue.front();
                 printing_queue.pop();
             }

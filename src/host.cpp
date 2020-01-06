@@ -40,21 +40,8 @@ namespace simpleP2P {
                 ), possesed_resources.end());
     }
 
-    const std::vector<std::weak_ptr<Resource>>& Host::get_possesed() const
-    {
+    const std::vector<std::weak_ptr<Resource>> &Host::get_possesed() const {
         return possesed_resources;
-    }
-}
-
-    void Host::remove_resource(std::shared_ptr<Resource> res) {
-        possesed_resources.erase(
-                std::remove_if(
-                        possesed_resources.begin(),
-                        possesed_resources.end(),
-                        [&res](auto &it) {
-                            return it.lock() == res;
-                        }
-                ), possesed_resources.end());
     }
 
 // boost::asio::ip::address Host::get_address() const { return host_ip; }

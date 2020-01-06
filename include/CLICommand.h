@@ -5,24 +5,26 @@
 #include <string>
 #include <functional>
 
-namespace simpleP2P
-{
+namespace simpleP2P {
 
-class CLICommand
-{
-    std::string name;
-    std::string description;
-    std::function<Int32(const std::string&)> function;
+    class CLICommand {
+        std::string name;
+        std::string description;
+        std::function<Int32(const std::string &)> function;
 
-public:
-    CLICommand(std::string, std::string, std::function<Int32(const std::string&)>);
-    ~CLICommand(){};
-    void operator()(std::string) const;
-    std::string getName() const { return name;};
-    std::string getDesc() const { return description;};
-};
+    public:
+        CLICommand(std::string, std::string, std::function<Int32(const std::string &)>);
 
-std::ostream& operator<<(std::ostream&, const simpleP2P::CLICommand&);
+        ~CLICommand() {};
+
+        void operator()(std::string) const;
+
+        std::string getName() const { return name; };
+
+        std::string getDesc() const { return description; };
+    };
+
+    std::ostream &operator<<(std::ostream &, const simpleP2P::CLICommand &);
 
 } // namespace simpleP2P
 

@@ -31,7 +31,7 @@ namespace simpleP2P {
          * @param complete_resource_c
          */
         DownloadWorker(Logging_Module &logging_module_c,
-                       boost::asio::io_service &io_service_c, Host *host_c,
+                       boost::asio::io_service &io_service_c, std::shared_ptr<Host> host_c,
                        std::shared_ptr<CompleteResource> complete_resource_c);
 
         ~DownloadWorker();

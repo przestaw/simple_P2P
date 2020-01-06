@@ -168,8 +168,7 @@ namespace simpleP2P {
         return my_host;
     }
 
-        const std::vector<std::shared_ptr<Resource>> Resource_Database::getResources() const
-    {
+    const std::vector<std::shared_ptr<Resource>> Resource_Database::getResources() const {
         std::shared_lock lock(database_mutex);
         return resources;
     }
