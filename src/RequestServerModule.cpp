@@ -7,7 +7,7 @@
 #include <boost/asio.hpp>
 #include <thread>
 
-namespace SimpleP2P {
+namespace simpleP2P {
 	RequestServerModule::RequestServerModule(Uint16 port_, FileManager& fm)
 		: port(port_), file_manager(fm)
 	{}

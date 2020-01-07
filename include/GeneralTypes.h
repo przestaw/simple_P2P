@@ -7,7 +7,7 @@
 
 #include <cinttypes>
 
-namespace SimpleP2P
+namespace simpleP2P
 {
 	#define Uint8  uint_fast8_t
 	#define Uint16 uint_fast16_t

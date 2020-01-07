@@ -14,7 +14,7 @@
 
 using boost::asio::ip::tcp;
 
-namespace SimpleP2P {
+namespace simpleP2P {
 	RequestWorker::RequestWorker (boost::asio::io_service& io_service, FileManager& fm)
 		: _socket(io_service), file_manager(fm)
 	{

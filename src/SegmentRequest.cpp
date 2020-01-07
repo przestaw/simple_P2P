@@ -7,7 +7,7 @@
 #include "SegmentRequest.h"
 #include "GeneralTypes.h"
 
-namespace SimpleP2P {
+namespace simpleP2P {
 	SegmentRequest::SegmentRequest(std::string f, Uint32 s)
 		: file_name(f), segment(s)
 	{}

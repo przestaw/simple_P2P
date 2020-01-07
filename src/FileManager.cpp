@@ -12,7 +12,7 @@
 #include "FileManager.h"
 #include "GeneralTypes.h"
 
-namespace SimpleP2P {
+namespace simpleP2P {
 	FileManager::~FileManager()
 	{
 		for (OpenFile* f : rlocked_files)

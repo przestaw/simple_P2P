@@ -10,7 +10,7 @@
 
 #include "GeneralTypes.h"
 
-namespace SimpleP2P 
+namespace simpleP2P 
 {	
 	/**
 	 * \brief Carries info about a single resource transfer request - resource header and number of the segment to transfer.

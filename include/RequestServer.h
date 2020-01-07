@@ -11,7 +11,7 @@
 #include "GeneralTypes.h"
 using boost::asio::ip::tcp;
 
-namespace SimpleP2P 
+namespace simpleP2P 
 {
 	class FileManager;
 	/**
