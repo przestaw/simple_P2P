@@ -27,6 +27,7 @@ namespace SimpleP2P
 	#define BROADCAST_ADDRESS "192.168.1.255"
 	
 	const Uint16 FILE_NAME_LENGHT = 256;
+	const Uint16 FILE_SIZE_LENGHT = 8;
 	const Uint16 SEGMENT_SIZE = 1024;
 }
 #endif //SIMPLE_P2P_GENERALTYPES_H
