@@ -34,5 +34,4 @@ namespace SimpleP2P
 	};
 }			
 
-#endif // SIMPLE_P2P_REQUEST_SERVER_MODULE_H		 
-			
+#endif // SIMPLE_P2P_REQUEST_SERVER_MODULE_H

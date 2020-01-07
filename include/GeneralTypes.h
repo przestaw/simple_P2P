@@ -25,9 +25,14 @@ namespace SimpleP2P
 	#define FILE_LIST 32
 
 	#define BROADCAST_ADDRESS "192.168.1.255"
+	#define SegmentId Uint16
+
+	#define TIMEOUT_COUNTER_LIMIT 5
+	#define MAX_TIMEOUT 100ms
+	#define BAN_TIME 1000ms
+	#define TIMEOUT_CHECK_INTERVAL 300ms
 	
 	const Uint16 FILE_NAME_LENGHT = 256;
-	const Uint16 FILE_SIZE_LENGHT = 8;
 	const Uint16 SEGMENT_SIZE = 1024;
 }
 #endif //SIMPLE_P2P_GENERALTYPES_H

@@ -1,11 +1,11 @@
-/* 
+/*
  * RequestServerModule.cpp
  * Kamil Zacharczuk
  */
-#include <boost/asio.hpp>
-#include <thread>
 #include "RequestServerModule.h"
 #include "RequestServer.h"
+#include <boost/asio.hpp>
+#include <thread>
 
 namespace SimpleP2P {
 	RequestServerModule::RequestServerModule(Uint16 port_, FileManager& fm)

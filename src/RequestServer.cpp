@@ -1,15 +1,15 @@
-/* 
+/*
  * RequestServer.cpp
  * Kamil Zacharczuk
  */
- 
-#include <memory>	// make_shared
-#include <utility>	// move
-#include <thread>	// thread
-#include <boost/asio.hpp>
-#include <boost/bind.hpp>
+
 #include "RequestServer.h"
 #include "GeneralTypes.h"
+#include <boost/asio.hpp>
+#include <boost/bind.hpp>
+#include <memory>  // make_shared
+#include <thread>  // thread
+#include <utility> // move
 
 using boost::asio::ip::tcp;
 

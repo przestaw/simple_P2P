@@ -45,11 +45,10 @@ namespace SimpleP2P
 		void start_accept();
 
 		/**
-		 * Starts the worker so it handles the connection if it's accepted successfully, and calls listening for next connections.
-		 */		
-		void handle_accept(RequestWorker* new_worker, const boost::system::error_code& error);
+		* Starts the worker so it handles the connection if it's accepted successfully, and calls listening for next connections.
+		*/
+		void handle_accept(RequestWorker *new_worker, const boost::system::error_code &error);
 	};
 }
-						
-#endif // SIMPLE_P2P_REQUEST_SERVER_H	
 
+#endif // SIMPLE_P2P_REQUEST_SERVER_H
