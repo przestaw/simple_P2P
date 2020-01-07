@@ -8,6 +8,7 @@
 #include <memory>	// enable_shared_from_this
 #include <boost/asio.hpp>
 
+#include "FileManager.h"
 #include "GeneralTypes.h"
 
 using boost::asio::ip::tcp;
@@ -20,13 +21,15 @@ namespace SimpleP2P
 	 * Receives the file request, buffers requested segments and sends them to the client.
 	 */
 	class RequestWorker
-		: public std::enable_shared_from_this<RequestWorker>
+		//: public std::enable_shared_from_this<RequestWorker>
 	{
 	public:
 		/**
 		 * Constructor allows setting the socket on which the connection is established
 		 */
-		RequestWorker (boost::asio::io_service& io_service);
+		RequestWorker (boost::asio::io_service& io_service, FileManager& fm);
+		
+		~RequestWorker();
 		
 		/**
 		 * Start handling the request.
@@ -39,12 +42,16 @@ namespace SimpleP2P
 		tcp::socket& socket();
 	
 	private:
-		static const Uint16 MAX_RECVD_DATA_LENGHT = 400;
+		static const Uint16 MAX_RECV_DATA_LENGHT = 300;	// A little more than what we will ever expect.
 		
-		tcp::socket _socket;	//!< Socket on which the connection is established.
-		char recvd_data [MAX_RECVD_DATA_LENGHT];
+		tcp::socket _socket;		//!< Socket on which the connection is established.
+		FileManager& file_manager;	//!< FileManager for accessing requested files.
+		
+		Uint8 recv_data [MAX_RECV_DATA_LENGHT];
+		Uint8* send_data;
 		
 		void handle_read(const boost::system::error_code& error, std::size_t bytes_transferred);
+		void handle_write(const boost::system::error_code& error);
 		
 	};
 }

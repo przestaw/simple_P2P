@@ -13,6 +13,7 @@ using boost::asio::ip::tcp;
 
 namespace SimpleP2P 
 {
+	class FileManager;
 	/**
 	 * Asynchronous TCP server. It accepts connections asynchronously and for each of them creates a worker object to handle it.
 	 */
@@ -25,7 +26,7 @@ namespace SimpleP2P
 		 * @param io_service boost::asio::io_service for the acceptor.
 		 * @param port Port for the acceptor to listen on.
 		 */
-		RequestServer(boost::asio::io_service& io_service, Uint16 port);
+		RequestServer(boost::asio::io_service& io_service, Uint16 port, FileManager& fm);
 		
 		/**
 		 * Turns on the listening and accepting connections and returns the thread in which it works.
@@ -33,7 +34,8 @@ namespace SimpleP2P
 		std::thread init();
 	private:
 		boost::asio::io_service& io_service;
-		tcp::acceptor acceptor;	//!< The acceptor listening and accepting connections.
+		tcp::acceptor acceptor;					//!< The acceptor listening and accepting connections.
+		FileManager& file_manager;				//!< FileManager for accessing requested files.
 				
 		/**
 		 * \brief Asynchronous connection accepting function.

@@ -9,6 +9,7 @@
 
 namespace SimpleP2P	
 {
+	class FileManager;
 	/**
 	 * Module of the TCP server receiving file requests and sending the requested files' segments.
 	 */
@@ -18,7 +19,7 @@ namespace SimpleP2P
 		/**
 		 * Constructor, allows setting the port for the server.
 		 */
-		RequestServerModule(Uint16 port_);
+		RequestServerModule(Uint16 port_, FileManager& fm);
 		
 		/**
 		 * \brief Returns the thread object for the module.
@@ -28,7 +29,8 @@ namespace SimpleP2P
 		std::thread init();
 	
 	private:
-		Uint16 port;	//!< Port for the server.
+		Uint16 port;				//!< Port for the server.
+		FileManager& file_manager;	//!< FileManager for accessing requested files. 
 	};
 }			
 

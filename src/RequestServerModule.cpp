@@ -8,8 +8,8 @@
 #include "RequestServer.h"
 
 namespace SimpleP2P {
-	RequestServerModule::RequestServerModule(Uint16 port_)
-		: port(port_)
+	RequestServerModule::RequestServerModule(Uint16 port_, FileManager& fm)
+		: port(port_), file_manager(fm)
 	{}
 	
 	std::thread RequestServerModule::init() {
@@ -18,7 +18,7 @@ namespace SimpleP2P {
 		
 		try {
 			boost::asio::io_service io_service;
-			RequestServer server (io_service, port);
+			RequestServer server (io_service, port, file_manager);
 			res = server.init();
 			io_service.run();
 		}
