@@ -43,7 +43,7 @@ namespace simpleP2P
 		 * @param requested_segment_size Size of the segment to buffer.
 		 * @return If the segment has been buffered successfully.
 		 */
-		bool get_segment (const SegmentRequest request, char* result, const std::size_t requested_segment_size); 
+		bool get_segment (const SegmentRequest request, Uint8* result, const std::size_t requested_segment_size); 
 					
 		 /**
 		 * Stores the file contents in the physical file on disc.
@@ -51,7 +51,7 @@ namespace simpleP2P
 		 * @param resource File to store on the disc.
 		 * The data will not be interpreted, so make sure it's complete and ready to store.
 		 */
-		void store_resource (const CompleteResource& resource);
+		void store_resource (CompleteResource& complete_resource);
 		/**
 		 * Closes the file and unlocks it for writing.
 		 *

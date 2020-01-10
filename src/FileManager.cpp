@@ -10,6 +10,7 @@
 
 #include "SegmentRequest.h"
 #include "FileManager.h"
+#include "CompleteResource.h"
 #include "GeneralTypes.h"
 
 namespace simpleP2P {
@@ -27,7 +28,7 @@ namespace simpleP2P {
 		wlocked_files.erase(wlocked_files.begin(), wlocked_files.end());
 	}
 	
-	bool FileManager::get_segment(const SegmentRequest request, char* result, const std::size_t requested_segment_size)
+	bool FileManager::get_segment(const SegmentRequest request, Uint8* result, const std::size_t requested_segment_size)
 	{
 		if (result == nullptr)
 		{
@@ -69,7 +70,7 @@ namespace simpleP2P {
 			return false;
 		}
 		
-		file_ptr->stream.read(result, requested_segment_size);	// Put requested number of bytes in the provided buffer.
+		file_ptr->stream.read(reinterpret_cast<char*>(result), requested_segment_size);	// Put requested number of bytes in the provided buffer.
 		if (!file_ptr->stream)
 		{
 			if (file_ptr->stream.eof() && !file_ptr->stream.fail())
@@ -84,13 +85,26 @@ namespace simpleP2P {
 				return false;
 			}
 		}
-		
+
+		// If we are reading the last segment (and its size < SEGMENT_SIZE), complement the result buffer with 0's.
+		// (the result buffer's size always == SEGMENT_SIZE)
+		if (requested_segment_size < SEGMENT_SIZE)
+		{
+			std::fill (result+requested_segment_size, result+SEGMENT_SIZE, '\0');
+		}
+
 		return true;
 	}
 			
-	void FileManager::store_resource(const CompleteResource& resource)
+	void FileManager::store_resource(CompleteResource& complete_resource)
 	{
-		std::string file_name; // TODO: get file_name from the CompleteResource object.
+		char c_file_name [FILE_NAME_LENGHT];
+		std::vector<Uint8> resource_header = complete_resource.get_resource()->generate_resource_header();
+		std::copy(resource_header.begin(), resource_header.begin()+FILE_NAME_LENGHT, c_file_name);
+
+		auto end = std::find (c_file_name, c_file_name+FILE_NAME_LENGHT, '\0');
+
+		std::string file_name (c_file_name, end);
 
 		write_lock(file_name);
 		
@@ -102,11 +116,13 @@ namespace simpleP2P {
 			// TODO: log error.
 		}
 
-		char* file_contents; // TODO: get file contents from the CompleteResource object.
-		std::size_t file_size; // TODO: get file size from the CompleteResource object.
+		Uint8* file_contents = complete_resource.get_data();
+	
+		size_t file_size;
+		std::copy (resource_header.begin()+FILE_NAME_LENGHT, resource_header.end(), &file_size);
 
 		file.seekp(0); // Write at the beggining of the file. Is this step necessary as the 'trunc' flag is set?
-		file.write(file_contents, file_size);
+		file.write(reinterpret_cast<char*>(file_contents), file_size);
 
 		if (!file) 
 		{

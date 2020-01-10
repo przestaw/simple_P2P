@@ -15,6 +15,10 @@ std::shared_ptr<Resource> CompleteResource::get_resource() const {
   return resource;
 }
 
+Uint8* CompleteResource::get_data() {
+	return data;
+}
+
 Segment CompleteResource::get_segment() {
   if (is_completed()) {
     return Segment::no_segment_left();

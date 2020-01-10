@@ -36,6 +36,13 @@ public:
    */
   std::shared_ptr<Resource> get_resource() const;
 
+	/**
+	 * @brief Get the contents of the file.
+	 *
+	 * @return Uint8*
+	 */
+	Uint8* get_data();
+
   /**
    * @brief Synchronised method returning Segment object representing the first
    * unbusy and incomplete segment.
