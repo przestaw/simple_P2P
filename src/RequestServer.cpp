@@ -13,7 +13,7 @@
 
 using boost::asio::ip::tcp;
 
-namespace SimpleP2P
+namespace simpleP2P
 {
 	RequestServer::RequestServer (boost::asio::io_service& _io_service, Uint16 port, FileManager& fm)
 		: io_service(_io_service), acceptor(_io_service, tcp::endpoint(tcp::v4(), port)), file_manager(fm)

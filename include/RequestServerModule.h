@@ -6,6 +6,7 @@
 #define SIMPLE_P2P_REQUEST_SERVER_MODULE_H
 
 #include "GeneralTypes.h"
+#include <thread>
 
 namespace simpleP2P	
 {
