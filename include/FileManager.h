@@ -12,6 +12,7 @@
 #include <condition_variable>
 
 #include "SegmentRequest.h"
+#include "logging_module.h"
 #include "GeneralTypes.h"
 
 namespace simpleP2P
@@ -28,8 +29,7 @@ namespace simpleP2P
 	class FileManager
 	{
 	public:
-		//static const Uint16 FILE_NAME_LENGHT = 256;
-		//static const Uint16 SEGMENT_SIZE = 1024;
+		FileManager(Logging_Module& lm);
 
 		~FileManager();
 		/** 
@@ -87,13 +87,15 @@ namespace simpleP2P
 			std::ifstream stream;
 		};
 		
-		std::vector<OpenFile*> rlocked_files;		//!< Files opened for reading, which also means - read-locked.
-		std::vector<std::string> wlocked_files;		//!< Write-locked files.
+		std::vector<OpenFile*> rlocked_files;    //!< Files opened for reading, which also means - read-locked.
+		std::vector<std::string> wlocked_files;  //!< Write-locked files.
 		
-		std::mutex rlmutex;							//!< Mutex synchronizing access to the rlocked_files vector.
-		std::mutex wlmutex;							//!< Mutex synchronizing access to the wlocked_files vector.
-		std::mutex condvmutex;						//!< Mutex for the condition variable.
-		std::condition_variable condv;				//!< Condition variable synchronizing access to local files.
+		std::mutex rlmutex;                      //!< Mutex synchronizing access to the rlocked_files vector.
+		std::mutex wlmutex;                      //!< Mutex synchronizing access to the wlocked_files vector.
+		std::mutex condvmutex;                   //!< Mutex for the condition variable.
+		std::condition_variable condv;           //!< Condition variable synchronizing access to local files.
+
+		Logging_Module& logging_module;          //!< Logging_Module for logging events.
 		
 		/**
 		 * \brief Blocks other threads from reading/writing to the specified file.

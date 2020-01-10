@@ -26,7 +26,7 @@ namespace simpleP2P
 		 * @param io_service boost::asio::io_service for the acceptor.
 		 * @param port Port for the acceptor to listen on.
 		 */
-		RequestServer(boost::asio::io_service& io_service, Uint16 port, FileManager& fm);
+		RequestServer(boost::asio::io_service& io_service, Uint16 port, FileManager& fm, Logging_Module& lm);
 		
 		/**
 		 * Turns on the listening and accepting connections and returns the thread in which it works.
@@ -34,8 +34,9 @@ namespace simpleP2P
 		std::thread init();
 	private:
 		boost::asio::io_service& io_service;
-		tcp::acceptor acceptor;					//!< The acceptor listening and accepting connections.
-		FileManager& file_manager;				//!< FileManager for accessing requested files.
+		tcp::acceptor acceptor;          //!< The acceptor listening and accepting connections.
+		FileManager& file_manager;       //!< FileManager for accessing requested files.
+		Logging_Module& logging_module;  //!< Logging_Module for logging events.
 				
 		/**
 		 * \brief Asynchronous connection accepting function.

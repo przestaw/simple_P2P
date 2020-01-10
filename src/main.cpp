@@ -87,7 +87,7 @@ int main(int argc, const char *argv[]) {
 
   std::thread basic[4];
   Logging_Module logging_module;
-  FileManager file_manager;
+  FileManager file_manager (logging_module);
   Resource_Database resource_database(
       Host{boost::asio::ip::address::from_string("192.168.0.1")});
   boost::asio::io_service io_service;

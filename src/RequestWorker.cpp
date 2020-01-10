@@ -6,6 +6,7 @@
 #include <utility> // move
 #include <algorithm> // find	
 #include <string>
+#include <sstream> // stringstream
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 
@@ -15,11 +16,9 @@
 using boost::asio::ip::tcp;
 
 namespace simpleP2P {
-	RequestWorker::RequestWorker (boost::asio::io_service& io_service, FileManager& fm)
-		: _socket(io_service), file_manager(fm)
-	{
-	
-	}
+	RequestWorker::RequestWorker (boost::asio::io_service& io_service, FileManager& fm, Logging_Module& lm)
+		: _socket(io_service), file_manager(fm), logging_module(lm)
+	{}
 	
 	RequestWorker::~RequestWorker ()
 	{
@@ -35,11 +34,14 @@ namespace simpleP2P {
 			
 		if (send_data == nullptr)
 		{
-			// TODO: log error.
+			logging_module.add_log_line("RequestWorker::start(): allocating memory for a segment to be sent FAILED! (malloc returned nullptr) Throwing 																	   exception...", 
+			                                std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 			
 			throw std::exception();
 		}
 		
+		logging_module.add_log_line("RequestWorker successfully started", std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+
 		_socket.async_read_some(boost::asio::buffer(recv_data, MAX_RECV_DATA_LENGHT),
         						boost::bind(&RequestWorker::handle_read, this, 
         									boost::asio::placeholders::error, 
@@ -61,8 +63,8 @@ namespace simpleP2P {
 			
 			// Get the file_name from the recv_data buffer (it's null-terminated)
 			auto end = std::find (recv_data+1, recv_data+1+FILE_NAME_LENGHT, '\0');
-			std::string file_name((recv_data+1), end);
-					
+			std::string file_name((recv_data+1), end);			
+
 			if (command == REQ_SEGMENT)
 			{
 				Uint64 file_size;
@@ -72,6 +74,10 @@ namespace simpleP2P {
 				Uint16 segment;
 				std::copy(recv_data+1+FILE_NAME_LENGHT+FILE_SIZE_LENGHT, recv_data+1+FILE_NAME_LENGHT+FILE_SIZE_LENGHT+sizeof(Uint16), &segment);
 				segment = ntohs(segment);
+
+				std::stringstream logmsg;
+				logmsg << "RequestWorker: request for segment " << segment << " of file " << file_name << " received";
+				logging_module.add_log_line(logmsg.str(), std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 				
 				Uint32 requested_segment_size;
 				double nsegments = (double)file_size / SEGMENT_SIZE;
@@ -91,18 +97,16 @@ namespace simpleP2P {
 				//{
 					//char* send_data = (char*) malloc (SEGMENT_SIZE);	// If the requested segment is the last segment and it's shorter than SEGMENT_SIZE,
 																		// the buffer will be complemented with 0's. 
-					if (send_data == nullptr)
-					{
-						// TODO: log error and do sth.
-					}
-		
 					file_manager.read_lock(file_name);
 					
 					if (!file_manager.get_segment(SegmentRequest(file_name, segment), send_data, requested_segment_size))
 					{
-						// TODO: log error and do sth.
+						logging_module.add_log_line("RequestWorker: getting the requested segment from file manager FAILED. Delete RequestWorker object",
+						                                std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 					}
 					
+					logmsg << "RequestWorker: sending segment " << segment << " of file " << file_name << "...";
+					logging_module.add_log_line(logmsg.str(), std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 					// Send the segment.
 					boost::asio::async_write(_socket,
 										boost::asio::buffer(send_data, sizeof(send_data)),
@@ -112,6 +116,8 @@ namespace simpleP2P {
 			}
 			else if (command == QUIT_CONN)
 			{
+				logging_module.add_log_line("RequestWorker: client requested a connection quit. Deleting RequestWorker object",
+				                                std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 				file_manager.read_unlock(file_name);
 				
 				delete this;
@@ -119,6 +125,8 @@ namespace simpleP2P {
 		}
 		else
 		{
+			logging_module.add_log_line("RequestWorker: ERROR reading data from the client! Deleting RequestWorker object",
+			                                std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 			delete this;
 		}
 	}
@@ -127,7 +135,8 @@ namespace simpleP2P {
 	{
 		if (!error)
 		{
-			// TODO: log that the segment was successfully sent.
+			logging_module.add_log_line("RequestWorker: segment successfully sent",
+			                                std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 			
 			// Get back to listening for further requests.
 			_socket.async_read_some(boost::asio::buffer(recv_data, MAX_RECV_DATA_LENGHT),
@@ -137,7 +146,8 @@ namespace simpleP2P {
         }
         else
 		{
-			// TODO: log error.
+			logging_module.add_log_line("RequestWorker: ERROR sending a segment! Deleting RequestWorker object",
+			                                std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 			
 			// Kill yourself, you can't even send a mere kilobyte.
 			delete this;

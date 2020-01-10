@@ -5,6 +5,7 @@
 #ifndef SIMPLE_P2P_REQUEST_SERVER_MODULE_H
 #define SIMPLE_P2P_REQUEST_SERVER_MODULE_H
 
+#include "logging_module.h"
 #include "GeneralTypes.h"
 #include <thread>
 
@@ -20,7 +21,7 @@ namespace simpleP2P
 		/**
 		 * Constructor, allows setting the port for the server.
 		 */
-		RequestServerModule(Uint16 port_, FileManager& fm);
+		RequestServerModule(Uint16 port_, FileManager& fm, Logging_Module& lm);
 		
 		/**
 		 * \brief Returns the thread object for the module.
@@ -30,8 +31,10 @@ namespace simpleP2P
 		std::thread init();
 	
 	private:
-		Uint16 port;				//!< Port for the server.
-		FileManager& file_manager;	//!< FileManager for accessing requested files. 
+		Uint16 port;                     //!< Port for the server.
+		FileManager& file_manager;       //!< FileManager for accessing requested files.
+		Logging_Module& logging_module;  //!< Logging_Module for logging events.
+ 
 	};
 }			
 
