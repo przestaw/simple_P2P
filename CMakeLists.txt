@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 project(Simple_P2P)
 
-set(THREADS_PREFER_PTHREAD_FLAG ON)
+set(THREADS_PREFER_PTHREAD_FLAG OFF)
 
 find_package(Threads REQUIRED)
 

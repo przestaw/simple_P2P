@@ -101,6 +101,8 @@ void simpleP2P::Udp_Client::fire_beacon() {
         }
     } while (!files.empty());
 
+    database.check_for_gone_hosts();
+
     boost::posix_time::seconds interval(timeout);
     timer.expires_at(timer.expires_at() + interval);
     timer.async_wait(boost::bind(&Udp_Client::fire_beacon,

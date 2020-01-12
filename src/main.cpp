@@ -80,7 +80,7 @@ int main(int argc, const char *argv[]) {
 
     //TODO : localhost as shared_ptr
     Printer printer;
-    CLI commandline(database, logger, io_service, fm, *database.getHost().get(), printer);
+    CLI commandline(database, logger, io_service, fm, *database.get_localhost(), printer);
 
     basic[0] = logger.init();
     basic[1] = udp.init();

@@ -11,7 +11,7 @@
 
 namespace simpleP2P {
     Host::Host(boost::asio::ip::address ip)
-            : host_ip(std::move(ip)) {}
+            : host_ip(std::move(ip)), no_of_missed_updates(0) {}
 
     bool Host::has_resource(Resource res) {
         return std::count_if(possesed_resources.begin(),

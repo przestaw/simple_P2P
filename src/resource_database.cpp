@@ -19,7 +19,7 @@ namespace simpleP2P {
         auto host = std::find_if(hosts.begin(),
                                  hosts.end(),
                                  [this](shared_ptr<Host> &it) {
-                                     return *(it.get()) == *my_host.get();
+                                     return *(it.get()) == *my_host;
                                  });
         auto res_i = std::find_if(host->get()->possesed_resources.begin(),
                                   host->get()->possesed_resources.end(),
@@ -71,7 +71,7 @@ namespace simpleP2P {
                                            return *(it.lock().get()) == host;
                                        });
             if (host_i != res_i->get()->hosts_in_possession.end()) {
-                host_i->lock().get()->remove_resource(*res_i);
+                host_i->lock()->remove_resource(*res_i);
                 res_i->get()->remove_host(host_i->lock());
                 return true;
             } else {
@@ -101,11 +101,11 @@ namespace simpleP2P {
     }
 
     void Resource_Database::add_file(const Resource &res) {
-        return add_file(res, *my_host.get());
+        return add_file(res, *my_host);
     }
 
     bool Resource_Database::remove_file(const Resource &res) {
-        return remove_file(res, *my_host.get());
+        return remove_file(res, *my_host);
     }
 
     std::vector<std::vector<Uint8>> Resource_Database::generate_database_headers() {
@@ -119,7 +119,7 @@ namespace simpleP2P {
                                  });
 
         for (auto &it : host->get()->possesed_resources) {
-            header.emplace_back(it.lock().get()->generate_resource_header());
+            header.emplace_back(it.lock()->generate_resource_header());
 
         }
 
@@ -134,10 +134,11 @@ namespace simpleP2P {
                                      return *(it.get()) == host_a;
                                  });
         shared_ptr<Host> to_update = *host;
+        to_update->no_of_missed_updates = 0;
         for (auto &resource: host_a.possesed_resources) {
             if (std::count_if(
-                    to_update.get()->possesed_resources.begin(),
-                    to_update.get()->possesed_resources.end(),
+                    to_update->possesed_resources.begin(),
+                    to_update->possesed_resources.end(),
                     [&resource](auto &it) {
                         return *(resource.lock().get()) == *(it.lock().get());
                     }) == 0) {
@@ -164,12 +165,30 @@ namespace simpleP2P {
         }
     }
 
-    std::shared_ptr<Host> Resource_Database::getHost() const {
+    std::shared_ptr<Host> Resource_Database::get_localhost() const {
         return my_host;
     }
 
-    const std::vector<std::shared_ptr<Resource>> Resource_Database::getResources() const {
+    std::vector<std::shared_ptr<Resource>> Resource_Database::getResources() const {
         std::shared_lock lock(database_mutex);
         return resources;
+    }
+
+    void Resource_Database::check_for_gone_hosts(uint16_t left_margin) {
+        std::unique_lock lock(database_mutex);
+        for (auto &it : hosts) {
+            if (it->no_of_missed_updates >= left_margin) {
+                remove_host(it);
+            }
+        }
+    }
+
+    void Resource_Database::remove_host(const std::shared_ptr<Host> &host) {
+        if (host != my_host) {
+            for (auto &it: host->possesed_resources) {
+                it.lock()->remove_host(host);
+            }
+            hosts.erase(std::find(hosts.begin(), hosts.end(), host));
+        }
     }
 }

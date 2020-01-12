@@ -22,9 +22,11 @@ simpleP2P::Udp_Server::Udp_Server(io_service &io_service,
 
 void simpleP2P::Udp_Server::handle_receive(const boost::system::error_code &error, size_t bytes_transferred) {
     if (!error || error == error::message_size) {
-        //TODO negate to switch branches
-        if (*database.getHost().get() == Host(remote_endpoint.address())) {
-            Uint8 *buf = recv_buffer.data() + 1;
+
+        //FIXME: negate to switch branches while testing on SINGLE host
+
+        if (*database.get_localhost() != Host(remote_endpoint.address())) {
+            Uint8 *buf = recv_buffer.data() + 1; // move to header
             if (recv_buffer.front() == FILE_LIST) {
                 logger.add_log_line("received (files beacon) : " +
                                     std::to_string(bytes_transferred) +
@@ -36,8 +38,8 @@ void simpleP2P::Udp_Server::handle_receive(const boost::system::error_code &erro
                 Host adv_host(remote_endpoint.address());
                 std::vector<std::shared_ptr<Resource>> resources; // To keep objects from destruction
                 for (Uint64 i = 0; i < iter; ++i) {
-                    Resource res(std::vector<Uint8>(buf, buf + 264));
-                    buf += 264;//move to next header
+                    Resource res(std::vector<Uint8>(buf, buf + RESOURCE_HEADER_SIZE));
+                    buf += RESOURCE_HEADER_SIZE;//move to next header
 
                     resources.push_back(std::make_shared<Resource>(res));
                     adv_host.possesed_resources.emplace_back(resources.back());

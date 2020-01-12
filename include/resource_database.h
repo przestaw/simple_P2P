@@ -105,9 +105,15 @@ namespace simpleP2P {
          * Get localhost information
          * @return localhost
          */
-        std::shared_ptr<Host> getHost() const;
+        std::shared_ptr<Host> get_localhost() const;
 
-        const std::vector<std::shared_ptr<Resource>> getResources() const;
+        /**
+         * Checks if any of the host missed a couple beacon intervals as we suppose they left the network
+         * @param left_margin number of left margins needed for deletion of the host
+         */
+        void check_for_gone_hosts(Uint16 left_margin = LEFT_MARGIN);
+
+        std::vector<std::shared_ptr<Resource>> getResources() const;
 
     private:
         std::shared_ptr<Host> my_host;                     //!< localhost Host struct
@@ -115,6 +121,8 @@ namespace simpleP2P {
         std::vector<std::shared_ptr<Resource>> resources;  //!< vector of Resources in database
         std::vector<std::shared_ptr<Host>> hosts;          //!< vector of Hosts in database
         std::shared_mutex mutable database_mutex;                  //!< rw_lock for database, allows multiple concurrent reads but permits concurrent writes
+
+        inline void remove_host(const std::shared_ptr<Host> &host);
     };
 }
 
