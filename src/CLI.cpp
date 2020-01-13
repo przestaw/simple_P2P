@@ -160,7 +160,6 @@ void CLI::start_CLI()
 
     while (std::getline(std::cin, line))
     {
-        prompt();
         typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
         boost::char_separator<char> sep(" ");
         tokenizer tokens(line, sep);

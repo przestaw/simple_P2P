@@ -21,7 +21,7 @@ namespace simpleP2P {
 
         /**
          * Init methods run worker in thread and returns it
-         * @return printing thread
+         * @return printing std::thread
          */
         std::thread init();
 

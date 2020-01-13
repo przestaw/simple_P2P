@@ -37,7 +37,7 @@ namespace simpleP2P {
 
     public:
         /**
-         * @brief Construct a new Download Service object
+         * @brief Construct a new CLI object
          *
          * @param res_db_
          * @param Logger_
@@ -53,7 +53,7 @@ namespace simpleP2P {
 
         /**
          * @brief Method initiating CLI in the current thread.
-         *
+         * @return CLI std::thread
          */
         std::thread init();
 
