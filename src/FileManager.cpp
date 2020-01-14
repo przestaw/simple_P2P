@@ -8,7 +8,6 @@
 #include <mutex>
 #include <condition_variable>
 #include <sstream> // stringstream
-#include "SegmentRequest.h"
 #include "FileManager.h"
 #include "CompleteResource.h"
 #include "GeneralTypes.h"
@@ -32,7 +31,7 @@ namespace simpleP2P {
 		wlocked_files.erase(wlocked_files.begin(), wlocked_files.end());
 	}
 	
-	bool FileManager::get_segment(const SegmentRequest request, Uint8* result, const std::size_t requested_segment_size)
+	bool FileManager::get_segment(const std::string file_name, const Uint16 segment, Uint8* result, const std::size_t requested_segment_size)
 	{
 		if (result == nullptr)
 		{
@@ -52,7 +51,7 @@ namespace simpleP2P {
 		rlmutex.lock();
 		for (OpenFile* f : rlocked_files)
 		{
-			if (f->file_name == request.get_file_name())
+			if (f->file_name == file_name)
 			{
 				file_ptr = f;
 				break;
@@ -67,9 +66,7 @@ namespace simpleP2P {
 			                                std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 			return false;
 		}
-		
-		Uint32 segment = request.get_segment();
-		
+				
 		file_ptr->stream.seekg(segment * SEGMENT_SIZE); // Set the position of reading to the position of the requested segment.
 		if (file_ptr->stream.tellg() != segment * SEGMENT_SIZE)
 		{	

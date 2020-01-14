@@ -11,7 +11,6 @@
 #include <mutex>
 #include <condition_variable>
 
-#include "SegmentRequest.h"
 #include "logging_module.h"
 #include "GeneralTypes.h"
 
@@ -43,7 +42,7 @@ namespace simpleP2P
 		 * @param requested_segment_size Size of the segment to buffer.
 		 * @return If the segment has been buffered successfully.
 		 */
-		bool get_segment (const SegmentRequest request, Uint8* result, const std::size_t requested_segment_size); 
+		bool get_segment (const std::string file_name, const Uint16 segment, Uint8* result, const std::size_t requested_segment_size); 
 					
 		 /**
 		 * Stores the file contents in the physical file on disc.

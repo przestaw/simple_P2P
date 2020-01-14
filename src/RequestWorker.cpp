@@ -99,7 +99,7 @@ namespace simpleP2P {
 																		// the buffer will be complemented with 0's. 
 					file_manager.read_lock(file_name);
 					
-					if (!file_manager.get_segment(SegmentRequest(file_name, segment), send_data, requested_segment_size))
+					if (!file_manager.get_segment(file_name, segment, send_data, requested_segment_size))
 					{
 						logging_module.add_log_line("RequestWorker: getting the requested segment from file manager FAILED. Delete RequestWorker object",
 						                                std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
