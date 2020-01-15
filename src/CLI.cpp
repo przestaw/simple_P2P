@@ -89,7 +89,7 @@ CLI::CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_se
                        return 0;
                    }),
 
-        CLICommand("global", "prints files in the system", [this](std::string dupa) {
+        CLICommand("global", "prints files in the system", [this](std::string placeholder) {
             std::vector<std::shared_ptr<Resource>> resources = res_db.getResources();
 
             for (auto resource : resources)
@@ -121,7 +121,7 @@ CLI::CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_se
                      return 0;
                  }),*/
 
-        CLICommand("help", "prints available commands", [this](std::string x) {
+        CLICommand("help", "prints available commands", [this](std::string placeholder) {
             for (auto &command : CLICommands)
                 stream << command;
             print_text(stream);
