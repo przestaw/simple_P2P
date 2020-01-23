@@ -11,6 +11,8 @@
 #include <deque>
 #include "GeneralTypes.h"
 #include "resource.h"
+#include "resource_database.h"
+#include "logging_module.h"
 
 namespace simpleP2P {
     /**
@@ -21,11 +23,14 @@ namespace simpleP2P {
         /**
          * Constructor of UDP Client
          * @param io_service asio Io Service
+         * @param database Database
+         * @param logger Logger
          * @param broadcast_address address on which packets will be sent
          * @param broadcast_port port on which packets will be sent
          * @param timeout beacon interval
          */
         Udp_Client(boost::asio::io_service &io_service,
+                   Resource_Database &database, Logging_Module &logger,
                    const boost::asio::ip::address &broadcast_address,
                    Uint16 broadcast_port, Uint32 timeout = 5 * 60);
 
@@ -50,7 +55,7 @@ namespace simpleP2P {
          * Put arbitrary datagram in a tx_queue_.
          * @param packet datagram to be put in the tx_queue_
          */
-        void send(const std::vector<Int8> &packet);
+        void send(const std::vector<Uint8> &packet);
 
         /**
          * Sends the packet from tx_queue_ head
@@ -78,8 +83,11 @@ namespace simpleP2P {
 
         boost::asio::ip::udp::endpoint endpoint_;    //!< Endpoint where data will be sent
         boost::asio::ip::udp::socket socket_;        //!< Socket on which operates Client
-        std::deque<std::vector<Int8> > tx_queue_;    //!< Queue of datagrams to be sent
+        std::deque<std::vector<Uint8> > tx_queue_;   //!< Queue of datagrams to be sent
         boost::asio::deadline_timer timer;           //!< Timer for the beacon
+        Resource_Database &database;                 //!< Connection to ResourceDatabase
+        Logging_Module &logger;                      //!< Connection to LoggingModule
+        Uint32 timeout;                              //!< Beacon interval
     };
 }
 

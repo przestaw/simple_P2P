@@ -9,6 +9,8 @@
 #include "GeneralTypes.h"
 #include "udp_client.h"
 #include "udp_server.h"
+#include "logging_module.h"
+#include "resource_database.h"
 
 namespace simpleP2P {
     /**
@@ -22,7 +24,9 @@ namespace simpleP2P {
          * @param port port on which packets will be sent
          * @param beacon_interval beacon interval
          */
-        Udp_Module(boost::asio::ip::address broadcast_address,
+        Udp_Module(Resource_Database &database_c,
+                   Logging_Module &logger_c,
+                   boost::asio::ip::address broadcast_address,
                    Uint16 port, Uint32 beacon_interval);
 
         /**
@@ -38,13 +42,18 @@ namespace simpleP2P {
         void revoke_file(const Resource &resource);
 
     private:
+        /**
+         * Internal thread function. Initialise Client, Server and their IO context
+         */
         void run_server();
 
-        boost::shared_ptr<Udp_Client> ptr_client;
-        boost::shared_ptr<Udp_Server> ptr_server;
-        boost::asio::ip::address broadcast_address;
-        Uint16 port;
-        Uint32 beacon_interval;
+        boost::shared_ptr<Udp_Client> ptr_client;            //!< Handle to UDP Client
+        boost::shared_ptr<Udp_Server> ptr_server;            //!< Handle to UDP Server
+        boost::asio::ip::address broadcast_address;          //!< UDP broadcast address
+        Uint16 port;                                         //!< UDP broadcast port
+        Uint32 beacon_interval;                              //!< Beacon interval
+        Resource_Database &database;                         //!< Connection to ResourceDatabase
+        Logging_Module &logger;                              //!< Connection to LoggingModule
     };
 }
 
