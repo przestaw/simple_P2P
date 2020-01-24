@@ -76,7 +76,7 @@ namespace simpleP2P {
 				segment = ntohs(segment);
 
 				std::stringstream logmsg;
-				logmsg << "RequestWorker: request for segment " << segment << " of file " << file_name << " received";
+				logmsg << "RequestWorker: request for segment " << segment << " of file: '" << file_name << "' received";
 				logging_module.add_log_line(logmsg.str(), std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 				
 				Uint32 requested_segment_size;
@@ -105,7 +105,7 @@ namespace simpleP2P {
 						                                std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 					}
 					
-					logmsg << "RequestWorker: sending segment " << segment << " of file " << file_name << "...";
+					logmsg << "RequestWorker: sending segment " << segment << " of file: '" << file_name << "'...";
 					logging_module.add_log_line(logmsg.str(), std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 					// Send the segment.
 					boost::asio::async_write(_socket,

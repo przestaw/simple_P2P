@@ -21,7 +21,7 @@ namespace simpleP2P
 
 	std::thread RequestServer::init() 
 	{
-		logging_module.add_log_line("RequestServer initialized\n",
+		logging_module.add_log_line("RequestServer initialized",
 			                              std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 		return std::thread([=] { start_accept(); });
 	}
@@ -38,7 +38,7 @@ namespace simpleP2P
 	{
 	    if (!error)
 	    {
-				logging_module.add_log_line("RequestServer: successful asynchronous accept\n",
+				logging_module.add_log_line("RequestServer: successful asynchronous accept",
 			                                  std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 	      try 
 	      {
@@ -46,7 +46,7 @@ namespace simpleP2P
 	      }
 	      catch (std::exception& e)
 	      {
-	      	logging_module.add_log_line("RequestServer: exception caught from RequestWorker::start()! Deleting RequestWorker object\n",
+	      	logging_module.add_log_line("RequestServer: exception caught from RequestWorker::start()! Deleting RequestWorker object",
 			                                   std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 	      	
 	      	if (new_worker != nullptr) // Extra security.
@@ -57,7 +57,7 @@ namespace simpleP2P
 	    }
 	    else
 	    {
-				logging_module.add_log_line("RequestServer: ERROR asynchronously accepting\n",
+				logging_module.add_log_line("RequestServer: ERROR asynchronously accepting",
 			                                  std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 	      delete new_worker;
 	    }
