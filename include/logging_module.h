@@ -25,7 +25,7 @@ namespace simpleP2P {
          * @note if output stream is a file you must explicitly close it
          */
         std::thread init();
-
+        
         /**
          * Synchronised method for logging output
          * @param line

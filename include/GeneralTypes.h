@@ -19,6 +19,7 @@
 
 #define SegmentId Uint16
 
+#define QUIT_CONN 4
 #define REQ_SEGMENT 8
 #define REVOKE 16
 #define FILE_LIST 32
@@ -38,4 +39,10 @@
 #define BAN_TIME 1000ms
 #define TIMEOUT_CHECK_INTERVAL 300ms
 
-#endif // SIMPLE_P2P_GENERALTYPES_H
+namespace simpleP2P
+{
+	const Uint16 FILE_NAME_LENGHT = 256;
+	const Uint16 FILE_SIZE_LENGHT = 8;
+	const Uint16 SEGMENT_SIZE = 1024;
+}
+#endif //SIMPLE_P2P_GENERALTYPES_H

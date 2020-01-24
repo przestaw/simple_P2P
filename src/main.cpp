@@ -4,14 +4,14 @@
 
 #include "CLI.h"
 #include <GeneralTypes.h>
+#include <boost/asio.hpp>
+#include <boost/program_options.hpp>
 #include <iostream>
 #include <logging_module.h>
 #include <thread>
-#include <boost/program_options.hpp>
-#include <boost/asio.hpp>
-#include <udp_server.h>
 #include <udp_client.h>
 #include <udp_module.h>
+#include <udp_server.h>
 
 using namespace simpleP2P;
 using namespace boost;
