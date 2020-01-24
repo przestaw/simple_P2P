@@ -122,7 +122,7 @@ namespace simpleP2P {
 		if (file.fail()) 
 		{
 			std::stringstream logmsg;
-			logmsg << "FileManager: opening file " << file_name << " for writing (creating it) FAILED!\n  File storing FAILED";
+			logmsg << "FileManager: opening file: '" << file_name << "' for writing (creating it) FAILED!\n  File storing FAILED";
 			logging_module.add_log_line(logmsg.str(), std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 			return;
 		}
@@ -137,13 +137,13 @@ namespace simpleP2P {
 		if (!file) 
 		{
 			std::stringstream logmsg;
-			logmsg << "FileManager: ERROR storing the file " << file_name << " on disc!";
+			logmsg << "FileManager: ERROR storing the file: '" << file_name << "' on disc!";
 			logging_module.add_log_line(logmsg.str(), std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 		}
 		else
 		{
 			std::stringstream logmsg;
-			logmsg << "FileManager: file " << file_name << " successfully stored on disc";
+			logmsg << "FileManager: file: '" << file_name << "' successfully stored on disc";
 			logging_module.add_log_line(logmsg.str(), std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 		}
 
@@ -199,7 +199,7 @@ namespace simpleP2P {
 		{
 			rlmutex.unlock();
 			std::stringstream logmsg;
-			logmsg << "FileManager: ERROR opening file " << file_name << " for reading!";
+			logmsg << "FileManager: ERROR opening file: '" << file_name << "' for reading!";
 			logging_module.add_log_line(logmsg.str(), std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 			return false;
 		}
@@ -208,7 +208,7 @@ namespace simpleP2P {
 		
 		rlmutex.unlock();
 		std::stringstream logmsg;
-		logmsg << "FileManager: file " << file_name << " successfully opened for reading";
+		logmsg << "FileManager: file: '" << file_name << "' successfully opened for reading";
 		logging_module.add_log_line(logmsg.str(), std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 		return true;
 	}
@@ -231,11 +231,11 @@ namespace simpleP2P {
 		std::stringstream logmsg;
 		if (erased)
 		{
-				logmsg << "FileManager: file " << file_name << " successfully closed for reading";
+				logmsg << "FileManager: file: '" << file_name << "' successfully closed for reading";
 		}
 		else
 		{
-				logmsg << "FileManager: could not close file " << file_name << " for reading as it had not been opened for reading!";
+				logmsg << "FileManager: could not close file: '" << file_name << "' for reading as it had not been opened for reading!";
 		}
 
 		logging_module.add_log_line(logmsg.str(), std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));

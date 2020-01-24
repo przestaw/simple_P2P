@@ -7,6 +7,7 @@
 #include <algorithm> // find	
 #include <string>
 #include <sstream> // stringstream
+#include <cmath> // modf
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 
@@ -73,6 +74,7 @@ namespace simpleP2P {
 				
 				Uint16 segment;
 				std::copy(recv_data+1+FILE_NAME_LENGHT+FILE_SIZE_LENGHT, recv_data+1+FILE_NAME_LENGHT+FILE_SIZE_LENGHT+sizeof(Uint16), &segment);
+				  // Uint16 is always 16-bit, not platform dependent.
 				segment = ntohs(segment);
 
 				std::stringstream logmsg;
@@ -80,13 +82,13 @@ namespace simpleP2P {
 				logging_module.add_log_line(logmsg.str(), std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 				
 				Uint32 requested_segment_size;
-				double nsegments = (double)file_size / SEGMENT_SIZE;
-			
-				// Check if the requested segment is the last segment of the file (and its size != SEGMENT_SIZE)
-				// and if this is the case calculate its size.
-				if (segment == (Uint64)nsegments+1)
+				double nsegments = static_cast<double>(file_size) / SEGMENT_SIZE;
+				
+				// Check if the requested segment is the last segment of the file (and its size != SEGMENT_SIZE).
+				// If this is the case, calculate its size.
+				if (segment == static_cast<Uint16>(nsegments))
 				{
-					requested_segment_size = file_size - (Uint64)nsegments * SEGMENT_SIZE;
+					requested_segment_size = file_size - static_cast<Uint16>(nsegments) * SEGMENT_SIZE;
 				}
 				else
 				{
@@ -101,17 +103,19 @@ namespace simpleP2P {
 					
 					if (!file_manager.get_segment(file_name, segment, send_data, requested_segment_size))
 					{
-						logging_module.add_log_line("RequestWorker: getting the requested segment from file manager FAILED. Delete RequestWorker object",
+						logging_module.add_log_line("RequestWorker: getting the requested segment from file manager FAILED. Deleting RequestWorker object",
 						                                std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+						delete this;
 					}
-					
-					logmsg << "RequestWorker: sending segment " << segment << " of file: '" << file_name << "'...";
-					logging_module.add_log_line(logmsg.str(), std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
-					// Send the segment.
-					boost::asio::async_write(_socket,
-										boost::asio::buffer(send_data, sizeof(send_data)),
-										boost::bind(&RequestWorker::handle_write, this, boost::asio::placeholders::error));
-					
+					else
+					{
+						logmsg << "RequestWorker: sending segment " << segment << " of file: '" << file_name << "'...";
+						logging_module.add_log_line(logmsg.str(), std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+						// Send the segment.
+						boost::asio::async_write(_socket,
+											boost::asio::buffer(send_data, sizeof(send_data)),
+											boost::bind(&RequestWorker::handle_write, this, boost::asio::placeholders::error));
+					}
 				//}
 			}
 			else if (command == QUIT_CONN)
