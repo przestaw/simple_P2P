@@ -9,9 +9,9 @@
 #include <thread>
 #include <boost/program_options.hpp>
 #include <boost/asio.hpp>
-#include <udp_server.h>
 #include <udp_client.h>
 #include <udp_module.h>
+
 
 using namespace simpleP2P;
 using namespace boost;
@@ -56,7 +56,7 @@ int main(int argc, const char *argv[]) {
      * Create threads for all modules and connect them e.g. by signal-slot
      */
     //TODO: use parameters
-    Host localhost(boost::asio::ip::address::from_string("192.168.1.198"));
+    Host localhost(boost::asio::ip::address::from_string("192.168.1.1"));
     Logging_Module logger; //TODO file OR default = std::cerr
     Resource_Database database(localhost); //TODO ADRR
     Udp_Module udp(database, logger, boost::asio::ip::address::from_string(BROADCAST_ADDRESS), BROADCAST_PORT,
@@ -75,12 +75,12 @@ int main(int argc, const char *argv[]) {
     }
 
     boost::asio::io_service io_service;
-    FileManager fm;
+    FileManager fm (logger);
     // ^ XDD
 
     //TODO : localhost as shared_ptr
     Printer printer(std::cout);
-    CLI commandline(database, logger, io_service, fm, *database.getHost().get(), printer);
+    CLI commandline(database, logger, io_service, fm, *database.get_localhost(), printer);
 
     basic[0] = logger.init();
     basic[1] = udp.init();

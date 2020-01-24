@@ -7,9 +7,9 @@
 namespace simpleP2P {
     Logging_Module::Logging_Module(std::ostream &output_c) : output(output_c) {}
 
-    std::thread Logging_Module::init() {
-        return std::thread([=] { worker(); });
-    }
+	std::thread Logging_Module::init() {
+  		return std::thread([=] { worker(); });
+	}
 
     void Logging_Module::worker() {
         std::unique_lock<std::mutex> uniqueLock(queue_mutex);

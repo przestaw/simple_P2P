@@ -2,9 +2,9 @@
 // Created by przemek on 09.12.2019.
 //
 
-#include <algorithm>
-#include "host.h"
 #include "resource.h"
+#include "host.h"
+#include <algorithm>
 #include <cstring>
 
 namespace simpleP2P {

@@ -30,6 +30,13 @@ namespace simpleP2P {
         ~CompleteResource();
 
         /**
+        * @brief Get the contents of the file.
+        *
+        * @return Uint8*
+        */
+        Uint8* get_data();
+        
+        /**
          * @brief Get the underlaying resource object
          *
          * @return std::shared_ptr<Resource>
