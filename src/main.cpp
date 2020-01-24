@@ -79,12 +79,14 @@ int main(int argc, const char *argv[]) {
     // ^ XDD
 
     //TODO : localhost as shared_ptr
-    Printer printer;
-    CLI commandline(database, logger, io_service, fm, *database.get_localhost(), printer);
+    Printer printer(std::cout);
+    CLI commandline(database, logger, io_service, fm, *database.getHost().get(), printer);
 
     basic[0] = logger.init();
     basic[1] = udp.init();
-    basic[2] = commandline.init();
+    basic[2] = printer.init();
+    basic[3] = commandline.init();
+    std::cout << "Init Done\n";
 
     for (auto &iter : basic) {
         iter.join();
