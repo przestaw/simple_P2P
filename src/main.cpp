@@ -75,7 +75,7 @@ int main(int argc, const char *argv[]) {
     }
 
     boost::asio::io_service io_service;
-    FileManager fm;
+    FileManager fm (logger);
     // ^ XDD
 
     //TODO : localhost as shared_ptr
