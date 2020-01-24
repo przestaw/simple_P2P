@@ -4,14 +4,14 @@
 
 #include "CLI.h"
 #include <GeneralTypes.h>
-#include <boost/asio.hpp>
-#include <boost/program_options.hpp>
 #include <iostream>
 #include <logging_module.h>
 #include <thread>
+#include <boost/program_options.hpp>
+#include <boost/asio.hpp>
 #include <udp_client.h>
 #include <udp_module.h>
-#include <udp_server.h>
+
 
 using namespace simpleP2P;
 using namespace boost;
@@ -84,7 +84,9 @@ int main(int argc, const char *argv[]) {
 
     basic[0] = logger.init();
     basic[1] = udp.init();
-    basic[2] = commandline.init();
+    basic[2] = printer.init();
+    basic[3] = commandline.init();
+    std::cout << "dupa";
 
     for (auto &iter : basic) {
         iter.join();
