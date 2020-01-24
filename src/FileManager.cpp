@@ -110,9 +110,9 @@ namespace simpleP2P {
 		return true;
 	}
 			
-	void FileManager::store_resource(CompleteResource& complete_resource)
+	void FileManager::store_resource(std::shared_ptr<CompleteResource> complete_resource)
 	{
-		std::string file_name = complete_resource.get_resource()->getName();
+		std::string file_name = complete_resource->get_resource()->getName();
 
 		write_lock(file_name);
 		
@@ -127,9 +127,9 @@ namespace simpleP2P {
 			return;
 		}
 
-		char* file_contents = reinterpret_cast<char*>(complete_resource.get_data());
+		char* file_contents = reinterpret_cast<char*>(complete_resource->get_data());
 	
-		Uint64 file_size = complete_resource.get_resource()->getSize();
+		Uint64 file_size = complete_resource->get_resource()->getSize();
 
 		file.seekp(0); // Write at the beggining of the file. Is this step necessary as the 'trunc' flag is set?
 		file.write(file_contents, file_size);

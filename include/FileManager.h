@@ -50,7 +50,7 @@ namespace simpleP2P
 		 * @param resource File to store on the disc.
 		 * The data will not be interpreted, so make sure it's complete and ready to store.
 		 */
-		void store_resource (CompleteResource& complete_resource);
+		void store_resource (std::shared_ptr<CompleteResource> complete_resource);
 		/**
 		 * Closes the file and unlocks it for writing.
 		 *
