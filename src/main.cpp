@@ -56,11 +56,11 @@ int main(int argc, const char *argv[]) {
      * Create threads for all modules and connect them e.g. by signal-slot
      */
     //TODO: use parameters
-    Host localhost(boost::asio::ip::address::from_string("192.168.1.1"));
+    Host localhost(boost::asio::ip::address::from_string("192.168.1.198"));
     Logging_Module logger; //TODO file OR default = std::cerr
     Resource_Database database(localhost); //TODO ADRR
     Udp_Module udp(database, logger, boost::asio::ip::address::from_string(BROADCAST_ADDRESS), BROADCAST_PORT,
-                   10); // basic test
+                   3); // basic test
 
     {
         Resource res = Resource("Bananowe jointy", 102070);

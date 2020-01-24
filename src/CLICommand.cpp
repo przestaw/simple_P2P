@@ -5,16 +5,17 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include <utility>
 
 namespace simpleP2P {
     CLICommand::CLICommand(std::string name_, std::string description_,
                            std::function<Int32(const std::string &)> function_) {
-        name = name_;
-        description = description_;
-        function = function_;
+        name = std::move(name_);
+        description = std::move(description_);
+        function = std::move(function_);
     };
 
-    void CLICommand::operator()(std::string argument) const {
+    void CLICommand::operator()(const std::string& argument) const {
         if (function != nullptr)
             function(argument);
         else

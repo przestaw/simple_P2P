@@ -17,7 +17,7 @@ namespace simpleP2P {
 
         ~CLICommand() {};
 
-        void operator()(std::string) const;
+        void operator()(const std::string&) const;
 
         std::string getName() const { return name; };
 

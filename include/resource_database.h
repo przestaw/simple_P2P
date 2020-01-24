@@ -30,12 +30,6 @@ namespace simpleP2P {
          */
         bool has_file(const Resource &res);
 
-        /* NOTE: chosen conception
-         * >>> use pointers outside Database -> slightly inefficient,
-         *      probably best as it is possible to have host without resources and theoretically lonely resource
-         * This assumes that once host is in database it's never deleted
-         */
-
         /**
          * Adds connection between file and resource, adn creates them if they do not exist
          * @param res Resource to be added
@@ -86,7 +80,7 @@ namespace simpleP2P {
         * @return shared pointer to res
         */
         inline std::shared_ptr<Resource>
-        who_has_file(std::vector<Uint8> resource_header); //NOTE: no constructor available
+        who_has_file(std::vector<Uint8> resource_header);
 
         /**
          * Returns shared pointer to resource to allow access to information about file owners
