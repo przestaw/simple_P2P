@@ -29,6 +29,8 @@ namespace simpleP2P {
          */
         Host(boost::asio::ip::address ip);
 
+        Host(const Host &other) : Host(other.host_ip) {}
+
         /**
          * Determines if host has resource
          * @param res Resource to be checked

@@ -11,7 +11,7 @@ You should have installed:
 
 Run **`N`** instances of the program to simulate a network:
 
-`docker-compose up --detach --build --scale host=`**`N`**
+`docker-compose up -d --build --scale host=`**`N`**
 
 ### Enable user input from one of running hosts
 

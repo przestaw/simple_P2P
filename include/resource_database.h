@@ -117,6 +117,8 @@ namespace simpleP2P {
         std::shared_mutex mutable database_mutex;                  //!< rw_lock for database, allows multiple concurrent reads but permits concurrent writes
 
         inline void remove_host(const std::shared_ptr<Host> &host);
+
+        inline void add_file_internal(const Resource &res, const Host &host);
     };
 }
 

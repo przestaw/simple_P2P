@@ -35,6 +35,8 @@ namespace simpleP2P {
          */
         Resource(std::vector<Uint8> resource_header);
 
+        Resource(const Resource &other) : Resource(other.name, other.size, other.path) {}
+
         /**
          * Generates Resource header
          * @return Resource header

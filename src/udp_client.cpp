@@ -69,6 +69,8 @@ void simpleP2P::Udp_Client::revoke_file(simpleP2P::Resource resource) {
     packet.emplace_back(REVOKE);
     auto res = resource.generate_resource_header();
     packet.insert(packet.end(), res.begin(), res.end());
+    logger.add_log_line("prepared : revoke over UDP",
+                        std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
     send(packet);
 }
 

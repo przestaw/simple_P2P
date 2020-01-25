@@ -5,6 +5,7 @@
 #include "resource_database.h"
 #include <utility>
 #include <memory>
+#include <iostream>
 
 using std::shared_ptr;
 using std::weak_ptr;
@@ -31,30 +32,7 @@ namespace simpleP2P {
 
     void Resource_Database::add_file(const Resource &res, const Host &host) {
         std::unique_lock lock(database_mutex);
-        auto res_i = std::find_if(resources.begin(),
-                                  resources.end(),
-                                  [&res](shared_ptr<Resource> &it) {
-                                      return *(it.get()) == res;
-                                  });
-        auto host_i = std::find_if(hosts.begin(),
-                                   hosts.end(),
-                                   [&host](shared_ptr<Host> &it) {
-                                       return *(it.get()) == host;
-                                   });
-
-        //create resource and host if they do not exist
-        if (res_i == resources.end()) {
-            resources.emplace_back(std::make_shared<Resource>(res));
-            res_i = resources.end() - 1;
-        }
-        if (host_i == hosts.end()) {
-            hosts.emplace_back(std::make_shared<Host>(host));
-            host_i = hosts.end() - 1;
-        }
-
-        //push back pointers
-        res_i->get()->hosts_in_possession.emplace_back(*host_i);
-        host_i->get()->possesed_resources.push_back(*res_i);
+        this->add_file_internal(res, host);
     }
 
     bool Resource_Database::remove_file(const Resource &res, const Host &host) {
@@ -133,16 +111,25 @@ namespace simpleP2P {
                                  [&host_a](shared_ptr<Host> &it) {
                                      return *(it.get()) == host_a;
                                  });
+        std::cout << "alive - update\n";
+        if (host == hosts.end()) {
+            hosts.emplace_back(std::make_shared<Host>(host_a));
+            host = hosts.end() - 1;
+            std::cout << "alive - new host\n";
+        }
+
         shared_ptr<Host> to_update = *host;
         to_update->no_of_missed_updates = 0;
+
         for (auto &resource: host_a.possesed_resources) {
+
             if (std::count_if(
                     to_update->possesed_resources.begin(),
                     to_update->possesed_resources.end(),
                     [&resource](auto &it) {
                         return *(resource.lock().get()) == *(it.lock().get());
                     }) == 0) {
-                add_file(*(resource.lock().get()), *(to_update.get()));
+                add_file_internal(*(resource.lock().get()), *(to_update.get()));
             }//else no need for action
         }
     }
@@ -160,7 +147,7 @@ namespace simpleP2P {
             std::for_each(res->get()->hosts_in_possession.begin(),
                           res->get()->hosts_in_possession.end(),
                           [&res](weak_ptr<Host> &it) {
-                              it.lock().get()->remove_resource(*res);
+                              it.lock()->remove_resource(*res);
                           });
         }
     }
@@ -184,11 +171,40 @@ namespace simpleP2P {
     }
 
     void Resource_Database::remove_host(const std::shared_ptr<Host> &host) {
+        // no lock
         if (host != my_host) {
             for (auto &it: host->possesed_resources) {
                 it.lock()->remove_host(host);
             }
             hosts.erase(std::find(hosts.begin(), hosts.end(), host));
         }
+    }
+
+    void Resource_Database::add_file_internal(const Resource &res, const Host &host) {
+        // no lock
+        auto res_i = std::find_if(resources.begin(),
+                                  resources.end(),
+                                  [&res](shared_ptr<Resource> &it) {
+                                      return *(it.get()) == res;
+                                  });
+        auto host_i = std::find_if(hosts.begin(),
+                                   hosts.end(),
+                                   [&host](shared_ptr<Host> &it) {
+                                       return *(it.get()) == host;
+                                   });
+
+        //create resource and host if they do not exist
+        if (res_i == resources.end()) {
+            resources.emplace_back(std::make_shared<Resource>(res));
+            res_i = resources.end() - 1;
+        }
+        if (host_i == hosts.end()) {
+            hosts.emplace_back(std::make_shared<Host>(host));
+            host_i = hosts.end() - 1;
+        }
+
+        //push back pointers
+        res_i->get()->hosts_in_possession.emplace_back(*host_i);
+        host_i->get()->possesed_resources.push_back(*res_i);
     }
 }

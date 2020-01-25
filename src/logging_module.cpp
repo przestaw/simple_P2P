@@ -22,7 +22,7 @@ namespace simpleP2P {
         }
     }
 
-    void Logging_Module::add_log_line(std::string line, const std::time_t time) {
+    void Logging_Module::add_log_line(std::string line, const std::time_t &time) {
         std::lock_guard<std::mutex> uniqueLock(queue_mutex);
         auto time_str = std::string(std::ctime(&time));
         logging_queue.push("[" +
