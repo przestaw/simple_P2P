@@ -6,6 +6,8 @@
 #include "host.h"
 #include <algorithm>
 #include <cstring>
+#include <iostream>
+#include <utility>
 
 namespace simpleP2P {
     Resource::Resource(std::string name_c, Uint64 size_c, std::string path_c)
