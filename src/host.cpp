@@ -73,7 +73,7 @@ namespace simpleP2P {
     }
 
     boost::asio::ip::tcp::endpoint Host::get_endpoint() const {
-        return boost::asio::ip::tcp::endpoint{host_ip, port};
+        return boost::asio::ip::tcp::endpoint{host_ip, TCP_SERVER_PORT};
     }
 
 } // namespace simpleP2P

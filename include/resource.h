@@ -54,7 +54,7 @@ namespace simpleP2P {
          * Calculates and returns segment count
          * @return segment count
          */
-        inline Uint16 calc_segments_count() const {
+        Uint16 calc_segments_count() const {
             if (size % SEGMENT_SIZE)
                 return 1 + (size / SEGMENT_SIZE);
             else
@@ -103,7 +103,8 @@ namespace simpleP2P {
          */
         bool operator!=(const Resource &other) const;
 
-        const tbb::concurrent_vector<std::weak_ptr<Host>> &get_hosts() const;
+        // const tbb::concurrent_vector<std::weak_ptr<Host>> 
+        const std::vector<std::weak_ptr<Host>>  &get_hosts() const;
 
     private:
         void remove_host(std::shared_ptr<Host> host);
@@ -113,7 +114,8 @@ namespace simpleP2P {
         /*atrribs not checked for equality*/
         bool invalidated;                       //!< indicates that resource has been revoked
         std::string path;                       //!< file path
-        tbb::concurrent_vector<std::weak_ptr<Host>> hosts_in_possession;  //!< Host in possession of the Resource
+        // tbb::concurrent_vector<std::weak_ptr<Host>>
+        std::vector<std::weak_ptr<Host>> hosts_in_possession;  //!< Host in possession of the Resource
 
         friend class Resource_Database;         //!< friendship to manage Resource Hosts, path etc
     };

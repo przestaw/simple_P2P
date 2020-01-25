@@ -3,10 +3,10 @@
 namespace simpleP2P {
 
     CompleteResource::CompleteResource(std::shared_ptr<Resource> resource_c)
-            : resource(resource_c), busy_segments(resource->calc_segments_count()),
-              completed_segments(resource->calc_segments_count()),
+            : resource(resource_c), busy_segments(resource_c->calc_segments_count()),
+              completed_segments(resource_c->calc_segments_count()),
               completed_counter(0) {
-        data = new Uint8[resource->calc_segments_count() * SEGMENT_SIZE];
+        data = new Uint8[resource_c->calc_segments_count() * SEGMENT_SIZE];
     }
 
     CompleteResource::~CompleteResource() { delete[] data; }
