@@ -20,22 +20,17 @@ DownloadService::DownloadService(Logging_Module &logging_module_c,
   complete_resource = std::make_shared<CompleteResource>(resource_c);
 }
 
-DownloadService::~DownloadService() {}
+DownloadService::~DownloadService() {
+  close_workers();
+  join_workers();
+}
 
 void DownloadService::init() {
   try {
     create_workers();
     init_workers();
-
-    try {
-      controll_workers();
-      store_file();
-    } catch (std::exception &e) {
-      handle_exception(e);
-      close_workers();
-      join_workers();
-    }
-
+    controll_workers();
+    store_file();
   } catch (std::exception &e) {
     handle_exception(e);
   }
