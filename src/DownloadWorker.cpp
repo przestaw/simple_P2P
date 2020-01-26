@@ -72,6 +72,9 @@ void DownloadWorker::close() {
   std::unique_lock<std::mutex> lk(cv_m);
   closed = true;
   cv.notify_one();
+  socket.cancel();
+  boost::system::error_code error_code;
+  socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both, error_code);
 }
 
 void DownloadWorker::connect() {
@@ -143,7 +146,7 @@ std::vector<Uint8> DownloadWorker::serialize_segment_request(Segment &segment) {
   std::copy(resource_header.begin(), resource_header.end(),
             std::back_inserter(data));
 
-  auto id = segment.get_id();
+  auto id = htons(segment.get_id());
   const Uint8 *byte_id_begin = reinterpret_cast<const Uint8 *>(&id);
   std::copy(byte_id_begin, byte_id_begin + sizeof(SegmentId),
             std::back_inserter(data));

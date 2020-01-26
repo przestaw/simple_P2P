@@ -100,6 +100,8 @@ namespace simpleP2P {
         // a time point to which a host is considered to be retarded
         // std::atomic<std::time_t> ban_time; //!<
         // a timestamp to which a host is considered to be retarded
+        Int8 timeout_counter;
+        bool retarded;
 
         Uint16 port; //TODO : delete port as it has no meaning
         Uint16 no_of_missed_updates;
