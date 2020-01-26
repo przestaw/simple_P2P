@@ -11,7 +11,7 @@
 
 namespace simpleP2P {
     Host::Host(boost::asio::ip::address ip)
-            : host_ip(std::move(ip)), no_of_missed_updates(0) {}
+            : host_ip(std::move(ip)), no_of_missed_updates(0), retarded(false), timeout_counter(0) {}
 
     bool Host::has_resource(Resource res) {
         return std::count_if(possesed_resources.begin(),
@@ -51,10 +51,16 @@ namespace simpleP2P {
     bool Host::is_retarded() {
         // return ban_time >
         //        std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+        // return retarded;
         return false;
     }
 
     void Host::increase_timeout_counter() {
+
+        timeout_counter++;
+        if(timeout_counter >= TIMEOUT_COUNTER_LIMIT) {
+            retarded = true;
+        }
         // TODO possible races
         // timeout_counter++;
 
@@ -73,7 +79,7 @@ namespace simpleP2P {
     }
 
     boost::asio::ip::tcp::endpoint Host::get_endpoint() const {
-        return boost::asio::ip::tcp::endpoint{host_ip, port};
+        return boost::asio::ip::tcp::endpoint{host_ip, TCP_SERVER_PORT};
     }
 
 } // namespace simpleP2P
