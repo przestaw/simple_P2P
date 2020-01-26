@@ -85,7 +85,7 @@ int main(int argc, const char *argv[]) {
 
     Printer printer(std::cout);
     CLI commandline(database, logger, io_service, fm, *database.get_localhost(),
-                    printer);
+                    printer, udp);
 
     RequestServerModule rsm(TCP_SERVER_PORT, fm, logger);
 

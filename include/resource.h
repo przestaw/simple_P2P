@@ -15,113 +15,113 @@
 
 namespace simpleP2P {
 
-    class Host; //!< Forward declaration
+class Host; //!< Forward declaration
 
 /**
  * Class contains file information and points to nodes with file possesion
  */
-    class Resource {
-    public:
-        /**
-         * Constructor
-         * @param name filename
-         * @param size filesize
-         * @param path filepath, default is "./"
-         */
-        Resource(std::string name, Uint64 size, std::string path = "./");
+class Resource {
+public:
+  /**
+   * Constructor
+   * @param name filename
+   * @param size filesize
+   * @param path filepath, default is "./"
+   */
+  Resource(std::string name, Uint64 size, std::string path = "./");
 
-        /**
-         * Constructor makes resource from header
-         * @param resource_header Resource header
-         */
-        Resource(std::vector<Uint8> resource_header);
+  /**
+   * Constructor makes resource from header
+   * @param resource_header Resource header
+   */
+  Resource(std::vector<Uint8> resource_header);
 
-        Resource(const Resource &other) : Resource(other.name, other.size, other.path) {}
+  Resource(const Resource &other) : Resource(other.name, other.size, other.path) {}
 
-        /**
-         * Generates Resource header
-         * @return Resource header
-         */
-        std::vector<Uint8> generate_resource_header();
+  /**
+   * Generates Resource header
+   * @return Resource header
+   */
+  std::vector<Uint8> generate_resource_header();
 
-        /**
-         * Determines if resource is possesed by Host
-         * @param host Host
-         * @return true if resource is possessed by host
-         */
-        bool has_host(Host host);
+  /**
+   * Determines if resource is possesed by Host
+   * @param host Host
+   * @return true if resource is possessed by host
+   */
+  bool has_host(Host host);
 
-        /**
-         * Calculates and returns segment count
-         * @return segment count
-         */
-        Uint16 calc_segments_count() const {
-            std::shared_lock(resource_mutex);
-            if (size % SEGMENT_SIZE)
-                return 1 + (size / SEGMENT_SIZE);
-            else
-                return size / SEGMENT_SIZE;
-        }
+  /**
+   * Calculates and returns segment count
+   * @return segment count
+   */
+  Uint16 calc_segments_count() const {
+      std::shared_lock lock(resource_mutex);
+      if (size % SEGMENT_SIZE)
+          return 1 + (size / SEGMENT_SIZE);
+      else
+          return size / SEGMENT_SIZE;
+  }
 
-        /**
-         * Function used to set invalidated flag.
-         * To allow references on resource outside database to gather information about revoke
-         */
-        void set_revoked();
+  /**
+   * Function used to set invalidated flag.
+   * To allow references on resource outside database to gather information about revoke
+   */
+  void set_revoked();
 
-        bool isInvalidated();
+  bool isInvalidated();
 
-        /**
-         * Getter for file size
-         * @return file size
-         */
-        Uint64 getSize() const;
+  /**
+   * Getter for file size
+   * @return file size
+   */
+  Uint64 getSize() const;
 
-        /**
-         * Getter for file name
-         * @return file name
-         */
-        const std::string &getName() const;
+  /**
+   * Getter for file name
+   * @return file name
+   */
+  const std::string &getName() const;
 
-        /**
-         * Getter for file path
-         * @return file path
-         */
-        const std::string &getPath() const;
+  /**
+   * Getter for file path
+   * @return file path
+   */
+  const std::string &getPath() const;
 
-        /**
-         * Operator == checks file size and name for equality
-         * @param other other
-         * @return true if equal
-         */
-        bool operator==(const Resource &other) const;
+  /**
+   * Operator == checks file size and name for equality
+   * @param other other
+   * @return true if equal
+   */
+  bool operator==(const Resource &other) const;
 
-        /**
-         * Operator != checks file size and name for equality
-         * @param other other
-         * @return true if not equal
-         */
-        bool operator!=(const Resource &other) const;
+  /**
+   * Operator != checks file size and name for equality
+   * @param other other
+   * @return true if not equal
+   */
+  bool operator!=(const Resource &other) const;
 
-        // const tbb::concurrent_vector<std::weak_ptr<Host>> 
-        std::vector<std::weak_ptr<Host>> get_hosts();
+  // const tbb::concurrent_vector<std::weak_ptr<Host>>
+  std::vector<std::weak_ptr<Host>> get_hosts();
 
-    private:
-        void remove_host(std::shared_ptr<Host> host);
+private:
+  void remove_host(std::shared_ptr<Host> host);
 
-        void remove_host(const Host &host);
+  void remove_host(const Host &host);
 
-        Uint64 size;                            //!< file size
-        std::string name;                       //!< file name
-        /*atrribs not checked for equality*/
-        std::shared_mutex mutable resource_mutex;
-        bool invalidated;                       //!< indicates that resource has been revoked
-        std::string path;                       //!< file path
-        // tbb::concurrent_vector<std::weak_ptr<Host>>
-        std::vector<std::weak_ptr<Host>> hosts_in_possession;  //!< Host in possession of the Resource
+  Uint64 size;                            //!< file size
+  std::string name;                       //!< file name
+  /*atrribs not checked for equality*/
+  std::shared_mutex mutable resource_mutex;
+  bool invalidated;                       //!< indicates that resource has been revoked
+  std::string path;                       //!< file path
+  // tbb::concurrent_vector<std::weak_ptr<Host>>
+  std::vector<std::weak_ptr<Host>> hosts_in_possession;  //!< Host in possession of the Resource
 
-        friend class Resource_Database;         //!< friendship to manage Resource Hosts, path etc
-    };
+  friend class Resource_Database;         //!< friendship to manage Resource Hosts, path etc
+};
 }
 
 #endif //SIMPLE_P2P_RESOURCE_H
