@@ -62,21 +62,20 @@ namespace simpleP2P {
 
             if (command == REQ_SEGMENT) {
                 Uint64 file_size;
-                std::memcpy(&file_size, recv_data + 1 + FILE_NAME_LENGHT, FILE_SIZE_LENGHT);
-                file_size = be64toh(file_size);
+                std::copy(recv_data + 1 + FILE_NAME_LENGHT, recv_data + 1 + FILE_NAME_LENGHT + FILE_SIZE_LENGHT,
+                          &file_size);
+                file_size = ntohs(file_size);
 
                 Uint16 segment;
-                //std::copy(recv_data+1+FILE_NAME_LENGHT+FILE_SIZE_LENGHT, recv_data+1+FILE_NAME_LENGHT+FILE_SIZE_LENGHT+sizeof(Uint16), &segment);
-                std::memcpy(&segment, recv_data + 1 + FILE_NAME_LENGHT + FILE_SIZE_LENGHT, sizeof(Uint16));
+                std::copy(recv_data + 1 + FILE_NAME_LENGHT + FILE_SIZE_LENGHT,
+                          recv_data + 1 + FILE_NAME_LENGHT + FILE_SIZE_LENGHT + sizeof(Uint16), &segment);
                 // Uint16 is always 16-bit, not platform dependent.
                 segment = ntohs(segment);
 
-                // std::stringstream logmsg;
-                // logmsg << "RequestWorker: request for segment " << segment << " of file: '" ;//<< file_name << "' received";
-                std::string logmsg =
-                        "RequestWorker: request for segment " + std::to_string(segment) + " of file: '" + file_name +
-                        "' received";
-                logging_module.add_log_line(logmsg,
+                std::stringstream logmsg;
+                logmsg << "RequestWorker: request for segment " << segment << " of file: '" << file_name
+                       << "' received";
+                logging_module.add_log_line(logmsg.str(),
                                             std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 
                 Uint32 requested_segment_size;
@@ -102,13 +101,12 @@ namespace simpleP2P {
                             std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
                     delete this;
                 } else {
-                    logmsg = "RequestWorker: sending segment " + std::to_string(segment) + " of file: '" + file_name +
-                             "'...";
-                    logging_module.add_log_line(logmsg,
+                    logmsg << "RequestWorker: sending segment " << segment << " of file: '" << file_name << "'...";
+                    logging_module.add_log_line(logmsg.str(),
                                                 std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
                     // Send the segment.
                     boost::asio::async_write(_socket,
-                                             boost::asio::buffer(send_data, std::size_t(SEGMENT_SIZE)),
+                                             boost::asio::buffer(send_data, sizeof(send_data)),
                                              boost::bind(&RequestWorker::handle_write, this,
                                                          boost::asio::placeholders::error));
                 }

@@ -149,10 +149,8 @@ namespace simpleP2P {
         bool is_locked = true;
         wlmutex.lock();
         while (is_locked) {
-            is_locked = false;
             for (auto wlocked : wlocked_files) {
                 if (wlocked == file_name) {
-                    is_locked = true;
                     // File is wlocked - we must block.
                     break;
                 }
@@ -233,10 +231,8 @@ namespace simpleP2P {
         bool is_locked = true;
         rlmutex.lock();
         while (is_locked) {
-            is_locked = false;
             for (OpenFile *f : rlocked_files) {
                 if (file_name == f->file_name) {
-                    is_locked = true;
                     // The file is rlocked.
                     break;
                 }

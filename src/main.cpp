@@ -72,15 +72,12 @@ int main(int argc, const char *argv[]) {
                    5);  // basic test
 
     {
-        Resource res = Resource("Bananowe jointy", 102070);
-        database.add_file(res);
+        Resource res1 = Resource("Banano", 102070);
+        database.add_file(res1);
 
-        res = Resource("XD", 10302000);
+        Resource res2 = Resource("XD", 10302000);
 
-        database.add_file(res);
-        res = Resource("Karmiace kaczki", 1910);
-
-        database.add_file(res);
+        database.add_file(res2);
     }
 
     boost::asio::io_service io_service;
@@ -88,10 +85,9 @@ int main(int argc, const char *argv[]) {
 
     Printer printer(std::cout);
     CLI commandline(database, logger, io_service, fm, *database.get_localhost(),
-                    printer, udp);
+                    printer);
 
-    RequestServerModule rsm(boost::asio::ip::address::from_string(host_ip),
-                            TCP_SERVER_PORT, fm, logger);
+    RequestServerModule rsm(TCP_SERVER_PORT, fm, logger);
 
     basic[0] = logger.init();
     basic[1] = udp.init();

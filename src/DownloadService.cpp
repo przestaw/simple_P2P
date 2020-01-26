@@ -20,24 +20,33 @@ namespace simpleP2P {
         complete_resource = std::make_shared<CompleteResource>(resource_c);
     }
 
-    DownloadService::~DownloadService() {
-        close_workers();
-        join_workers();
-    }
+    DownloadService::~DownloadService() {}
 
     void DownloadService::init() {
         try {
+            std::cout << "im in d serv" << std::endl;
             create_workers();
+            std::cout << "w creat in d serv" << std::endl;
+
             init_workers();
+            std::cout << "w init d serv" << std::endl;
+
+        } catch (std::exception &e) {
+            handle_exception(e);
+        }
+
+        try {
             controll_workers();
             store_file();
         } catch (std::exception &e) {
             handle_exception(e);
+            close_workers();
+            join_workers();
         }
     }
 
     std::thread DownloadService::init_thread() {
-        return std::thread([&] { init(); });
+        return std::thread([=] { init(); });
     }
 
     void DownloadService::create_workers() {
@@ -73,6 +82,7 @@ namespace simpleP2P {
                 // download_completed
                 break;
             } else {
+                std::cout << "timeout controller" << std::endl;
                 // timeouted
                 if (all_workers_unavailable()) {
                     throw std::runtime_error("All workers are unavailable");
@@ -108,13 +118,12 @@ namespace simpleP2P {
     void DownloadService::handle_exception(std::exception &e) {
         // std::stringstream error_message;
         // error_message << "Failed to download resource: " << resource->getName()
-        //               << "\n detailed error: " << e.what() << "\n";
-        std::string error_message =
-                "Failed to download resource: " + resource->getName() +
-                "\n detailed error: " + e.what() + "\n";
-        using namespace std::chrono;
-        logging_module.add_log_line(error_message,
-                                    system_clock::to_time_t(system_clock::now()));
+        //               << std::endl
+        //               << " detailed error: " << e.what() << std::endl;
+
+        // using namespace std::chrono;
+        // logging_module.add_log_line(error_message.str(),
+        //                             system_clock::to_time_t(system_clock::now()));
     }
 
     void DownloadService::store_file() {
