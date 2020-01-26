@@ -90,7 +90,7 @@ int main(int argc, const char *argv[]) {
     FileManager fm (logger);
 
     Printer printer(std::cout);
-    CLI commandline(database, logger, io_service, fm, *database.get_localhost(), printer);
+    CLI commandline(database, logger, io_service, fm, *database.get_localhost(), printer, udp);
 
     basic[0] = logger.init();
     basic[1] = udp.init();

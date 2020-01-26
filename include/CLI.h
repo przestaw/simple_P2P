@@ -11,6 +11,7 @@
 #include "logging_module.h"
 #include "FileManager.h"
 #include "printer.h"
+#include "udp_module.h"
 #include <sstream>
 
 namespace simpleP2P {
@@ -24,6 +25,7 @@ namespace simpleP2P {
         Host &localhost;
         Printer &printer;
         std::stringstream stream;
+        Udp_Module &udp;
 
         /**
          * Function for printing through CLI and clearing stringstream
@@ -47,7 +49,7 @@ namespace simpleP2P {
          * @param printer_
          */
         CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_service &io_service_, FileManager &fm_,
-            Host &localhost_, Printer &printer_);
+            Host &localhost_, Printer &printer_, Udp_Module &udp);
 
         ~CLI();
 
