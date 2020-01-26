@@ -8,7 +8,7 @@ namespace simpleP2P {
     Logging_Module::Logging_Module(std::ostream &output_c) : output(output_c) {}
 
 	std::thread Logging_Module::init() {
-  		return std::thread([=] { worker(); });
+  		return std::thread([&] { worker(); });
 	}
 
     void Logging_Module::worker() {

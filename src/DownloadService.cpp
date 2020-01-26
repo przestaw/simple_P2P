@@ -30,23 +30,22 @@ void DownloadService::init() {
 
     init_workers();
     std::cout << "w init d serv" << std::endl;
+    try {
+      controll_workers();
+      store_file();
+    } catch (std::exception &e) {
+      handle_exception(e);
+      close_workers();
+      join_workers();
+    }
 
   } catch (std::exception &e) {
     handle_exception(e);
-  }
-
-  try {
-    controll_workers();
-    store_file();
-  } catch (std::exception &e) {
-    handle_exception(e);
-    close_workers();
-    join_workers();
   }
 }
 
 std::thread DownloadService::init_thread() {
-  return std::thread([=] { init(); });
+  return std::thread([&] { init(); });
 }
 
 void DownloadService::create_workers() {
@@ -60,6 +59,7 @@ void DownloadService::create_workers() {
     if (!host.lock().get()->is_retarded()) {
       workers.push_back(std::make_shared<DownloadWorker>(
           logging_module, io_service, host.lock(), complete_resource));
+      std::cout << "addibng hiost" << std::endl;
     }
   }
 
@@ -118,12 +118,13 @@ bool DownloadService::all_workers_unavailable() {
 void DownloadService::handle_exception(std::exception &e) {
   // std::stringstream error_message;
   // error_message << "Failed to download resource: " << resource->getName()
-  //               << std::endl
-  //               << " detailed error: " << e.what() << std::endl;
-
-  // using namespace std::chrono;
-  // logging_module.add_log_line(error_message.str(),
-  //                             system_clock::to_time_t(system_clock::now()));
+  //               << "\n detailed error: " << e.what() << "\n";
+  std::string error_message = resource->getName();
+      // "Failed to download resource: " + resource->getName() +
+      // "\n detailed error: " + e.what() + "\n";
+  using namespace std::chrono;
+  logging_module.add_log_line(error_message,
+                              system_clock::to_time_t(system_clock::now()));
 }
 
 void DownloadService::store_file() {

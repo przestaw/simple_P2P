@@ -4,7 +4,7 @@ namespace simpleP2P {
     Printer::Printer(std::ostream &output_c) : output(output_c) {}
 
     std::thread Printer::init() {
-        return std::thread([=] { worker(); });
+        return std::thread([&] { worker(); });
     }
 
     void Printer::worker() {

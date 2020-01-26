@@ -90,7 +90,8 @@ int main(int argc, const char *argv[]) {
   CLI commandline(database, logger, io_service, fm, *database.get_localhost(),
                   printer);
 
-  RequestServerModule rsm(TCP_SERVER_PORT, fm, logger);
+  RequestServerModule rsm(boost::asio::ip::address::from_string(host_ip),
+                          TCP_SERVER_PORT, fm, logger);
 
   basic[0] = logger.init();
   basic[1] = udp.init();

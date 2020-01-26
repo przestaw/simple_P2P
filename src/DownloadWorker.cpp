@@ -7,9 +7,13 @@ DownloadWorker::DownloadWorker(
     Logging_Module &logging_module_c, boost::asio::io_service &io_service_c,
     std::shared_ptr<Host> host_c,
     std::shared_ptr<CompleteResource> complete_resource_c)
-    : logging_module(logging_module_c), io_service(io_service_c), host(host_c),
-      complete_resource(complete_resource_c), socket(io_service_c),
-      timeouted(false), closed(false),
+    : logging_module(logging_module_c),
+      io_service(io_service_c),
+      host(host_c),
+      complete_resource(complete_resource_c),
+      socket(io_service_c),
+      timeouted(false),
+      closed(false),
       owned_segment_id(Segment::NO_SEGMENT_ID) {}
 
 DownloadWorker::~DownloadWorker() {
@@ -19,7 +23,7 @@ DownloadWorker::~DownloadWorker() {
 }
 
 std::thread DownloadWorker::init() {
-  return std::thread([=] {
+  return std::thread([&] {
     try {
       connect();
       logging_module.add_log_line("new DownloadWorker initiated",
@@ -60,12 +64,7 @@ void DownloadWorker::worker() {
     owned_segment_id = segment.get_id();
     log_start_downloading();
     download(segment);
-    std::this_thread::sleep_for(
-        std::chrono::duration(std::chrono::milliseconds(100)));
     log_finish_downloading();
-
-    timeouted = false;
-    complete_resource->set_segment(segment);
   }
 }
 
@@ -95,6 +94,8 @@ void DownloadWorker::download(Segment &segment) {
   try {
     request_segment(segment);
     receive_segment(segment);
+    timeouted = false;
+    complete_resource->set_segment(segment);
   } catch (std::exception &e) {
     std::stringstream error_message;
     error_message << "Failed to download segment: " + segment.get_id()
@@ -109,13 +110,15 @@ void DownloadWorker::download(Segment &segment) {
                                 system_clock::to_time_t(system_clock::now()));
 
     complete_resource->unset_busy(owned_segment_id);
+    throw e;
   }
 }
 
 void DownloadWorker::request_segment(Segment &segment) {
   boost::system::error_code error;
-  boost::asio::write(
-      socket, boost::asio::buffer(serialize_segment_request(segment)), error);
+  std::vector<Uint8> data = serialize_segment_request(segment);
+
+  boost::asio::write(socket, boost::asio::buffer(data), error);
   if (error) {
     throw boost::system::system_error(error);
   }
@@ -151,7 +154,6 @@ std::vector<Uint8> DownloadWorker::serialize_segment_request(Segment &segment) {
 void DownloadWorker::check_timeout() {
   std::unique_lock<std::mutex> lk{timeouted_mutex};
   if (timeouted) {
-
     host->increase_timeout_counter();
     complete_resource->unset_busy(owned_segment_id);
   }
@@ -178,7 +180,6 @@ void DownloadWorker::log_finish_downloading() {
 }
 
 std::string DownloadWorker::get_log_header() {
-
   std::stringstream message;
   message << "Download worker"
           << "; Resource: " << complete_resource->get_resource()->getName()
@@ -190,4 +191,4 @@ std::string DownloadWorker::get_log_header() {
 bool DownloadWorker::is_closed() { return closed; }
 bool DownloadWorker::is_unavailable() { return closed || host->is_retarded(); }
 
-} // namespace simpleP2P
+}  // namespace simpleP2P

@@ -77,9 +77,10 @@ namespace simpleP2P {
 				  // Uint16 is always 16-bit, not platform dependent.
 				segment = ntohs(segment);
 
-				std::stringstream logmsg;
-				logmsg << "RequestWorker: request for segment " << segment << " of file: '" << file_name << "' received";
-				logging_module.add_log_line(logmsg.str(), std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+				// std::stringstream logmsg;
+				// logmsg << "RequestWorker: request for segment " << segment << " of file: '" ;//<< file_name << "' received";
+				std::string logmsg = "RequestWorker: request for segment " +  std::to_string(segment) + " of file: '" + file_name + "' received";
+				logging_module.add_log_line(logmsg, std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 				
 				Uint32 requested_segment_size;
 				double nsegments = static_cast<double>(file_size) / SEGMENT_SIZE;
@@ -109,8 +110,8 @@ namespace simpleP2P {
 					}
 					else
 					{
-						logmsg << "RequestWorker: sending segment " << segment << " of file: '" << file_name << "'...";
-						logging_module.add_log_line(logmsg.str(), std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+						logmsg = "RequestWorker: sending segment " + std::to_string(segment) + " of file: '" + file_name + "'...";
+						logging_module.add_log_line(logmsg, std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 						// Send the segment.
 						boost::asio::async_write(_socket,
 											boost::asio::buffer(send_data, sizeof(send_data)),

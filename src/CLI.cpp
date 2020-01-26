@@ -148,7 +148,7 @@ void CLI::print_init_info()
 
 std::thread CLI::init()
 {
-    return std::thread([=] { start_CLI(); });
+    return std::thread([&] { start_CLI(); });
 }
 
 void CLI::start_CLI()
@@ -184,7 +184,7 @@ void CLI::print_text(std::stringstream &text)
 void CLI::execute_command(std::string name, std::string arg)
 {
     bool found = 0;
-    for (auto command : CLICommands)
+    for (auto& command : CLICommands)
     {
         //std::cout << command.getName() << "\n";
 
