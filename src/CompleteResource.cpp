@@ -14,8 +14,8 @@ namespace simpleP2P {
     std::shared_ptr<Resource> CompleteResource::get_resource() const {
         return resource;
     }
-    
-    Uint8* CompleteResource::get_data() {
+
+    Uint8 *CompleteResource::get_data() {
         return data;
     }
 

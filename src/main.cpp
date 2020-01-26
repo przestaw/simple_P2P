@@ -71,17 +71,14 @@ int main(int argc, const char *argv[]) {
                  BROADCAST_PORT,
                  5);  // basic test
 
-  {
-    Resource res = Resource("Bananowe jointy", 102070);
-    database.add_file(res);
+    {
+        Resource res1 = Resource("Banano", 102070);
+        database.add_file(res1);
 
-    res = Resource("XD", 10302000);
+        Resource res2 = Resource("XD", 10302000);
 
-    database.add_file(res);
-    res = Resource("Karmiace kaczki", 1910);
-
-    database.add_file(res);
-  }
+        database.add_file(res2);
+    }
 
   boost::asio::io_service io_service;
   FileManager fm(logger);

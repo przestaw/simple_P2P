@@ -32,9 +32,13 @@ namespace simpleP2P {
          * @param text Stringstream with text to be printed
          */
         void print_text(std::stringstream &text);
+
         void print_help() const;
+
         void execute_command(std::string name, std::string arg);
+
         void print_init_info();
+
         void start_CLI();
 
     public:

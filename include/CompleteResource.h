@@ -34,8 +34,8 @@ namespace simpleP2P {
         *
         * @return Uint8*
         */
-        Uint8* get_data();
-        
+        Uint8 *get_data();
+
         /**
          * @brief Get the underlaying resource object
          *

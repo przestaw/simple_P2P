@@ -36,7 +36,7 @@ namespace simpleP2P {
          * @param res Resource to be checked
          * @return true if Host has Resource res
          */
-        bool has_resource(Resource res);
+        bool has_resource(const Resource &res);
 
         /**
          * Operator == checks host_ip for equality
@@ -88,8 +88,13 @@ namespace simpleP2P {
 
         const std::vector<std::weak_ptr<Resource>> &get_possesed() const;
 
-    private:
+
         void remove_resource(std::shared_ptr<Resource> res);
+
+        void remove_resource(const Resource &res);
+
+    private:
+        //void remove_resource(std::shared_ptr<Resource> res);
 
         boost::asio::ip::address host_ip;           //!< Ip of the Host
 
@@ -103,7 +108,6 @@ namespace simpleP2P {
         Int8 timeout_counter;
         bool retarded;
 
-        Uint16 port; //TODO : delete port as it has no meaning
         Uint16 no_of_missed_updates;
 
         std::vector<std::weak_ptr<Resource>> possesed_resources; //!< Resources possessed by the Host

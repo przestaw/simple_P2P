@@ -15,21 +15,6 @@ namespace simpleP2P {
         hosts.push_back(my_host);
     }
 
-    bool Resource_Database::has_file(const Resource &res) {
-        std::shared_lock lock(database_mutex);
-        auto host = std::find_if(hosts.begin(),
-                                 hosts.end(),
-                                 [this](shared_ptr<Host> &it) {
-                                     return *(it.get()) == *my_host;
-                                 });
-        auto res_i = std::find_if(host->get()->possesed_resources.begin(),
-                                  host->get()->possesed_resources.end(),
-                                  [&res](weak_ptr<Resource> &it) {
-                                      return *(it.lock().get()) == res;
-                                  });
-        return res_i != host->get()->possesed_resources.end();
-    }
-
     void Resource_Database::add_file(const Resource &res, const Host &host) {
         std::unique_lock lock(database_mutex);
         this->add_file_internal(res, host);
@@ -43,18 +28,7 @@ namespace simpleP2P {
                                       return *(it.get()) == res;
                                   });
         if (res_i != resources.end()) {
-            auto host_i = std::find_if(res_i->get()->hosts_in_possession.begin(),
-                                       res_i->get()->hosts_in_possession.end(),
-                                       [&host](auto &it) {
-                                           return *(it.lock().get()) == host;
-                                       });
-            if (host_i != res_i->get()->hosts_in_possession.end()) {
-                host_i->lock()->remove_resource(*res_i);
-                res_i->get()->remove_host(host_i->lock());
-                return true;
-            } else {
-                return false;
-            }
+            res_i->get()->remove_host(host);
         } else {
             return false;
         }
@@ -93,12 +67,11 @@ namespace simpleP2P {
         auto host = std::find_if(hosts.begin(),
                                  hosts.end(),
                                  [this](shared_ptr<Host> &it) {
-                                     return *(it.get()) == *my_host.get();
+                                     return *(it.get()) == *my_host;
                                  });
 
         for (auto &it : host->get()->possesed_resources) {
             header.emplace_back(it.lock()->generate_resource_header());
-
         }
 
         return header;
@@ -111,11 +84,9 @@ namespace simpleP2P {
                                  [&host_a](shared_ptr<Host> &it) {
                                      return *(it.get()) == host_a;
                                  });
-        std::cout << "alive - update\n";
         if (host == hosts.end()) {
             hosts.emplace_back(std::make_shared<Host>(host_a));
             host = hosts.end() - 1;
-            std::cout << "alive - new host\n";
         }
 
         shared_ptr<Host> to_update = *host;
@@ -123,12 +94,7 @@ namespace simpleP2P {
 
         for (auto &resource: host_a.possesed_resources) {
 
-            if (std::count_if(
-                    to_update->possesed_resources.begin(),
-                    to_update->possesed_resources.end(),
-                    [&resource](auto &it) {
-                        return *(resource.lock().get()) == *(it.lock().get());
-                    }) == 0) {
+            if (!to_update->has_resource(*(resource.lock().get()))) {
                 add_file_internal(*(resource.lock().get()), *(to_update.get()));
             }//else no need for action
         }
@@ -143,12 +109,7 @@ namespace simpleP2P {
                                 });
 
         if (res != resources.end()) {
-            res->get()->invalidated = true;
-            std::for_each(res->get()->hosts_in_possession.begin(),
-                          res->get()->hosts_in_possession.end(),
-                          [&res](weak_ptr<Host> &it) {
-                              it.lock()->remove_resource(*res);
-                          });
+            res->get()->set_revoked();
         }
     }
 
@@ -174,7 +135,7 @@ namespace simpleP2P {
         // no lock
         if (host != my_host) {
             for (auto &it: host->possesed_resources) {
-                it.lock()->remove_host(host);
+                it.lock()->remove_host(*host);
             }
             hosts.erase(std::find(hosts.begin(), hosts.end(), host));
         }
