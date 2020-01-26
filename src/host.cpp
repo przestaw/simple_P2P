@@ -58,7 +58,7 @@ namespace simpleP2P {
     void Host::increase_timeout_counter() {
 
         timeout_counter++;
-        if(timeout_counter >= TIMEOUT_COUNTER_LIMIT) {
+        if (timeout_counter >= TIMEOUT_COUNTER_LIMIT) {
             retarded = true;
         }
         // TODO possible races

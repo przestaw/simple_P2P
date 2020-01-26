@@ -94,7 +94,7 @@ namespace simpleP2P {
     }
 
     // const tbb::concurrent_vector<std::weak_ptr<Host>> 
-    const std::vector<std::weak_ptr<Host>>  Resource::get_hosts() const {
+    const std::vector<std::weak_ptr<Host>> Resource::get_hosts() const {
         return hosts_in_possession;
     }
 }

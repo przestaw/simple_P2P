@@ -15,7 +15,7 @@ namespace simpleP2P {
         function = std::move(function_);
     };
 
-    void CLICommand::operator()(const std::string& argument) const {
+    void CLICommand::operator()(const std::string &argument) const {
         if (function != nullptr)
             function(argument);
         else
