@@ -17,9 +17,9 @@
 namespace simpleP2P
 {
 CLI::CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_service &io_service_,
-         FileManager &fm_, Host &localhost_, Printer &printer_) : res_db(res_db_), Logger(Logger_),
+         FileManager &fm_, Host &localhost_, Printer &printer_, Udp_Module &udp_) : res_db(res_db_), Logger(Logger_),
                                                                   io_service(io_service_), fm(fm_),
-                                                                  localhost(localhost_), printer(printer_)
+                                                                  localhost(localhost_), printer(printer_), udp(udp_)
 {
     CLICommands = {
         CLICommand("add", "\"add name_of_file\" - adds local file to resource db, will be broadcasted",
@@ -40,7 +40,7 @@ CLI::CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_se
                        }
                        else if (errc == std::errc::no_such_file_or_directory)
                        {
-                           stream << " File does not exist. Are you sure it is in Simple_P2P.bin?\n";
+                           stream << " File does not exist. Are you sure it is in Simple_P2P/bin?\n";
                            print_text(stream);
                            return 0;
                        }
@@ -54,7 +54,7 @@ CLI::CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_se
                        {
                            if (resource->getName() == name_of_file)
                            {
-                               res_db.revoke_resource(*resource);
+                               udp.revoke_file(*resource);
                                stream << " Done.\n";
                                print_text(stream);
                                return 1;
