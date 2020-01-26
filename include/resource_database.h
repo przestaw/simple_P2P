@@ -24,13 +24,6 @@ namespace simpleP2P {
         Resource_Database(Host localhost);
 
         /**
-         * Check if localhost has certain file
-         * @param res Resource to be checked
-         * @return true if host already has some resource
-         */
-        bool has_file(const Resource &res);
-
-        /**
          * Adds connection between file and resource, adn creates them if they do not exist
          * @param res Resource to be added
          * @param host Host which possess Resource res

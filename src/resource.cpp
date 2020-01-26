@@ -30,6 +30,7 @@ namespace simpleP2P {
     }
 
     std::vector<Uint8> Resource::generate_resource_header() {
+        std::shared_lock lock(resource_mutex);
         std::vector<Uint8> header;
         header.resize(256 + sizeof(Uint64));
         memset(header.data(), 0, 256);
@@ -43,6 +44,7 @@ namespace simpleP2P {
     }
 
     bool Resource::has_host(simpleP2P::Host host) {
+        std::shared_lock lock(resource_mutex);
         return std::count_if(hosts_in_possession.begin(),
                              hosts_in_possession.end(),
                              [&host](std::weak_ptr<Host> &it) {
@@ -51,50 +53,81 @@ namespace simpleP2P {
     }
 
     Uint64 Resource::getSize() const {
+        std::shared_lock lock(resource_mutex);
         return size;
     }
 
     const std::string &Resource::getName() const {
+        std::shared_lock lock(resource_mutex);
         return name;
     }
 
     const std::string &Resource::getPath() const {
+        std::shared_lock lock(resource_mutex);
         return path;
     }
 
     bool Resource::operator==(const Resource &other) const {
+        std::shared_lock lock(resource_mutex);
         return this->size == other.size &&
                this->name == other.name;
     }
 
     bool Resource::operator!=(const Resource &other) const {
+        std::shared_lock lock(resource_mutex);
         return !operator==(other);
     }
 
-    void Resource::remove_host(std::shared_ptr<Host> host) {
-        //make local copy and erase
-        std::vector<std::weak_ptr<Host>> temp(hosts_in_possession.begin(),
-                                              hosts_in_possession.end());
-        temp.erase(
+    void Resource::remove_host(const Host &host) {
+        std::unique_lock lock(resource_mutex);
+        hosts_in_possession.erase(
                 std::remove_if(
-                        temp.begin(),
-                        temp.end(),
+                        hosts_in_possession.begin(),
+                        hosts_in_possession.end(),
+                        [&host](auto &it) {
+                            return *it.lock() == host;
+                        }
+                ), hosts_in_possession.end());
+
+    }
+
+    void Resource::remove_host(std::shared_ptr<Host> host) {
+        std::unique_lock lock(resource_mutex);
+        //make local copy and erase
+        //std::vector<std::weak_ptr<Host>> temp(hosts_in_possession.begin(),
+        //                                      hosts_in_possession.end());
+        hosts_in_possession.erase(
+                std::remove_if(
+                        hosts_in_possession.begin(),
+                        hosts_in_possession.end(),
                         [&host](auto &it) {
                             return it.lock() == host;
                         }
-                ), temp.end());
+                ), hosts_in_possession.end());
 
         //swap contents of the vectors
-        hosts_in_possession.clear();
-        hosts_in_possession.assign(temp.begin(), temp.end());
+//        hosts_in_possession.clear();
+//        hosts_in_possession.assign(temp.begin(), temp.end());
     }
 
     bool Resource::isInvalidated() {
-        return invalidated == true;
+        std::shared_lock lock(resource_mutex);
+        return invalidated;
+    }
+
+    void Resource::set_revoked() {
+        std::unique_lock lock(resource_mutex);
+        invalidated = true;
+        std::for_each(hosts_in_possession.begin(),
+                      hosts_in_possession.end(),
+                      [this](std::weak_ptr<Host> &it) {
+                          it.lock()->remove_resource(*this);
+                      });
     }
 
     // const tbb::concurrent_vector<std::weak_ptr<Host>> 
-    const std::vector<std::weak_ptr<Host>>  &Resource::get_hosts() const {
+    std::vector<std::weak_ptr<Host>> Resource::get_hosts() {
+        std::shared_lock lock(resource_mutex);
         return hosts_in_possession;
     }
 }

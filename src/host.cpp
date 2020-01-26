@@ -13,12 +13,13 @@ namespace simpleP2P {
     Host::Host(boost::asio::ip::address ip)
             : host_ip(std::move(ip)), no_of_missed_updates(0) {}
 
-    bool Host::has_resource(Resource res) {
-        return std::count_if(possesed_resources.begin(),
-                             possesed_resources.end(),
-                             [&res](std::weak_ptr<Resource> &it) {
-                                 return res == *(it.lock().get());
-                             }) != 0;
+    bool Host::has_resource(const Resource &resource) {
+        return std::count_if(
+                possesed_resources.begin(),
+                possesed_resources.end(),
+                [&resource](auto &it) {
+                    return resource == *(it.lock().get());
+                }) != 0;
     }
 
     bool Host::operator==(const Host &other) const {
@@ -40,13 +41,21 @@ namespace simpleP2P {
                 ), possesed_resources.end());
     }
 
+
+    void Host::remove_resource(const Resource &res) {
+        possesed_resources.erase(
+                std::remove_if(
+                        possesed_resources.begin(),
+                        possesed_resources.end(),
+                        [&res](auto &it) {
+                            return *it.lock() == res;
+                        }
+                ), possesed_resources.end());
+    }
+
     const std::vector<std::weak_ptr<Resource>> &Host::get_possesed() const {
         return possesed_resources;
     }
-
-// boost::asio::ip::address Host::get_address() const { return host_ip; }
-
-// Int16 Host::get_port() const { return port; }
 
     bool Host::is_retarded() {
         // return ban_time >

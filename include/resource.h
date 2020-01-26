@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <GeneralTypes.h>
+#include <shared_mutex>
 #include "tbb/concurrent_vector.h"
 
 #define SEGMENT_SIZE 1024 // 1kb
@@ -65,9 +66,7 @@ namespace simpleP2P {
          * Function used to set invalidated flag.
          * To allow references on resource outside database to gather information about revoke
          */
-        inline void set_revoked() {
-            invalidated = true;
-        }
+        void set_revoked();
 
         bool isInvalidated();
 
@@ -104,14 +103,17 @@ namespace simpleP2P {
         bool operator!=(const Resource &other) const;
 
         // const tbb::concurrent_vector<std::weak_ptr<Host>> 
-        const std::vector<std::weak_ptr<Host>>  &get_hosts() const;
+        std::vector<std::weak_ptr<Host>> get_hosts();
 
     private:
         void remove_host(std::shared_ptr<Host> host);
 
+        void remove_host(const Host &host);
+
         Uint64 size;                            //!< file size
         std::string name;                       //!< file name
         /*atrribs not checked for equality*/
+        std::shared_mutex mutable resource_mutex;
         bool invalidated;                       //!< indicates that resource has been revoked
         std::string path;                       //!< file path
         // tbb::concurrent_vector<std::weak_ptr<Host>>
