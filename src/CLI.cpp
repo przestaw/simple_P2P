@@ -73,6 +73,12 @@ CLI::CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_se
                        {
                            if (resource->getName() == name_of_file)
                            {
+                               if (resource->isInvalidated())
+                               {
+                                   stream << " File found, invaldiated. Cannot be downloaded.\n";
+                                   print_text(stream);
+                                   return 0;
+                               }
                                stream << " File found, starting download.\n";
                                print_text(stream);
                                std::thread downloader([&]() {
