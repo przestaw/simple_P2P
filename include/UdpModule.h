@@ -25,7 +25,7 @@ public:
    * @param beacon_interval beacon interval
    */
   UdpModule(ResourceDatabase &database_c,
-            Logging_Module &logger_c,
+            LoggingModule &logger_c,
             boost::asio::ip::address broadcast_address,
             Uint16 port, Uint32 beacon_interval);
 
@@ -54,7 +54,7 @@ private:
   Uint16 port;                                         //!< UDP broadcast port
   Uint32 beacon_interval;                              //!< Beacon interval
   ResourceDatabase &database;                         //!< Connection to ResourceDatabase
-  Logging_Module &logger;                              //!< Connection to LoggingModule
+  LoggingModule &logger;                              //!< Connection to LoggingModule
 };
 }
 

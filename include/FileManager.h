@@ -27,7 +27,7 @@ class CompleteResource;
  */
 class FileManager {
 public:
-  FileManager(Logging_Module &lm);
+  FileManager(LoggingModule &lm);
 
   ~FileManager();
 
@@ -94,7 +94,7 @@ private:
   std::mutex condvmutex;                   //!< Mutex for the condition variable.
   std::condition_variable condv;           //!< Condition variable synchronizing access to local files.
 
-  Logging_Module &logging_module;          //!< Logging_Module for logging events.
+  LoggingModule &logging_module;          //!< LoggingModule for logging events.
 
   /**
    * \brief Blocks other threads from reading/writing to the specified file.

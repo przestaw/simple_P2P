@@ -15,7 +15,7 @@
 #include <sstream>
 
 namespace simpleP2P {
-CLI::CLI(ResourceDatabase &res_db_, Logging_Module &Logger_, boost::asio::io_service &io_service_,
+CLI::CLI(ResourceDatabase &res_db_, LoggingModule &Logger_, boost::asio::io_service &io_service_,
          FileManager &fm_, Host &localhost_, Printer &printer_, UdpModule &udp_) : res_db(res_db_), Logger(Logger_),
                                                                                    io_service(io_service_), fm(fm_),
                                                                                    localhost(localhost_),
@@ -40,6 +40,7 @@ CLI::CLI(ResourceDatabase &res_db_, Logging_Module &Logger_, boost::asio::io_ser
                      print_text(stream);
                      return 0;
                    }
+                   return 0;
                  }),
 
       CLICommand("revoke", "\"revoke name_of_file\" - invalidates a resource",
@@ -87,6 +88,7 @@ CLI::CLI(ResourceDatabase &res_db_, Logging_Module &Logger_, boost::asio::io_ser
                  }),
 
       CLICommand("global", "prints files in the system", [this](std::string placeholder) {
+        (void) placeholder;
         std::vector<std::shared_ptr<Resource>> resources = res_db.getResources();
 
         for (auto resource : resources) {
@@ -116,12 +118,14 @@ CLI::CLI(ResourceDatabase &res_db_, Logging_Module &Logger_, boost::asio::io_ser
                }),*/
 
       CLICommand("help", "prints available commands", [this](std::string placeholder) {
+        (void) placeholder;
         for (auto &command : CLICommands)
           stream << command;
         print_text(stream);
         return 1;
       }),
-      CLICommand("quit", "leaves the program", [](std::string x) {
+      CLICommand("quit", "leaves the program", [](std::string placeholder) {
+        (void) placeholder;
         exit(1);
         return 0;
       })};

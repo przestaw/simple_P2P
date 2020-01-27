@@ -9,7 +9,7 @@
 using namespace boost::asio;
 
 simpleP2P::UdpServer::UdpServer(io_service &io_service,
-                                ResourceDatabase &database_c, Logging_Module &logger_c,
+                                ResourceDatabase &database_c, LoggingModule &logger_c,
                                 const boost::asio::ip::address &broadcast_address,
                                 Uint16 broadcast_port)
     : socket_(io_service, ip::udp::endpoint(broadcast_address, broadcast_port)),

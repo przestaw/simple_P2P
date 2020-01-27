@@ -32,7 +32,7 @@ public:
    * @param resource_database_c
    * @param resource_c
    */
-  DownloadService(Logging_Module &logging_module_c,
+  DownloadService(LoggingModule &logging_module_c,
                   boost::asio::io_service &io_service_c,
                   FileManager &file_manager_c,
                   ResourceDatabase &resource_database_c,
@@ -124,7 +124,7 @@ private:
    */
   void handle_exception(std::exception &e);
 
-  Logging_Module &logging_module;  //!< Logger
+  LoggingModule &logging_module;  //!< Logger
   boost::asio::io_service
       &io_service;  //!< Boost IO Service to pass down to download workers
   FileManager &file_manager;  //!< File Manager to store downloaded resource

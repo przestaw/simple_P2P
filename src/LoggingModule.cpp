@@ -5,13 +5,13 @@
 #include "LoggingModule.h"
 
 namespace simpleP2P {
-Logging_Module::Logging_Module(std::ostream &output_c) : output(output_c) {}
+LoggingModule::LoggingModule(std::ostream &output_c) : output(output_c) {}
 
-std::thread Logging_Module::init() {
+std::thread LoggingModule::init() {
   return std::thread([&] { worker(); });
 }
 
-void Logging_Module::worker() {
+void LoggingModule::worker() {
   std::unique_lock<std::mutex> uniqueLock(queue_mutex);
   for (;;) {
     queue_cond.wait(uniqueLock);
@@ -22,7 +22,7 @@ void Logging_Module::worker() {
   }
 }
 
-void Logging_Module::add_log_line(std::string line, const std::time_t &time) {
+void LoggingModule::add_log_line(std::string line, const std::time_t &time) {
   std::lock_guard<std::mutex> uniqueLock(queue_mutex);
   auto time_str = std::string(std::ctime(&time));
   logging_queue.push("[" +

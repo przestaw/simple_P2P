@@ -11,7 +11,7 @@
 using namespace boost::asio;
 
 simpleP2P::UdpModule::UdpModule(ResourceDatabase &database_c,
-                                Logging_Module &logger_c,
+                                LoggingModule &logger_c,
                                 ip::address broadcast_address_c,
                                 Uint16 port_c, Uint32 beacon_interval_c)
     : ptr_client(nullptr), ptr_server(nullptr),

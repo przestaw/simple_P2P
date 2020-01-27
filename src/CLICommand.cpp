@@ -13,14 +13,14 @@ CLICommand::CLICommand(std::string name_, std::string description_,
   name = std::move(name_);
   description = std::move(description_);
   function = std::move(function_);
-};
+}
 
 void CLICommand::operator()(const std::string &argument) const {
   if (function != nullptr)
     function(argument);
   else
     std::cout << "not implemented yet :(\n";
-};
+}
 
 std::ostream &operator<<(std::ostream &os, const CLICommand &command) {
   os << "- " << std::setw(10) << std::left << command.getName() << " " << command.getDesc() << '\n';

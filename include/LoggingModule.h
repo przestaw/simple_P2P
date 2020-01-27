@@ -15,14 +15,14 @@ namespace simpleP2P {
 /**
  * class Providing logging support based on text logs
  */
-class Logging_Module {
+class LoggingModule {
 public:
   /**
    * Constructor
    * @param output_c Output stream for the logs
    * @note if output stream is a file you must explicitly close it
    */
-  Logging_Module(std::ostream &output_c = std::cerr);
+  LoggingModule(std::ostream &output_c = std::cerr);
 
   /**
    * Init thread for the logging module

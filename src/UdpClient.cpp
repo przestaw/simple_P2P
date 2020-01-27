@@ -8,7 +8,7 @@
 using namespace boost::asio;
 
 simpleP2P::UdpClient::UdpClient(io_service &io_service,
-                                ResourceDatabase &database_c, Logging_Module &logger_c,
+                                ResourceDatabase &database_c, LoggingModule &logger_c,
                                 const ip::address &broadcast_address,
                                 Uint16 broadcast_port, Uint32 timeout_c)
     : endpoint_(broadcast_address, broadcast_port),

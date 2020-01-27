@@ -29,9 +29,9 @@ public:
    *
    * @param io_service io_service in which the server runs
    * @param fm FileManager for accessing requested files
-   * @param lm Logging_Module for logging events
+   * @param lm LoggingModule for logging events
    */
-  RequestWorker(boost::asio::io_service &io_service, FileManager &fm, Logging_Module &lm);
+  RequestWorker(boost::asio::io_service &io_service, FileManager &fm, LoggingModule &lm);
 
   ~RequestWorker();
 
@@ -50,7 +50,7 @@ private:
 
   tcp::socket _socket;                             //!< Socket on which the connection is established.
   FileManager &file_manager;                       //!< FileManager for accessing requested files.
-  Logging_Module &logging_module;                  //!< Logging_Module for logging events.
+  LoggingModule &logging_module;                  //!< LoggingModule for logging events.
 
   Uint8 recv_data[MAX_RECV_DATA_LENGHT];          //!< Buffer for data received via TCP.
   Uint8 *send_data;                                //!< Buffer for data to be sent via TCP.

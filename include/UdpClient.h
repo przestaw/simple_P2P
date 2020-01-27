@@ -30,7 +30,7 @@ public:
    * @param timeout beacon interval
    */
   UdpClient(boost::asio::io_service &io_service,
-            ResourceDatabase &database, Logging_Module &logger,
+            ResourceDatabase &database, LoggingModule &logger,
             const boost::asio::ip::address &broadcast_address,
             Uint16 broadcast_port, Uint32 timeout = 5 * 60);
 
@@ -86,7 +86,7 @@ private:
   std::deque<std::vector<Uint8> > tx_queue_;   //!< Queue of datagrams to be sent
   boost::asio::deadline_timer timer;           //!< Timer for the beacon
   ResourceDatabase &database;                 //!< Connection to ResourceDatabase
-  Logging_Module &logger;                      //!< Connection to LoggingModule
+  LoggingModule &logger;                      //!< Connection to LoggingModule
   Uint32 timeout;                              //!< Beacon interval
 };
 }

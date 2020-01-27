@@ -6,7 +6,7 @@
 namespace simpleP2P {
 using namespace std::literals;
 
-DownloadService::DownloadService(Logging_Module &logging_module_c,
+DownloadService::DownloadService(LoggingModule &logging_module_c,
                                  boost::asio::io_service &io_service_c,
                                  FileManager &file_manager_c,
                                  ResourceDatabase &resource_database_c,
@@ -116,6 +116,7 @@ bool DownloadService::all_workers_unavailable() {
 }
 
 void DownloadService::handle_exception(std::exception &e) {
+  (void) e;
   // std::stringstream error_message;
   // error_message << "Failed to download resource: " << resource->getName()
   //               << std::endl

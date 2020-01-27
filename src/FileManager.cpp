@@ -13,7 +13,7 @@
 #include "GeneralTypes.h"
 
 namespace simpleP2P {
-FileManager::FileManager(Logging_Module &lm)
+FileManager::FileManager(LoggingModule &lm)
     : logging_module(lm) {}
 
 FileManager::~FileManager() {

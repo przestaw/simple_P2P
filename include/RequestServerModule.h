@@ -20,7 +20,7 @@ public:
   /**
    * Constructor, allows setting the port for the server.
    */
-  RequestServerModule(Uint16 port_, FileManager &fm, Logging_Module &lm);
+  RequestServerModule(Uint16 port_, FileManager &fm, LoggingModule &lm);
 
   /**
    * \brief Returns the thread object for the module.
@@ -32,7 +32,7 @@ public:
 private:
   Uint16 port;                     //!< Port for the server.
   FileManager &file_manager;       //!< FileManager for accessing requested files.
-  Logging_Module &logging_module;  //!< Logging_Module for logging events.
+  LoggingModule &logging_module;  //!< LoggingModule for logging events.
 
 };
 }

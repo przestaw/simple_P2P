@@ -17,7 +17,7 @@
 using boost::asio::ip::tcp;
 
 namespace simpleP2P {
-RequestWorker::RequestWorker(boost::asio::io_service &io_service, FileManager &fm, Logging_Module &lm)
+RequestWorker::RequestWorker(boost::asio::io_service &io_service, FileManager &fm, LoggingModule &lm)
     : _socket(io_service), file_manager(fm), logging_module(lm) {}
 
 RequestWorker::~RequestWorker() {
@@ -27,7 +27,7 @@ RequestWorker::~RequestWorker() {
 }
 
 void RequestWorker::start() {
-  send_data = (Uint8 *) malloc(SEGMENT_SIZE);
+  send_data = static_cast<Uint8 *>(malloc(SEGMENT_SIZE));
 
   if (send_data == nullptr) {
     logging_module.add_log_line(
@@ -52,6 +52,7 @@ tcp::socket &RequestWorker::socket() {
 
 void RequestWorker::handle_read(const boost::system::error_code &error,
                                 std::size_t bytes_transferred) {
+  (void) bytes_transferred;
   if (!error) {
     // Get the command
     Uint8 command = recv_data[0];

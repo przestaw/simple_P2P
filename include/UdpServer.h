@@ -28,7 +28,7 @@ public:
    * @param broadcast_port port on which Server will listen
    */
   UdpServer(boost::asio::io_service &io_service,
-            ResourceDatabase &database, Logging_Module &logger,
+            ResourceDatabase &database, LoggingModule &logger,
             const boost::asio::ip::address &broadcast_address,
             Uint16 broadcast_port);
 
@@ -55,7 +55,7 @@ private:
   boost::asio::ip::udp::endpoint remote_endpoint;      //!< Endpoint from data has came
   boost::array<Uint8, UDP_SERV_BUFFER_SIZE> recv_buffer;//!< Buffer for received data
   ResourceDatabase &database;                         //!< Connection to ResourceDatabase
-  Logging_Module &logger;                              //!< Connection to LoggingModule
+  LoggingModule &logger;                              //!< Connection to LoggingModule
 };
 }
 

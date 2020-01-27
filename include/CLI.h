@@ -19,7 +19,7 @@ namespace simpleP2P {
 class CLI {
   std::vector<CLICommand> CLICommands;
   ResourceDatabase &res_db;
-  Logging_Module &Logger;
+  LoggingModule &Logger;
   boost::asio::io_service &io_service;
   FileManager &fm;
   Host &localhost;
@@ -48,7 +48,7 @@ public:
    * @param localhost_
    * @param printer_
    */
-  CLI(ResourceDatabase &res_db_, Logging_Module &Logger_, boost::asio::io_service &io_service_, FileManager &fm_,
+  CLI(ResourceDatabase &res_db_, LoggingModule &Logger_, boost::asio::io_service &io_service_, FileManager &fm_,
       Host &localhost_, Printer &printer_, UdpModule &udp);
 
   ~CLI();
