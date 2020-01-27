@@ -65,7 +65,7 @@ void RequestWorker::handle_read(const boost::system::error_code &error,
       Uint64 file_size;
       std::copy(recv_data + 1 + FILE_NAME_LENGHT, recv_data + 1 + FILE_NAME_LENGHT + FILE_SIZE_LENGHT,
                 &file_size);
-      file_size = ntohs(file_size);
+      file_size = be64toh(file_size);
 
       Uint16 segment;
       std::copy(recv_data + 1 + FILE_NAME_LENGHT + FILE_SIZE_LENGHT,
