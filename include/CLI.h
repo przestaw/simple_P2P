@@ -6,26 +6,26 @@
 #include "GeneralTypes.h"
 #include "DownloadService.h"
 #include "CLICommand.h"
-#include "resource_database.h"
-#include "resource.h"
-#include "logging_module.h"
+#include "ResourceDatabase.h"
+#include "Resource.h"
+#include "LoggingModule.h"
 #include "FileManager.h"
-#include "printer.h"
-#include "udp_module.h"
+#include "Printer.h"
+#include "UdpModule.h"
 #include <sstream>
 
 namespace simpleP2P {
 
 class CLI {
   std::vector<CLICommand> CLICommands;
-  Resource_Database &res_db;
+  ResourceDatabase &res_db;
   Logging_Module &Logger;
   boost::asio::io_service &io_service;
   FileManager &fm;
   Host &localhost;
   Printer &printer;
   std::stringstream stream;
-  Udp_Module &udp;
+  UdpModule &udp;
 
   /**
    * Function for printing through CLI and clearing stringstream
@@ -48,8 +48,8 @@ public:
    * @param localhost_
    * @param printer_
    */
-  CLI(Resource_Database &res_db_, Logging_Module &Logger_, boost::asio::io_service &io_service_, FileManager &fm_,
-      Host &localhost_, Printer &printer_, Udp_Module &udp);
+  CLI(ResourceDatabase &res_db_, Logging_Module &Logger_, boost::asio::io_service &io_service_, FileManager &fm_,
+      Host &localhost_, Printer &printer_, UdpModule &udp);
 
   ~CLI();
 

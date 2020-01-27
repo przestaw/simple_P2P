@@ -9,7 +9,7 @@
 #include <boost/asio.hpp>
 
 #include "FileManager.h"
-#include "logging_module.h"
+#include "LoggingModule.h"
 #include "GeneralTypes.h"
 
 using boost::asio::ip::tcp;

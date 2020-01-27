@@ -11,9 +11,9 @@
 #include "DownloadWorker.h"
 #include "FileManager.h"
 #include "GeneralTypes.h"
-#include "logging_module.h"
-#include "resource.h"
-#include "resource_database.h"
+#include "LoggingModule.h"
+#include "Resource.h"
+#include "ResourceDatabase.h"
 
 namespace simpleP2P {
 
@@ -35,7 +35,7 @@ public:
   DownloadService(Logging_Module &logging_module_c,
                   boost::asio::io_service &io_service_c,
                   FileManager &file_manager_c,
-                  Resource_Database &resource_database_c,
+                  ResourceDatabase &resource_database_c,
                   std::shared_ptr<Resource> resource_c);
 
   ~DownloadService();
@@ -128,7 +128,7 @@ private:
   boost::asio::io_service
       &io_service;  //!< Boost IO Service to pass down to download workers
   FileManager &file_manager;  //!< File Manager to store downloaded resource
-  Resource_Database
+  ResourceDatabase
       &resource_database;  //!< Resource Database to add association between
   //!< localhost and resource
   std::shared_ptr<Resource> resource;  //!< Resource to download

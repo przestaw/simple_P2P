@@ -2,16 +2,16 @@
 // Created by przemek on 22.12.2019.
 //
 
-#include "udp_server.h"
+#include "UdpServer.h"
 #include <boost/bind.hpp>
 #include <iostream>
 
 using namespace boost::asio;
 
-simpleP2P::Udp_Server::Udp_Server(io_service &io_service,
-                                  Resource_Database &database_c, Logging_Module &logger_c,
-                                  const boost::asio::ip::address &broadcast_address,
-                                  Uint16 broadcast_port)
+simpleP2P::UdpServer::UdpServer(io_service &io_service,
+                                ResourceDatabase &database_c, Logging_Module &logger_c,
+                                const boost::asio::ip::address &broadcast_address,
+                                Uint16 broadcast_port)
     : socket_(io_service, ip::udp::endpoint(broadcast_address, broadcast_port)),
       remote_endpoint(), recv_buffer(), database(database_c), logger(logger_c) {
   socket_.set_option(
@@ -20,7 +20,7 @@ simpleP2P::Udp_Server::Udp_Server(io_service &io_service,
   do_receive();
 }
 
-void simpleP2P::Udp_Server::handle_receive(const boost::system::error_code &error, size_t bytes_transferred) {
+void simpleP2P::UdpServer::handle_receive(const boost::system::error_code &error, size_t bytes_transferred) {
   if (!error || error == error::message_size) {
 
     //FIXME: negate to switch branches while testing on SINGLE host
@@ -42,7 +42,7 @@ void simpleP2P::Udp_Server::handle_receive(const boost::system::error_code &erro
           buf += RESOURCE_HEADER_SIZE;//move to next header
 
           resources.push_back(std::make_shared<Resource>(res));
-          adv_host.possesed_resources.emplace_back(resources.back());
+          //adv_host.possesed_resources.emplace_back(resources.back());
         }
         database.update_host(adv_host);
         //now resources and adv_host ends scope as they are not longer necessary
@@ -62,14 +62,14 @@ void simpleP2P::Udp_Server::handle_receive(const boost::system::error_code &erro
   }
 }
 
-void simpleP2P::Udp_Server::do_receive() {
+void simpleP2P::UdpServer::do_receive() {
   socket_.async_receive_from(
       boost::asio::buffer(recv_buffer), remote_endpoint,
-      boost::bind(&Udp_Server::handle_receive, this,
+      boost::bind(&UdpServer::handle_receive, this,
                   boost::asio::placeholders::error,
                   boost::asio::placeholders::bytes_transferred));
 }
 
-simpleP2P::Udp_Server::~Udp_Server() {
+simpleP2P::UdpServer::~UdpServer() {
   socket_.close();
 }

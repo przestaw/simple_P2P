@@ -11,9 +11,9 @@
 #include "CompleteResource.h"
 #include "GeneralTypes.h"
 #include "Segment.h"
-#include "host.h"
-#include "logging_module.h"
-#include "resource.h"
+#include "Host.h"
+#include "LoggingModule.h"
+#include "Resource.h"
 
 namespace simpleP2P {
 /**

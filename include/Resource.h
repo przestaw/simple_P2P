@@ -56,11 +56,11 @@ public:
    * @return segment count
    */
   Uint16 calc_segments_count() const {
-      std::shared_lock lock(resource_mutex);
-      if (size % SEGMENT_SIZE)
-          return 1 + (size / SEGMENT_SIZE);
-      else
-          return size / SEGMENT_SIZE;
+    std::shared_lock lock(resource_mutex);
+    if (size % SEGMENT_SIZE)
+      return 1 + (size / SEGMENT_SIZE);
+    else
+      return size / SEGMENT_SIZE;
   }
 
   /**
@@ -103,24 +103,19 @@ public:
    */
   bool operator!=(const Resource &other) const;
 
-  // const tbb::concurrent_vector<std::weak_ptr<Host>>
   std::vector<std::weak_ptr<Host>> get_hosts();
-
-private:
-  void remove_host(std::shared_ptr<Host> host);
 
   void remove_host(const Host &host);
 
+  void add_host(const std::shared_ptr<Host> &host);
+private:
   Uint64 size;                            //!< file size
   std::string name;                       //!< file name
   /*atrribs not checked for equality*/
-  std::shared_mutex mutable resource_mutex;
+  std::shared_mutex mutable resource_mutex;//!< mutex for mutual access synchronisation
   bool invalidated;                       //!< indicates that resource has been revoked
   std::string path;                       //!< file path
-  // tbb::concurrent_vector<std::weak_ptr<Host>>
   std::vector<std::weak_ptr<Host>> hosts_in_possession;  //!< Host in possession of the Resource
-
-  friend class Resource_Database;         //!< friendship to manage Resource Hosts, path etc
 };
 }
 

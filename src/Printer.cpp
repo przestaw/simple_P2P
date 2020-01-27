@@ -1,4 +1,4 @@
-#include "printer.h"
+#include "Printer.h"
 
 namespace simpleP2P {
 Printer::Printer(std::ostream &output_c) : output(output_c) {}

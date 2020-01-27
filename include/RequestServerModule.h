@@ -5,7 +5,7 @@
 #ifndef SIMPLE_P2P_REQUEST_SERVER_MODULE_H
 #define SIMPLE_P2P_REQUEST_SERVER_MODULE_H
 
-#include "logging_module.h"
+#include "LoggingModule.h"
 #include "GeneralTypes.h"
 #include <thread>
 

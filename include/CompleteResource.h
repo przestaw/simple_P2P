@@ -10,7 +10,7 @@
 
 #include "GeneralTypes.h"
 #include "Segment.h"
-#include "resource.h"
+#include "Resource.h"
 
 namespace simpleP2P {
 /**

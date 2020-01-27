@@ -7,16 +7,16 @@
 
 #include <thread>
 #include "GeneralTypes.h"
-#include "udp_client.h"
-#include "udp_server.h"
-#include "logging_module.h"
-#include "resource_database.h"
+#include "UdpClient.h"
+#include "UdpServer.h"
+#include "LoggingModule.h"
+#include "ResourceDatabase.h"
 
 namespace simpleP2P {
 /**
  * Class containing all UDP related resources and logic
  */
-class Udp_Module {
+class UdpModule {
 public:
   /**
    * Constructor
@@ -24,10 +24,10 @@ public:
    * @param port port on which packets will be sent
    * @param beacon_interval beacon interval
    */
-  Udp_Module(Resource_Database &database_c,
-             Logging_Module &logger_c,
-             boost::asio::ip::address broadcast_address,
-             Uint16 port, Uint32 beacon_interval);
+  UdpModule(ResourceDatabase &database_c,
+            Logging_Module &logger_c,
+            boost::asio::ip::address broadcast_address,
+            Uint16 port, Uint32 beacon_interval);
 
   /**
    * Init methods run worker in thread and returns it
@@ -38,8 +38,9 @@ public:
   /**
    * Sends revoke datagram
    * @param resource Resource t obe revoked
+   * @return true on success
    */
-  void revoke_file(const Resource &resource);
+  bool revoke_file(const Resource &resource);
 
 private:
   /**
@@ -47,12 +48,12 @@ private:
    */
   void run_server();
 
-  boost::shared_ptr<Udp_Client> ptr_client;            //!< Handle to UDP Client
-  boost::shared_ptr<Udp_Server> ptr_server;            //!< Handle to UDP Server
+  boost::shared_ptr<UdpClient> ptr_client;            //!< Handle to UDP Client
+  boost::shared_ptr<UdpServer> ptr_server;            //!< Handle to UDP Server
   boost::asio::ip::address broadcast_address;          //!< UDP broadcast address
   Uint16 port;                                         //!< UDP broadcast port
   Uint32 beacon_interval;                              //!< Beacon interval
-  Resource_Database &database;                         //!< Connection to ResourceDatabase
+  ResourceDatabase &database;                         //!< Connection to ResourceDatabase
   Logging_Module &logger;                              //!< Connection to LoggingModule
 };
 }

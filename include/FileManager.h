@@ -11,7 +11,7 @@
 #include <mutex>
 #include <condition_variable>
 
-#include "logging_module.h"
+#include "LoggingModule.h"
 #include "GeneralTypes.h"
 
 namespace simpleP2P {

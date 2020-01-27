@@ -8,20 +8,20 @@
 #include <vector>
 #include <string>
 #include <shared_mutex>
-#include "host.h"
-#include "resource.h"
+#include "Host.h"
+#include "Resource.h"
 
 namespace simpleP2P {
 /**
  * Class holding information about files in network and on localhost
  */
-class Resource_Database {
+class ResourceDatabase {
 public:
   /**
    * Constructor
    * @param localhost localhost
    */
-  Resource_Database(Host localhost);
+  ResourceDatabase(Host localhost);
 
   /**
    * Adds connection between file and resource, adn creates them if they do not exist
@@ -35,9 +35,8 @@ public:
    * Removes connection between file and resource
    * @param res Resource to be removed from host list
    * @param host Host which resource will be removed
-   * @return returns false if file did not existed or was not possesed
    */
-  bool remove_file(const Resource &res,
+  void remove_file(const Resource &res,
                    const Host &host);
 
   /**
@@ -63,9 +62,8 @@ public:
   /**
     * same as remove_file(Resource, Host) but host is localhost
     * @param res Resource to be removed from localhost list
-    * @return returns false if file did not existed or was not possesed
     */
-  bool remove_file(const Resource &res);
+  void remove_file(const Resource &res);
 
   /**
   * Returns shared pointer to resource to allow access to information about file owners
@@ -100,6 +98,10 @@ public:
    */
   void check_for_gone_hosts(Uint16 left_margin = LEFT_MARGIN);
 
+  /**
+   * Obtains copy of possessed resources
+   * @return copy of possessed resources vector
+   */
   std::vector<std::shared_ptr<Resource>> getResources() const;
 
 private:

@@ -9,7 +9,7 @@ using namespace std::literals;
 DownloadService::DownloadService(Logging_Module &logging_module_c,
                                  boost::asio::io_service &io_service_c,
                                  FileManager &file_manager_c,
-                                 Resource_Database &resource_database_c,
+                                 ResourceDatabase &resource_database_c,
                                  std::shared_ptr<Resource> resource_c)
     : logging_module(logging_module_c),
       io_service(io_service_c),

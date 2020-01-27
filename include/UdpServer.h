@@ -10,14 +10,14 @@
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
 #include "GeneralTypes.h"
-#include "resource_database.h"
-#include "logging_module.h"
+#include "ResourceDatabase.h"
+#include "LoggingModule.h"
 
 namespace simpleP2P {
 /**
  * class UDP Server to handle all incoming packets
  */
-class Udp_Server : public boost::enable_shared_from_this<Udp_Server> {
+class UdpServer : public boost::enable_shared_from_this<UdpServer> {
 public:
   /**
    * Constructor of UDP Server
@@ -27,15 +27,15 @@ public:
    * @param broadcast_address address on which Server will listen
    * @param broadcast_port port on which Server will listen
    */
-  Udp_Server(boost::asio::io_service &io_service,
-             Resource_Database &database, Logging_Module &logger,
-             const boost::asio::ip::address &broadcast_address,
-             Uint16 broadcast_port);
+  UdpServer(boost::asio::io_service &io_service,
+            ResourceDatabase &database, Logging_Module &logger,
+            const boost::asio::ip::address &broadcast_address,
+            Uint16 broadcast_port);
 
   /**
    * Destructor closes socket
    */
-  ~Udp_Server();
+  ~UdpServer();
 
 private:
   /**
@@ -54,7 +54,7 @@ private:
   boost::asio::ip::udp::socket socket_;                //!< Socket on which operates Server
   boost::asio::ip::udp::endpoint remote_endpoint;      //!< Endpoint from data has came
   boost::array<Uint8, UDP_SERV_BUFFER_SIZE> recv_buffer;//!< Buffer for received data
-  Resource_Database &database;                         //!< Connection to ResourceDatabase
+  ResourceDatabase &database;                         //!< Connection to ResourceDatabase
   Logging_Module &logger;                              //!< Connection to LoggingModule
 };
 }

@@ -12,6 +12,7 @@
 
 #include <GeneralTypes.h>
 #include <boost/asio.hpp>
+#include <shared_mutex>
 
 namespace simpleP2P {
 
@@ -85,15 +86,42 @@ public:
    */
   std::chrono::system_clock::time_point get_ban_time_point() const;
 
-  const std::vector<std::weak_ptr<Resource>> &get_possesed() const;
+  std::vector<std::weak_ptr<Resource>> get_possesed() const;
 
-  void remove_resource(std::shared_ptr<Resource> res);
-
+  /**
+   * @brief removes Resource res
+   * @param res Resource to remove
+   */
   void remove_resource(const Resource &res);
 
-private:
-  //void remove_resource(std::shared_ptr<Resource> res);
+  /**
+   * @brief adds Resource res
+   * @param res Resource to add
+   */
+  void add_resource(const std::shared_ptr<Resource> &res);
 
+  /**
+   * Getter for no of missed updates
+   * @return missed updates count
+   */
+  Uint16 get_missed_updates() const;
+
+  /**
+   * reset missed updates
+   */
+  void reset_missed_updates();
+
+  /**
+   * increments missed updates couter
+   */
+  void inc_missed_updates();
+
+  /**
+   * clears possesd resources
+   */
+  void remove_all_resources();
+private:
+  std::shared_mutex mutable host_mutex;       //!< mutex for mutual access synchronisation
   boost::asio::ip::address host_ip;           //!< Ip of the Host
 
   /*atrribs not checked for equality*/
@@ -109,9 +137,6 @@ private:
   Uint16 no_of_missed_updates;
 
   std::vector<std::weak_ptr<Resource>> possesed_resources; //!< Resources possessed by the Host
-
-  friend class Resource_Database;             //!< friendship to manage Host's Resources timeouts etc
-  friend class Udp_Server;
 };
 }
 

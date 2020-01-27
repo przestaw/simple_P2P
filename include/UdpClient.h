@@ -10,15 +10,15 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <deque>
 #include "GeneralTypes.h"
-#include "resource.h"
-#include "resource_database.h"
-#include "logging_module.h"
+#include "Resource.h"
+#include "ResourceDatabase.h"
+#include "LoggingModule.h"
 
 namespace simpleP2P {
 /**
  * class UDP Client to handle all outgoing packets
  */
-class Udp_Client : public boost::enable_shared_from_this<Udp_Client> {
+class UdpClient : public boost::enable_shared_from_this<UdpClient> {
 public:
   /**
    * Constructor of UDP Client
@@ -29,15 +29,15 @@ public:
    * @param broadcast_port port on which packets will be sent
    * @param timeout beacon interval
    */
-  Udp_Client(boost::asio::io_service &io_service,
-             Resource_Database &database, Logging_Module &logger,
-             const boost::asio::ip::address &broadcast_address,
-             Uint16 broadcast_port, Uint32 timeout = 5 * 60);
+  UdpClient(boost::asio::io_service &io_service,
+            ResourceDatabase &database, Logging_Module &logger,
+            const boost::asio::ip::address &broadcast_address,
+            Uint16 broadcast_port, Uint32 timeout = 5 * 60);
 
   /**
    * Destructor closes socket
    */
-  ~Udp_Client();
+  ~UdpClient();
 
   /**
    * Constructs revoke header sends it
@@ -77,7 +77,7 @@ private:
    * @param error error code
    * @param bytes_transferred number of transfered bytes
    */
-  static void write_callback(boost::weak_ptr<Udp_Client> ptr,
+  static void write_callback(boost::weak_ptr<UdpClient> ptr,
                              boost::system::error_code const &error,
                              size_t bytes_transferred);
 
@@ -85,7 +85,7 @@ private:
   boost::asio::ip::udp::socket socket_;        //!< Socket on which operates Client
   std::deque<std::vector<Uint8> > tx_queue_;   //!< Queue of datagrams to be sent
   boost::asio::deadline_timer timer;           //!< Timer for the beacon
-  Resource_Database &database;                 //!< Connection to ResourceDatabase
+  ResourceDatabase &database;                 //!< Connection to ResourceDatabase
   Logging_Module &logger;                      //!< Connection to LoggingModule
   Uint32 timeout;                              //!< Beacon interval
 };
