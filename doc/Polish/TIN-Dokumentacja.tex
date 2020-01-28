@@ -261,6 +261,8 @@ Dokumentacja funkcji : \textit{Doxygen}
 Tworzenie dokumentacji : \textit{LaTeX}
 \item 
 Testy na jednej maszynie : \textit{Docker}
+\item 
+Analiza ruchu siecowego : \textit{Wireshark}
 \end{itemize}
 \subsection{CMake}
 Użyliśmy go do łatwiejszego zarządzania dużym projektem. Dodatkowe zewnętrzne zalezności są wyszukiwane przez narzedzie, tak samo zmiany w ilości i nazwach plików
@@ -323,6 +325,14 @@ Szczególnym przypadkiem hosta jest host lokalny czyli komputer na którym dzia�
 \textit{	Gubienie rozgłaszanych pakietów: }\\
 	 Udp rozgłasza pakiety fragmentami. Fragmenty są mniejsze niż 2*576 oktetów co oznacza że w przypadku działania w sieci przewodowej ryzyko zgubienia pakiety będzie minimalne [mtu = 1500 oktetów], a w przypadku sieci bezprzewodowej przynajmniej co któryś pakiet dotrze w całości. W przypadku notorycznego gubienia pakietów węzeł będzie niewidoczny dla pozostałych.
 	
+\end{enumerate}
+\section{Testy}
+Aplikacja została sprawdzona pod kątek działania w sieci wifi na2 osobnych maszynach
+\begin{enumerate}
+	\item Sprawdzono poprawność rozgłoszeń, obserwując ruch wiresharkiem.
+	\item Sprawdzono poprawność rozgłoszeń w programie.
+	\item Sprawdzono działanie unieważnień w programie.
+	\item Sprawdzono doświadczalnie na przykładzie kilkumegabajtowego pliku zdolność programu do wypełniania głównego zadania
 \end{enumerate}
 
 \part{Dokumentacja kodu źródłowego - \textit{English}}
