@@ -42,7 +42,7 @@ void simpleP2P::UdpServer::handle_receive(const boost::system::error_code &error
           buf += RESOURCE_HEADER_SIZE;//move to next header
 
           resources.push_back(std::make_shared<Resource>(res));
-          //adv_host.possesed_resources.emplace_back(resources.back());
+          adv_host.add_resource(resources.back());
         }
         database.update_host(adv_host);
         //now resources and adv_host ends scope as they are not longer necessary

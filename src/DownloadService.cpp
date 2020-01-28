@@ -116,15 +116,14 @@ bool DownloadService::all_workers_unavailable() {
 }
 
 void DownloadService::handle_exception(std::exception &e) {
-  (void) e;
-  // std::stringstream error_message;
-  // error_message << "Failed to download resource: " << resource->getName()
-  //               << std::endl
-  //               << " detailed error: " << e.what() << std::endl;
+   std::stringstream error_message;
+   error_message << "Failed to download resource: " << resource->getName()
+                 << std::endl
+                 << " detailed error: " << e.what() << std::endl;
 
-  // using namespace std::chrono;
-  // logging_module.add_log_line(error_message.str(),
-  //                             system_clock::to_time_t(system_clock::now()));
+   using namespace std::chrono;
+   logging_module.add_log_line(error_message.str(),
+                               system_clock::to_time_t(system_clock::now()));
 }
 
 void DownloadService::store_file() {
