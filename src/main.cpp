@@ -77,8 +77,8 @@ int main(int argc, const char *argv[]) {
   CLI commandline(database, logger, io_service, fm, *database.get_localhost(),
                   printer, udp);
 
-  RequestServerModule rsm(TCP_SERVER_PORT, fm, logger);
-
+ RequestServerModule rsm(boost::asio::ip::address::from_string(host_ip),
+                          TCP_SERVER_PORT, fm, logger);
   using namespace std::chrono_literals;
   basic[0] = logger.init();
   basic[1] = udp.init();
