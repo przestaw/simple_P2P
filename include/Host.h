@@ -125,13 +125,9 @@ private:
   boost::asio::ip::address host_ip;           //!< Ip of the Host
 
   /*atrribs not checked for equality*/
-  //TODO: timeout etc stats
-  // std::atomic<Int8> timeout_counter; //!< timeout counter
-  // std::atomic<std::chrono::system_clock::time_point> ban_time_point; //!<
-  // a time point to which a host is considered to be retarded
-  // std::atomic<std::time_t> ban_time; //!<
-  // a timestamp to which a host is considered to be retarded
-  Int8 timeout_counter;
+  Int8 timeout_counter;                                 //!< timeout counter
+  std::chrono::system_clock::time_point ban_time_point; //!< a time point to which a host is considered to be retarded
+  std::time_t ban_time;                                 //!< a timestamp to which a host is considered to be retarded
   bool retarded;
 
   Uint16 no_of_missed_updates;

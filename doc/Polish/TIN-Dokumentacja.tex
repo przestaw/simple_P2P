@@ -1,7 +1,7 @@
 % !TEX TS-program = pdflatex
 % !TEX encoding = UTF-8 Unicode
 
-\documentclass[11pt]{book}
+\documentclass[11pt,oneside]{book}
 \usepackage[utf8]{inputenc} 
 \usepackage[parfill]{parskip}
 \usepackage[T1]{fontenc} 
@@ -92,10 +92,10 @@ Kamil Zacharczuk
 	}
 	\maketitle
 	\setcounter{secnumdepth}{3}
-	\setcounter{tocdepth}{3}
+	\setcounter{tocdepth}{1}
 	\tableofcontents
 	\clearpage
-
+\part{Dokumentacja logiczna}
 \chapter{Zadanie}
 \section{Tresć Zadania}
 \paragraph{Napisać program obsługujący prosty protokół P2P}
@@ -156,19 +156,8 @@ Jeśli węzeł niespodziewanie zakończy połączenie TCP i przestanie rozgłasz
 W przypadku gdy pojawi się błąd w trakcie transferu TCP, usuwamy pobrane dane (segmenty) i kończymy wątek pobierający. Ponowne pobieranie od tego węzła będzie odbywać się po ponownym połączeniu z węzłem.
 \end{itemize}
 \chapter{Opis Funkcjonalny Projektu}
-\paragraph{Użytkownik systemu ma wgląd w dwie listy}
-\begin{itemize}
-\item
-lokalny rejestr zasobów - pliki, które użytkownik dodał lub pobrał od innych,
-\item
-pliki obecne w systemie - pliki posiadane w lokalnym rejestrze zasobów przez innych użytkowników, które nie zostały unieważnione.
-\end{itemize}
-\textsl{Dla każdego użytkownika generowana jest, oczywiście, odrębna para list.}
-
 \paragraph{Użytkownik może wprowadzać tekstowe komendy, aby za ich pomocą}
 \begin{itemize}
-\item
-\textsl{wyświetlić listę lokalnych zasobów,}
 \item 
 \textsl{wyświetlić listę zasobów obecnych w systemie,}
 \item
@@ -215,70 +204,147 @@ Broadcast po UDP: \\ \verb|<Command = REVOKE><ResourceHeader = Revoked File>|
 \textsl{Rozgłaszanie dostępnych plików:}\\
 Broadcast po UDP: \\ \verb|<Command = FILE_LIST><No_Of_Files = liczba dostępnych plików>| \\
 \verb|        <ResourceHeader = plik1>....|
-%\item
-%\textsl{Wyjście z sieci:}\\
-%Broadcast po UDP: \\ \verb|<Command = EXIT_NETWORK>|
 \item
 \textsl{Żądanie utworzenia połączenia TCP:}\\
 Wysyłane do węzła po TCP: \verb|<Command = REQ_CONN>|
 \item
 \textsl{Żądanie pobrania segmentu:}\\
 Wysyłane do węzła po TCP: \\ \verb|<Command = REQ_SEGMENT><ResourceHeader = plik><Options = segment number>|
-%\item
-%\textsl{Jawne zakończenie pobierania od węzła:}\\
-%Wysyłane do węzła po TCP: \\ \verb|<Command = QUIT_CONN>|
-%\item
-%\textsl{Opuszczenie sieci:}\\
-%Broadcast na UDP: \\ \verb|<Command = EXIT_NETWORK>|
 \end{itemize}
 \chapter{Organizacja Projektu}
+\section{Współbieżność}
+\paragraph{Ogólna koncepcja zakłada istnienie wspólbierznie działań:}
+\begin{enumerate}
+	\item 
+	\textsl{Obsługa przychodzących żądań przesłania posiadanego zasobu.}\\
+	Nasłuchuje na porcie TCP. W przypadku nawiązania połączenia na tym porcie tworzony jest watek  Wątek ten odbiera żądanie przesłania lokalnie posiadanego pliku i nadzoruje to przesłanie. 
+	\item
+	\textsl{Odbiór komunikatów broadcast UDP.}\\
+	Komunikaty te obejmują okresowe rozgłaszanie przez każdego użytkownika listy lokalnie posiadanych zasobów, rozgłaszanie unieważnienia zasobu. Po odebraniu komunikatu wątek ten przekazuje otrzymane informacje do bazy danych programu.
+	\item
+	\textsl{Okresowe rozgłaszanie lokalnej listy zasobów.}\\
+	Co pewien czas rozgłaszana jest przez UDP lista zasobów, które host udostępnia do pobrania.
+	\item
+	\textsl{Zachowywanie spójności danych o plikach w sieci}\\
+	Struktura danych przechowująca informacje o plikach umożliwiająca współbieżny dostęp. Działanie przez jego interfejs zachowuje spójność danych
+	\item
+	\textsl{Obsługa interfejsu użytkownika.}\\
+	Interakcja z użytkownikiem przez CLI. Odbieranie komend od użytkownika i odpowiednie reagowanie - powoływanie nowych wątków, które mają zająć się realizacją komendy, między innymi: 
+	\begin{itemize}
+		\item
+		W przypadku chęci pobrania pliku tworzony jest wątek nadzorujący to pobieranie. Na potrzeby połączenia z wieloma węzłami może on stworzyć kilka kolejnych wątków przypisanych do połączeń z węzłami.\\
+		W zależności od wyniku pobierania przekaże odpowiednie informacje do wątku synchronizującego dane.
+		\item
+		W przypadku chęci rozgłoszenia faktu posiadania pliku można dodać informację o nim do systemu
+		\item
+		Wyświetlanie informacji o plikach przechowywanej w programie \textit{tj} w sieci i w rejestrze hosta
+	\end{itemize}
+	\textbf{Wyniki działań powyższych wątków przekazywane są z powrotem do CLI, który wyświetla je użytkownikowi.}
+\end{enumerate}
+\section{Wykorzystanie Protokołów}
+\begin{itemize}
+\item{\textbf{Protokół UDP}} - użyty do rozgłaszania informacji o lokalnie posiadanych zasobach oraz o unieważnieniu pliku. Wybraliśmy go do realizacji powyższych celów, ponieważ nie wymaga zestawiania połączenia i umożliwia łatwe rozgłaszanie informacji do wszystkich węzłów sieci.  Zestawianie połączenia w tym wypadku byłoby skrajnie nieefektywne. 
+\item{\textbf{Protokół TCP}} - użyty do przesyłania plików pomiędzy węzłami, a także do wysyłania żądań pobrania pliku, bezpośredniego poprzedzających transfer zasobu. Ponieważ protokół ten umożliwia zestawienie trwałego połączenia pomiędzy hostami i zapewnia abstrakcję strumienia danych, jest wygodny, gdy chcemy realizować wysyłanie żądań do konkretnego węzła i odbieranie od niego segmentów plików w odpowiedzi - zazwyczaj kilku w ramach jednej sesji.
+\end{itemize}
+\chapter{Implementacja}
+\section{Spis użytych narzędzi}
+\begin{itemize}
+\item
+Jezyki : \textit{C++}
+\item
+Biblioteki : \textit{Boost, std}
+\item 
+System budowania : \textit{CMake}
+\item
+Dokumentacja funkcji : \textit{Doxygen}
+\item
+Tworzenie dokumentacji : \textit{LaTeX}
+\item 
+Testy na jednej maszynie : \textit{Docker}
+\end{itemize}
+\subsection{CMake}
+Użyliśmy go do łatwiejszego zarządzania dużym projektem. Dodatkowe zewnętrzne zalezności są wyszukiwane przez narzedzie, tak samo zmiany w ilości i nazwach plików
+\subsection{Boost::asio}
+Użyliśmy jej do realizacji serwera i klienta TCP oraz serwera i klienta UDP. Jest to biblioteka udostępniająca wiele użytecznych narzędzi do programowania sieciowego, a jedną z możliwości, które wprowadza, jest tworzenie asynchronicznych serwerów i klientów TCP i UDP. Napisane przez nas serwery TCP i UDP, korzystając z tego narzędzia, realizują całą komunikację sieciową w jednym wątku. 
+W przypadku nadejścia żądania połączenia TCP jest ono asynchronicznie akceptowane, przy czym tworzony jest nowy obiekt sesji, który następnie asynchronicznie realizuje komunikację przez sieć. W tym samym czasie może działać wiele takich obiektów.
+\subsection{Docker}
+Użyliśmy go do realizacji testów na jednej maszynie. Dzięki zwirtualizowanemu środowisku możliwe jest tworzenie sieci o różnej ilości hostów.
+%% BEGIN DOXYGEN
 \section{Moduły}
 \begin{enumerate}
-\item
-Moduł CLI odpowiedzialny za komunikację z użytkownikiem.
-\item
-Moduł obsługi sieci.
-\item
-Moduł dispatchera obsługujący protokół.
+	\item 
+\textbf{CLI} - moduł odpowiedzialny za interpretowanie żądań użytkownika, przekazywanie poleceń innym modułom w reakcji na te żądania, a także przygotowywanie informacji do wyświetlenia użytkownikowi. Oparty jest na działającym w pętli wątku.
+	\item 
+\textbf{UdpModule} - moduł serwera i klienta UDP odpowiedzialny za rozgłaszanie i odbieranie informacji o posiadanych przez węzeł zasobach i o unieważnieniu zasobu. Okresowo wysyła do wszystkich węzłów w sieci informację o lokalnych zasobach, a na polecenie CLI rozgłasza unieważnienie zasobu.Po odebraniu komunikatu od innego węzła przekazuje ją do \textit{ResourceDatabase}, aby ten uaktualnił swoje informacje o zasobach innych węzłów.
+	\item 
+\textbf{RequestServerModule} - moduł odbierający żądania pobrania zasobów oraz wysyłający dany zasób w odpowiedzi. Oparty jest na asynchronicznym, działającym stale w jednym wątku serwerze TCP. W momencie nadejścia połączenia zestawiana jest sesja, podczas której asynchronicznie odbierany jest komunikat zawierający nazwę zasobu i numer segmentu, korzystając z obiektu \textit{FileManager} buforowany jest odpowiedni fragment pliku, po czym następuje asynchroniczne wysłanie go po TCP. Sesja jest kończona w momencie odebrania komunikatu z prośbą o zakończenie połączenia. Wiele takich sesji może działać “jednocześnie” ze względu na wspomnianą asynchroniczność realizowanej komunikacji.
+	\item 
+\textbf{DownloaderService} - moduł wysyłający żądania pobrania zasobów i odbierający dany zasób w odpowiedzi. Oparty jest na synchronicznej wersji biblioteki booost::asio. Przez TCP łączy się z modułem RequestServerModule. W ramach tego modułu tworzonych jest kilka wątków - klientów TCP łączących się z różnymi węzłami, tak, aby można było zasób pobierać równolegle od wielu hostów. Jednorazowo przez sieć pobierany jest segment o rozmiarze 1 KB. Po pobraniu wszystkich segmentów w tym module odbywa się kompletowanie ich w ciągły plik w odpowiedniej kolejności. Tak przygotowane dane zapisywane są na dysku przy pomocy obiektu \textit{FileManager}. Informacja o nowym lokalnym zasobie przekazywana jest również do \textit{ResourceDatabase}. Nadzoruje naliczanie timeoutów poszczególnym hostom.
+	\item 
+\textbf{FileManager} - API służące do odczytywania zasobów z systemu plików i buforowania ich, a także do zapisywania na dysku zbuforowanych danych.
+	\item 
+\textbf{ResourceDatabase} - moduł przechowujący informacje o plikach i hostach w sieci. Udostępnia synchronizowany interfejs dla pozostałych modułów programu.
+	\item 
+\textbf{Printer} - moduł zbierający informacje do wyświetlenia użytkownikowi
+	\item 
+\textbf{LoggingModule} - Logi są wypisywane na standardowe wyjście błędów \textit{stderr} co umożliwia ich łatwe przekierowanie do pliku. Moduł logujący zbiera informacje od wszystkich wątków grupując je w kolejkę i wypisując na wyjście. Zapewnia on synchronizację przekazywania logów.
+\\\\
+Format logów jest następujacy : \\
+<logline> := [<data i godzina wystąpienia zdarzenia>]<zdarzenie z informacją o wysyłającym oraz jego szczegółach>
+
+\begin{centering}
+	\includegraphics[width=\textwidth]{modules}
+\end{centering}
+
 \end{enumerate}
-\section{Współbieżność}
-\paragraph{Ogólna koncepcja zakłada istnienie następujących bazowych, działających w pętli wątków:}
+\section{Ważniejsze struktury danych}
+\subsection{CompleteResource}
+Klasa reprezentująca kompletny zasób, przechowująca zarówno wskaźnik do zbuforowanej zawartości pliku, jak i informacje o nim, takie jak lista hostów będących w jego posiadaniu. Ponadto klasa ta jest przystosowana do pobierania pliku w postaci jedno-kilobajtowych segmentów i do kompletowania ich w różnej kolejności. \\
+W momencie pobierania zasobu przez sieć wiele wątków pobiera współbieżnie różne segmenty zasobu. Każdy z wątków ma dostęp do obiektu klasy \textit{CompleteResource}. Klasa ta przechowuje bitsety niosące informacje o tym, które segmenty są aktualnie pobierane, które są już pobrane, a których jeszcze nie pobrano. Wątki pobierające modyfikują te bitsety poprzez odpowiednie metody klasa zapewnia synchronizację dostępu do bitsetów.
+\subsection{ResourceDatabase}
+\textit{ResourceDatabase} można przybliżyć jako graf dwudzielny którego jedna z klas dwudzielności to hosty a druga pliki posiadane przez odpowiednie hosty.
+Szczególnym przypadkiem hosta jest host lokalny czyli komputer na którym działa program.\\
+\begin{centering}
+	\includegraphics[width=\textwidth]{database}
+\end{centering}
+\section{Obsługa Sytuacji Wyjatkowych}
 \begin{enumerate}
-\item 
-\textsl{Obsługa przychodzących żądań przesłania posiadanego zasobu.}\\
-Wątek ten nasłuchuje na porcie TCP. W przypadku nawiązania połączenia na tym porcie tworzony jest watek potomny. Wątek ten odbiera żądanie przesłania lokalnie posiadanego pliku i nadzoruje to przesłanie. 
-\item
-\textsl{Odbiór komunikatów broadcast UDP.}\\
-Komunikaty te obejmują okresowe rozgłaszanie przez każdego użytkownika listy lokalnie posiadanych zasobów, rozgłaszanie unieważnienia zasobu. Po odebraniu komunikatu wątek ten przekazuje otrzymane informacje do wątku synchronizującego dane.
-\item
-\textsl{Okresowe rozgłaszanie lokalnej listy zasobów.}\\
-Wątek, który co pewien czas rozgłasza przez UDP listę zasobów, które udostępnia do pobrania. Wątek blokuje się pomiędzy kolejnymi broadcastami.  
-\item
-\textsl{Wątek synchronizujący dane.}\\
-Wątek manipulujący danymi przechowywanymi przez program takimi jak: lista  lokalnych zasobów, informacje o pozostałych węzłach - dla każdego z nich lista zasobów, które udostępnia, liczniki opóźnień itp.
-\item
-\textsl{Obsługa interfejsu użytkownika.}\\
-Interakcja z użytkownikiem przez CLI. Odbieranie komend od użytkownika i odpowiednie reagowanie - powoływanie nowych wątków, które mają zająć się realizacją komendy, między innymi: 
-\begin{itemize}
-\item
-W przypadku chęci pobrania pliku tworzony jest wątek nadzorujący to pobieranie. Na potrzeby połączenia z wieloma węzłami może on stworzyć kilka kolejnych wątków przypisanych do połączeń z węzłami.\\
-W zależności od wyniku pobierania przekaże odpowiednie informacje do wątku synchronizującego dane.
-\item
-W przypadku chęci dodania, usunięcia lub unieważnienia pliku tworzony jest wątek, który zajmie się wprowadzeniem tej zmiany i nadzorowaniem wszystkich jej następstw, np.: fizycznie doda plik do systemu i przekaże informację o nowym pliku do wątku synchronizującego dane. W przypadku unieważnienia stworzy nowy wątek, który rozgłosi odpowiednią informację w systemie.
-\item
-W przypadku chęci wyświetlenia którejś z list zasobów lub listy dostępnych komend tworzony jest wątek, który odczyta odpowiednie dane i przygotuje je w odpowiedniej formie do wyświetlenia użytkownikowi.
-\end{itemize}
-\textbf{Wyniki działań powyższych wątków przekazywane są z powrotem do wątku obsługującego CLI, który wyświetla je użytkownikowi.}
+	\item 
+	\textit{Opuszczenie przez węzeł sieci :} \\
+	po nie otrzymaniu od któregoś z węzłów sieci rozgłoszenia przez kilka okresów rozgłoszeń informacja o posiadaniu przez niego plików jest usuwana z systemu. Ze względu na fakt istnienia weak\_ptr  w kopiach hostów posiadających plik, informacja o jego istnieniu nie jest usuwana z bazy danych
+	\item
+\textit{	Opóźnione działanie węzła sieci :}\\
+	Dla każdego z węzłów prowadzone jest zliczanie prekroczeń ustalonego czasu przy odpowiedziach na zapytania. Po odczekaniu pewnego czasu [ban time] próbujemy ponownie, jesli węzeł znów odpowiada z opóźnieniem nie pobieramy od niego segmentów.
+	jeśli wszystkie węzły są opóźnione kończymy pobieranie.
+	\item
+	\textit{Błąd przy odbiorze danych przez TCP :}\\
+	wątek pobierający od danego Hosta zwalnia segment oraz kończy pracę
+	\item
+\textit{	Gubienie rozgłaszanych pakietów: }\\
+	 Udp rozgłasza pakiety fragmentami. Fragmenty są mniejsze niż 2*576 oktetów co oznacza że w przypadku działania w sieci przewodowej ryzyko zgubienia pakiety będzie minimalne [mtu = 1500 oktetów], a w przypadku sieci bezprzewodowej przynajmniej co któryś pakiet dotrze w całości. W przypadku notorycznego gubienia pakietów węzeł będzie niewidoczny dla pozostałych.
+	
 \end{enumerate}
-\chapter{Implementacja}
-\begin{itemize}
-\item
-Jezyki : \textsl{C++}
-\item
-Biblioteki : \textsl{Boost:Asio, std::thread}
-\end{itemize}
 
-%% BEGIN DOXYGEN
-
-
+\part{Dokumentacja kodu źródłowego - \textit{English}}
+\chapter{Class Index}
+\input{annotated}
+\chapter{Class Documentation}
+\input{classsimpleP2P_1_1CLI}
+\input{classsimpleP2P_1_1CLICommand}
+\input{classsimpleP2P_1_1CompleteResource}
+\input{classsimpleP2P_1_1DownloadService}
+\input{classsimpleP2P_1_1DownloadWorker}
+\input{classsimpleP2P_1_1FileManager}
+\input{classsimpleP2P_1_1Host}
+\input{classsimpleP2P_1_1LoggingModule}
+\input{classsimpleP2P_1_1Printer}
+\input{classsimpleP2P_1_1RequestServer}
+\input{classsimpleP2P_1_1RequestServerModule}
+\input{classsimpleP2P_1_1RequestWorker}
+\input{classsimpleP2P_1_1Resource}
+\input{classsimpleP2P_1_1ResourceDatabase}
+\input{classsimpleP2P_1_1Segment}
+\input{classsimpleP2P_1_1UdpClient}
+\input{classsimpleP2P_1_1UdpModule}
+\input{classsimpleP2P_1_1UdpServer}
 \end{document}

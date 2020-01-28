@@ -24,7 +24,6 @@ CLI::CLI(ResourceDatabase &res_db_, LoggingModule &Logger_, boost::asio::io_serv
       CLICommand("add", "\"add name_of_file\" - adds local file to resource db, will be broadcasted",
                  [this](std::string name_of_file) {
                    std::error_code errc;
-                   //std::cout << "Current path is " << std::experimental::filesystem::current_path() << '\n';
                    Uint64 size = std::experimental::filesystem::file_size(name_of_file, errc);
 
                    if (not errc) {
