@@ -3,24 +3,22 @@
 //
 
 #include "Host.h"
-#include <vector>
-#include <utility>
 #include "Resource.h"
 #include <iostream>
 #include <utility>
+#include <vector>
 
 namespace simpleP2P {
 Host::Host(boost::asio::ip::address ip)
-    : host_ip(std::move(ip)), timeout_counter(0), retarded(false), no_of_missed_updates(0) {}
+    : host_ip(std::move(ip)), timeout_counter(0), retarded(false),
+      no_of_missed_updates(0), ban_time(0) {}
 
 bool Host::has_resource(const Resource &resource) {
   std::shared_lock lock(host_mutex);
-  return std::count_if(
-      possesed_resources.begin(),
-      possesed_resources.end(),
-      [&resource](auto &it) {
-        return resource == *(it.lock().get());
-      }) != 0;
+  return std::count_if(possesed_resources.begin(), possesed_resources.end(),
+                       [&resource](auto &it) {
+                         return resource == *(it.lock().get());
+                       }) != 0;
 }
 
 bool Host::operator==(const Host &other) const {
@@ -36,13 +34,9 @@ bool Host::operator!=(const Host &other) const {
 void Host::remove_resource(const Resource &res) {
   std::unique_lock lock(host_mutex);
   possesed_resources.erase(
-      std::remove_if(
-          possesed_resources.begin(),
-          possesed_resources.end(),
-          [&res](auto &it) {
-            return *it.lock() == res;
-          }
-      ), possesed_resources.end());
+      std::remove_if(possesed_resources.begin(), possesed_resources.end(),
+                     [&res](auto &it) { return *it.lock() == res; }),
+      possesed_resources.end());
 }
 
 std::vector<std::weak_ptr<Resource>> Host::get_possesed() const {
@@ -52,7 +46,9 @@ std::vector<std::weak_ptr<Resource>> Host::get_possesed() const {
 
 bool Host::is_retarded() {
   std::shared_lock lock(host_mutex);
-  return retarded;
+  return ban_time >
+         std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+  // return retarded;
 }
 
 void Host::increase_timeout_counter() {
