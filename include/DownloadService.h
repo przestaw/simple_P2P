@@ -11,9 +11,9 @@
 #include "DownloadWorker.h"
 #include "FileManager.h"
 #include "GeneralTypes.h"
-#include "logging_module.h"
-#include "resource.h"
-#include "resource_database.h"
+#include "LoggingModule.h"
+#include "Resource.h"
+#include "ResourceDatabase.h"
 
 namespace simpleP2P {
 
@@ -22,7 +22,7 @@ namespace simpleP2P {
  *
  */
 class DownloadService {
- public:
+public:
   /**
    * @brief Construct a new Download Service object
    *
@@ -32,10 +32,10 @@ class DownloadService {
    * @param resource_database_c
    * @param resource_c
    */
-  DownloadService(Logging_Module &logging_module_c,
+  DownloadService(LoggingModule &logging_module_c,
                   boost::asio::io_service &io_service_c,
                   FileManager &file_manager_c,
-                  Resource_Database &resource_database_c,
+                  ResourceDatabase &resource_database_c,
                   std::shared_ptr<Resource> resource_c);
 
   ~DownloadService();
@@ -53,7 +53,7 @@ class DownloadService {
    */
   std::thread init_thread();
 
- private:
+private:
   /**
    * @brief Create a workers object per each not retarded host owning desired
    * resource
@@ -124,11 +124,11 @@ class DownloadService {
    */
   void handle_exception(std::exception &e);
 
-  Logging_Module &logging_module;  //!< Logger
+  LoggingModule &logging_module;  //!< Logger
   boost::asio::io_service
       &io_service;  //!< Boost IO Service to pass down to download workers
   FileManager &file_manager;  //!< File Manager to store downloaded resource
-  Resource_Database
+  ResourceDatabase
       &resource_database;  //!< Resource Database to add association between
   //!< localhost and resource
   std::shared_ptr<Resource> resource;  //!< Resource to download

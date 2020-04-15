@@ -4,21 +4,21 @@
  */
 
 #include "RequestServer.h"
+#include "GeneralTypes.h"
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
-#include <memory>   // make_shared
-#include <thread>   // thread
-#include <utility>  // move
-#include "GeneralTypes.h"
+#include <memory>  // make_shared
+#include <thread>  // thread
+#include <utility> // move
 
 using boost::asio::ip::tcp;
 
 namespace simpleP2P {
-RequestServer::RequestServer(boost::asio::io_service& _io_service, boost::asio::ip::address my_ip, Uint16 port,
-                             FileManager& fm, Logging_Module& lm)
+RequestServer::RequestServer(boost::asio::io_service &_io_service,
+                             boost::asio::ip::address my_ip, Uint16 port,
+                             FileManager &fm, LoggingModule &lm)
     : io_service(_io_service),
-      acceptor(_io_service, tcp::endpoint(my_ip, port)),
-      file_manager(fm),
+      acceptor(_io_service, tcp::endpoint(my_ip, port)), file_manager(fm),
       logging_module(lm) {}
 
 std::thread RequestServer::init() {
@@ -36,31 +36,31 @@ void RequestServer::init2() {
 }
 
 void RequestServer::start_accept() {
-  RequestWorker* new_worker =
+  RequestWorker *new_worker =
       new RequestWorker(io_service, file_manager, logging_module);
 
-  acceptor.async_accept(
-      new_worker->socket(),
-      boost::bind(&RequestServer::handle_accept, this, new_worker,
-                  boost::asio::placeholders::error));
+  acceptor.async_accept(new_worker->socket(),
+                        boost::bind(&RequestServer::handle_accept, this,
+                                    new_worker,
+                                    boost::asio::placeholders::error));
 }
 
-void RequestServer::handle_accept(RequestWorker* new_worker,
-                                  const boost::system::error_code& error) {
+void RequestServer::handle_accept(RequestWorker *new_worker,
+                                  const boost::system::error_code &error) {
   if (!error) {
     logging_module.add_log_line(
         "RequestServer: successful asynchronous accept",
         std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
     try {
       new_worker->start();
-    } catch (std::exception& e) {
+    } catch (std::exception &e) {
       logging_module.add_log_line(
           "RequestServer: exception caught from RequestWorker::start()! "
           "Deleting RequestWorker object",
           std::chrono::system_clock::to_time_t(
               std::chrono::system_clock::now()));
 
-      if (new_worker != nullptr)  // Extra security.
+      if (new_worker != nullptr) // Extra security.
       {
         delete new_worker;
       }
@@ -90,4 +90,4 @@ void RequestServer::accept_connection()
                         accept_connection(); // Wait for another request.
                 });
 }*/
-}  // namespace simpleP2P
+} // namespace simpleP2P

@@ -11,9 +11,9 @@
 #include "CompleteResource.h"
 #include "GeneralTypes.h"
 #include "Segment.h"
-#include "host.h"
-#include "logging_module.h"
-#include "resource.h"
+#include "Host.h"
+#include "LoggingModule.h"
+#include "Resource.h"
 
 namespace simpleP2P {
 /**
@@ -30,7 +30,7 @@ public:
    * @param host_c
    * @param complete_resource_c
    */
-  DownloadWorker(Logging_Module &logging_module_c,
+  DownloadWorker(LoggingModule &logging_module_c,
                  boost::asio::io_service &io_service_c,
                  std::shared_ptr<Host> host_c,
                  std::shared_ptr<CompleteResource> complete_resource_c);
@@ -67,6 +67,7 @@ public:
    *
    */
   bool is_closed();
+
   /**
    * @brief Synchronised method checking if worker is available (not closed and
    * associated host not retarded)
@@ -151,7 +152,7 @@ private:
    */
   std::string get_log_header();
 
-  Logging_Module &logging_module; //!< Logging module
+  LoggingModule &logging_module; //!< Logging module
   boost::asio::io_service
       &io_service;            //!< Boost IO Service to TCP communication
   std::shared_ptr<Host> host; //!<  Host to connect and request segments from

@@ -4,16 +4,12 @@
 namespace simpleP2P {
 
 DownloadWorker::DownloadWorker(
-    Logging_Module &logging_module_c, boost::asio::io_service &io_service_c,
+    LoggingModule &logging_module_c, boost::asio::io_service &io_service_c,
     std::shared_ptr<Host> host_c,
     std::shared_ptr<CompleteResource> complete_resource_c)
-    : logging_module(logging_module_c),
-      io_service(io_service_c),
-      host(host_c),
-      complete_resource(complete_resource_c),
-      socket(io_service_c),
-      timeouted(false),
-      closed(false),
+    : logging_module(logging_module_c), io_service(io_service_c), host(host_c),
+      complete_resource(complete_resource_c), socket(io_service_c),
+      timeouted(false), closed(false),
       owned_segment_id(Segment::NO_SEGMENT_ID) {}
 
 DownloadWorker::~DownloadWorker() {
@@ -194,4 +190,4 @@ std::string DownloadWorker::get_log_header() {
 bool DownloadWorker::is_closed() { return closed; }
 bool DownloadWorker::is_unavailable() { return closed || host->is_retarded(); }
 
-}  // namespace simpleP2P
+} // namespace simpleP2P

@@ -30,7 +30,6 @@
 
 #define UDP_SERV_BUFFER_SIZE (sizeof(Uint8)+sizeof(Uint64)+(BEACON_MAX_COUNT*RESOURCE_HEADER_SIZE))
 
-#define BROADCAST_ADDRESS "192.168.1.255"
 #define BROADCAST_PORT 2020
 
 #define TCP_SERVER_PORT 2169
@@ -41,10 +40,9 @@
 #define BAN_TIME 1000ms
 #define TIMEOUT_CHECK_INTERVAL 300ms
 
-namespace simpleP2P
-{
-	const Uint16 FILE_NAME_LENGHT = 256;
-	const Uint16 FILE_SIZE_LENGHT = 8;
-	const Uint16 SEGMENT_SIZE = 1024;
+namespace simpleP2P {
+const Uint16 FILE_NAME_LENGHT = 256;
+const Uint16 FILE_SIZE_LENGHT = 8;
+const Uint16 SEGMENT_SIZE = 1024;
 }
 #endif //SIMPLE_P2P_GENERALTYPES_H
