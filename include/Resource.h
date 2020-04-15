@@ -9,7 +9,6 @@
 #include <string>
 #include <GeneralTypes.h>
 #include <shared_mutex>
-#include "tbb/concurrent_vector.h"
 
 #define SEGMENT_SIZE 1024 // 1kb
 

@@ -127,8 +127,8 @@ private:
   /*atrribs not checked for equality*/
   Int8 timeout_counter;                                 //!< timeout counter
   std::chrono::system_clock::time_point ban_time_point; //!< a time point to which a host is considered to be retarded
-  std::time_t ban_time;                                 //!< a timestamp to which a host is considered to be retarded
   bool retarded;
+  std::time_t ban_time;                                 //!< a timestamp to which a host is considered to be retarded
 
   Uint16 no_of_missed_updates;
 

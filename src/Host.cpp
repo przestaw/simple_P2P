@@ -11,7 +11,7 @@
 namespace simpleP2P {
 Host::Host(boost::asio::ip::address ip)
     : host_ip(std::move(ip)), timeout_counter(0), retarded(false),
-      no_of_missed_updates(0), ban_time(0) {}
+      ban_time(0), no_of_missed_updates(0) {}
 
 bool Host::has_resource(const Resource &resource) {
   std::shared_lock lock(host_mutex);

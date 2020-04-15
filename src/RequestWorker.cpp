@@ -28,7 +28,7 @@ RequestWorker::~RequestWorker() {
 }
 
 void RequestWorker::start() {
-  send_data = (Uint8 *)malloc(SEGMENT_SIZE);
+  send_data = static_cast<Uint8*>(malloc(SEGMENT_SIZE));
 
   if (send_data == nullptr) {
     logging_module.add_log_line(
@@ -56,6 +56,7 @@ tcp::socket &RequestWorker::socket() { return _socket; }
 
 void RequestWorker::handle_read(const boost::system::error_code &error,
                                 std::size_t bytes_transferred) {
+  (void)bytes_transferred;
   if (!error) {
     // Get the command
     Uint8 command = recv_data[0];
@@ -71,16 +72,11 @@ void RequestWorker::handle_read(const boost::system::error_code &error,
       file_size = be64toh(file_size);
 
       Uint16 segment;
-      // std::copy(recv_data+1+FILE_NAME_LENGHT+FILE_SIZE_LENGHT,
-      // recv_data+1+FILE_NAME_LENGHT+FILE_SIZE_LENGHT+sizeof(Uint16), &segment);
       std::memcpy(&segment, recv_data + 1 + FILE_NAME_LENGHT + FILE_SIZE_LENGHT,
                   sizeof(Uint16));
       // Uint16 is always 16-bit, not platform dependent.
       segment = ntohs(segment);
 
-      // std::stringstream logmsg;
-      // logmsg << "RequestWorker: request for segment " << segment << " of
-      // file: '" ;//<< file_name << "' received";
       std::string logmsg = "RequestWorker: request for segment " +
                            std::to_string(segment) + " of file: '" + file_name +
                            "' received";
@@ -101,11 +97,6 @@ void RequestWorker::handle_read(const boost::system::error_code &error,
       }
 
       /* Explicit block in which 'send_data' is declared */
-      //{
-      // char* send_data = (char*) malloc (SEGMENT_SIZE);	// If the
-      // requested segment is the last segment and it's shorter than
-      // SEGMENT_SIZE,
-      // the buffer will be complemented with 0's.
       file_manager.read_lock(file_name);
 
       if (!file_manager.get_segment(file_name, segment, send_data,

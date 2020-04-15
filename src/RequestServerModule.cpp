@@ -9,8 +9,8 @@
 #include <sstream> // stringstream
 
 namespace simpleP2P {
-	RequestServerModule::RequestServerModule(boost::asio::ip::address my_ip, Uint16 port_, FileManager& fm, LoggingModule& lm)
-		: my_ip(my_ip), port(port_), file_manager(fm), logging_module(lm)
+	RequestServerModule::RequestServerModule(boost::asio::ip::address my_ip_, Uint16 port_, FileManager& fm, LoggingModule& lm)
+		: my_ip(my_ip_), port(port_), file_manager(fm), logging_module(lm)
 	{}
 	
 	std::thread RequestServerModule::init() {

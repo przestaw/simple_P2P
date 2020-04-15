@@ -21,7 +21,7 @@ public:
   /**
    * Constructor, allows setting the port for the server.
    */
-  RequestServerModule(boost::asio::ip::address my_ip, Uint16 port_,
+  RequestServerModule(boost::asio::ip::address my_ip_, Uint16 port_,
                       FileManager &fm, LoggingModule &lm);
 
   /**

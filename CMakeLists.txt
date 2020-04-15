@@ -7,11 +7,7 @@ find_package(Threads REQUIRED)
 
 find_package(Boost REQUIRED system program_options)
 
-find_package(PkgConfig REQUIRED)
-
-pkg_check_modules(TBB tbb REQUIRED)
-
-set(EXTERNAL_LIBS "stdc++fs" "Boost::system" "Boost::program_options" "Threads::Threads" "tbb")
+set(EXTERNAL_LIBS "stdc++fs" "Boost::system" "Boost::program_options" "Threads::Threads")
 
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
