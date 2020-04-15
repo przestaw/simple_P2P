@@ -9,11 +9,11 @@ mkdir ${work_dir}/build/Debug
 
 {
 cd ${work_dir}/build/Relase;
-cmake ../../ -DCMAKE_BUILD_TYPE="RELASE" -GNinja
+cmake ../../ -DCMAKE_BUILD_TYPE="RELASE"
 }
 
 {
 cd ${work_dir}/build/Debug;
-cmake ../../ -DCMAKE_BUILD_TYPE="DEBUG" -GNinja
+cmake ../../ -DCMAKE_BUILD_TYPE="DEBUG"
 }
 

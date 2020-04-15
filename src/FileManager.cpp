@@ -5,82 +5,277 @@
 #include <cstddef> // size_t
 #include <string>
 #include <fstream>
-
-#include "FileRequest.h"
+#include <mutex>
+#include <condition_variable>
+#include <sstream> // stringstream
 #include "FileManager.h"
+#include "CompleteResource.h"
 #include "GeneralTypes.h"
 
-#define FILE_NAME_LENGHT 256
-#define SEGMENT_SIZE 1024
+namespace simpleP2P {
+FileManager::FileManager(LoggingModule &lm)
+    : logging_module(lm) {}
 
-// TODO: synchronizing access to the files.
+FileManager::~FileManager() {
+  for (OpenFile *f : rlocked_files) {
+    if (f != nullptr) {
+      delete f;
+    }
+  }
 
-namespace SimpleP2P {
-	FileManager::FileManager()
-	{}
+  rlocked_files.erase(rlocked_files.begin(), rlocked_files.end());
+  wlocked_files.erase(wlocked_files.begin(), wlocked_files.end());
+}
 
-	void FileManager::get_file(FileRequest request, char* result, std::size_t size) {
-		char file_name[FILE_NAME_LENGHT];
-		/*std::string resource_header = request.get_resource_header();
-		resource_header.copy(file_name, FILE_NAME_LENGHT, 0);*/
-		// TODO: get file name from the FileRequest object
-		
-		std::vector<Uint32> segments = request.get_segments(); // Numbers of requested segments.
+bool FileManager::get_segment(const std::string file_name, const Uint16 segment, Uint8 *result,
+                              const std::size_t requested_segment_size) {
+  if (result == nullptr) {
+    logging_module.add_log_line(
+        "FileManager: ptr to 'result' buffer passed as parameter is null!\n  Segment reading FAILED",
+        std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+    return false;
+  }
+  if (requested_segment_size > SEGMENT_SIZE) {
+    logging_module.add_log_line(
+        "FileManager: requested segment size > typical segment size (must be <=)!\n  Segment reading FAILED",
+        std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+    return false;
+  }
 
-		// Open the file.
-		std::ifstream file(file_name, std::ifstream::in | std::ifstream::binary);
-		
-		if (file.fail()) {
-			// TODO: log that file could not be open.
-			return;
-		}
+  OpenFile *file_ptr;
 
-		char buffer[SEGMENT_SIZE]; // Buffer for reading a single segment.
+  rlmutex.lock();
+  for (OpenFile *f : rlocked_files) {
+    if (f->file_name == file_name) {
+      file_ptr = f;
+      break;
+    }
+  }
+  rlmutex.unlock();
 
-		for (Uint32 s : segments) {
-			file.seekg(s * SEGMENT_SIZE); // Set the position of reading to the position of the requested segment.
-			if (file.tellg() != s * SEGMENT_SIZE) {
-				// TODO: log error.
-			}
+  /* Only proceed if this file has been opened by calling read_lock() */
+  if (!file_ptr->stream.is_open()) {
+    logging_module.add_log_line(
+        "FileManager::get_segment(): file not rlocked! (Call read_lock() first)\n  Segment reading FAILED",
+        std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+    return false;
+  }
 
-			// TODO: checking if we didn't overflow the 'result' array.
-			
-			file.read(buffer, SEGMENT_SIZE); // Read the contents of the segment.
-			if (!file) {
-				if (file.eof() && !file.fail()) {
-					// We just read over EOF, that's ok - apparently we were reading the last segment.
-					file.clear(); // Reset the state so we can continue reading next segments.
-				}
-				else {
-					// TODO: log error
-				}
-			}
-		}
+  file_ptr->stream.seekg(
+      segment * SEGMENT_SIZE); // Set the position of reading to the position of the requested segment.
+  if (file_ptr->stream.tellg() != segment * SEGMENT_SIZE) {
+    logging_module.add_log_line(
+        "FileManager: [BUG] Reading position not set to the begging of the requested segment!\n  Segment reading FAILED",
+        std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+    return false;
+  }
 
-		file.close();
-	}
+  file_ptr->stream.read(reinterpret_cast<char *>(result),
+                        requested_segment_size);    // Put requested number of bytes in the provided buffer.
+  if (!file_ptr->stream) {
+    if (file_ptr->stream.eof() && !file_ptr->stream.fail()) {
+      // We read over the eof - it is NOT a proper situation, but we can distinguish it from other errors in the logs
+      std::stringstream logmsg;
+      logmsg << "FileManager: EOF read! (Did you try to read the last segment and forgot" << std::endl
+             << "to calculate its size?)\n"
+             << "  Segment reading FAILED";
+      logging_module.add_log_line(logmsg.str(),
+                                  std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 
-	void store_resource(CompleteResource& resource)
-	{
-		std::string file_name; // TODO: get file name from the CompleteResource object.
+    } else {
+      logging_module.add_log_line("FileManager: ERROR reading the segment from the physical file!",
+                                  std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+      return false;
+    }
+  }
 
-		// Open (create) the file in the mode of overwriting its content if the file exists.
-		std::ofstream file(file_name, std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
+  logging_module.add_log_line("FileManager: segment successfully read from the physical file",
+                              std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 
-		if (file.fail()) {
-			// TODO: log error.
-		}
+  // If we are reading the last segment (and its size < SEGMENT_SIZE), complement the result buffer with 0's.
+  // (the result buffer's size always == SEGMENT_SIZE)
+  if (requested_segment_size < SEGMENT_SIZE) {
+    logging_module.add_log_line(
+        "FileManager: [note] requested segment size < typical segment size. It must be the last segment of the file",
+        std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+    std::fill(result + requested_segment_size, result + SEGMENT_SIZE, '\0');
+  }
 
-		char* file_contents; // TODO: get file contents from the CompleteResource object.
-		std::size_t file_size; // TODO: get file size from the CompleteResource object.
+  return true;
+}
 
-		file.seekp(0); // Write at the beggining of the file. Is this step necessary as the 'trunc' flag is set?
-		file.write(file_contents, file_size);
+void FileManager::store_resource(std::shared_ptr<CompleteResource> complete_resource) {
+  std::string file_name = complete_resource->get_resource()->getName();
 
-		if (!file) {
-			// TODO: log error.
-		}
+  write_lock(file_name);
 
-		file.close();
-	}
+  // Open (create) the file in the mode of overwriting its content if the file exists.
+  std::ofstream file(file_name, std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
+
+  if (file.fail()) {
+    std::stringstream logmsg;
+    logmsg << "FileManager: opening file: '" << file_name
+           << "' for writing (creating it) FAILED!\n  File storing FAILED";
+    logging_module.add_log_line(logmsg.str(),
+                                std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+    return;
+  }
+
+  char *file_contents = reinterpret_cast<char *>(complete_resource->get_data());
+
+  Uint64 file_size = complete_resource->get_resource()->getSize();
+
+  file.seekp(0); // Write at the beggining of the file. Is this step necessary as the 'trunc' flag is set?
+  file.write(file_contents, file_size);
+
+  if (!file) {
+    std::stringstream logmsg;
+    logmsg << "FileManager: ERROR storing the file: '" << file_name << "' on disc!";
+    logging_module.add_log_line(logmsg.str(),
+                                std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+  } else {
+    std::stringstream logmsg;
+    logmsg << "FileManager: file: '" << file_name << "' successfully stored on disc";
+    logging_module.add_log_line(logmsg.str(),
+                                std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+  }
+
+  file.close();
+  write_unlock(file_name);
+}
+
+bool FileManager::read_lock(const std::string file_name) {
+  // Check if the file is wlocked
+  bool is_locked = true;
+  wlmutex.lock();
+  while (is_locked) {
+    for (auto wlocked : wlocked_files) {
+      if (wlocked == file_name) {
+        // File is wlocked - we must block.
+        break;
+      }
+    }
+    if (is_locked) {
+      wlmutex.unlock();
+      {
+        std::unique_lock<std::mutex> lk(condvmutex);
+        condv.wait(lk);
+      }
+      wlmutex.lock();
+    }
+  }
+  wlmutex.unlock();
+
+  // Check if the file is rlocked
+  rlmutex.lock();
+  for (OpenFile *f : rlocked_files) {
+    if (f->file_name == file_name) {
+      // File already rlocked - ok, multiple rlocks are permitted.
+      rlmutex.unlock();
+      return true;
+    }
+  }
+
+  /* File not rlocked nor wlocked - perform rlock. */
+  OpenFile *file_ptr = new OpenFile;
+  file_ptr->file_name = file_name;
+  file_ptr->stream.open(file_name, std::ifstream::in | std::ifstream::binary);
+
+  if (file_ptr->stream.fail()) {
+    rlmutex.unlock();
+    std::stringstream logmsg;
+    logmsg << "FileManager: ERROR opening file: '" << file_name << "' for reading!";
+    logging_module.add_log_line(logmsg.str(),
+                                std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+    return false;
+  }
+
+  rlocked_files.push_back(file_ptr);
+
+  rlmutex.unlock();
+  std::stringstream logmsg;
+  logmsg << "FileManager: file: '" << file_name << "' successfully opened for reading";
+  logging_module.add_log_line(logmsg.str(),
+                              std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+  return true;
+}
+
+void FileManager::read_unlock(const std::string file_name) {
+  bool erased = false;
+  rlmutex.lock();
+  for (auto it = rlocked_files.begin(); it != rlocked_files.end(); ++it) {
+    if (file_name == (*it)->file_name) {
+      (*it)->stream.close();
+      delete *it;
+      rlocked_files.erase(it);
+    }
+  }
+  rlmutex.unlock();
+
+  std::stringstream logmsg;
+  if (erased) {
+    logmsg << "FileManager: file: '" << file_name << "' successfully closed for reading";
+  } else {
+    logmsg << "FileManager: could not close file: '" << file_name
+           << "' for reading as it had not been opened for reading!";
+  }
+
+  logging_module.add_log_line(logmsg.str(),
+                              std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+}
+
+void FileManager::write_lock(const std::string file_name) {
+  wlmutex.lock();
+
+  // Check if the file is rlocked
+  bool is_locked = true;
+  rlmutex.lock();
+  while (is_locked) {
+    for (OpenFile *f : rlocked_files) {
+      if (file_name == f->file_name) {
+        // The file is rlocked.
+        break;
+      }
+
+      is_locked = false;
+    }
+
+    if (is_locked) {
+      rlmutex.unlock();
+      wlmutex.unlock();
+      {
+        std::unique_lock<std::mutex> lk(condvmutex);
+        condv.wait(lk);
+      }
+      wlmutex.lock();
+      rlmutex.lock();
+    }
+  }
+  rlmutex.unlock();
+
+  // !!
+  // We are not checking if the file is wlocked, because only one thread will perform wlocks (DownloadWorker)
+  // !!
+
+  // Perform wlock
+  wlocked_files.push_back(file_name);
+
+  wlmutex.unlock();
+}
+
+void FileManager::write_unlock(const std::string file_name) {
+  wlmutex.lock();
+  for (auto it = wlocked_files.begin(); it != wlocked_files.end(); ++it) {
+    if (*it == file_name) {
+      wlocked_files.erase(it);
+      wlmutex.unlock();
+      {
+        std::lock_guard<std::mutex> lk(condvmutex);
+        condv.notify_all();
+      }
+      return;
+    }
+  }
+  wlmutex.unlock();
+}
 }
