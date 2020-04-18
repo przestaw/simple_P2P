@@ -10,7 +10,7 @@ The aim of this project was to invent and implement a simple peer-to-peer protoc
 
 [Maciej Szulik](https://github.com/shoolic)
 
-[Kamil Zacharczuk](https://github.com/KamZet)
+[Kamil Zacharczuk](https://github.com/kazach7)
 
 [Wiktor Michalski](https://github.com/wmichalski)
 
